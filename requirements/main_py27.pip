@@ -1,3 +1,4 @@
+nose>=1.0.0
 numpy>=1.8.2
 decorator>=3.4.2
 funcsigs>=0.4

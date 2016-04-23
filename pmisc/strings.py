@@ -3,6 +3,9 @@
 # See LICENSE for details
 # pylint: disable=C0111
 
+# Intra-package imports
+from .file import normalize_windows_fname
+
 
 ###
 # Global constants
@@ -256,11 +259,12 @@ def strframe(obj, extended=False):
     # Stack frame -> (frame object [0], filename [1], line number of current
     # line [2], function name [3], list of lines of context from source
     # code [4], index of current line within list [5])
+    fname = normalize_windows_fname(obj[1])
     ret = list()
     ret.append(
         pcolor('Frame object ID: {0}'.format(hex(id(obj[0]))), 'yellow')
     )
-    ret.append('File name......: {0}'.format(obj[1]))
+    ret.append('File name......: {0}'.format(fname))
     ret.append('Line number....: {0}'.format(obj[2]))
     ret.append('Function name..: {0}'.format(obj[3]))
     ret.append('Context........: {0}'.format(obj[4]))
