@@ -36,7 +36,7 @@ before_install:
         bash Anaconda2-2.4.0-MacOSX-x86_64.sh -b;
         export PATH=/Users/travis/anaconda2/bin/:${PATH};
         conda update -y conda;
-        conda create -y --name ${INTERP} python=${JNAME} numpy scipy matplotlib;
+        conda create -y --name ${INTERP} python=${JNAME} numpy
         source activate ${INTERP};
         export PATH=/Users/travis/anaconda2/envs/${INTERP}/bin:${PATH};
         export PYTHON_SITE_PACKAGES=$(pip show pip | grep "Location*" | sed -E "s/^.*Location\W (.*)/\1/g");
@@ -101,11 +101,7 @@ before_install:
         sudo apt-get install -qq -y libatlas-base-dev;
         sudo apt-get install -qq -y libatlas3gf-base;
         sudo apt-get install -qq -y python-numpy;
-        sudo apt-get install -qq -y python-scipy;
-        sudo apt-get install -qq -y python-matplotlib;
         sudo apt-get install -qq -y python3-numpy;
-        sudo apt-get install -qq -y python3-scipy;
-        sudo apt-get install -qq -y python3-matplotlib;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "linux" ] && [ ! -f /usr/include/ft2build.h ]; then
         sudo ln -s /usr/include/freetype2/ft2build.h /usr/include/.;
@@ -131,11 +127,7 @@ install:
         dpkg --status libatlas-base-dev;
         dpkg --status libatlas3gf-base;
         dpkg --status python-numpy;
-        dpkg --status python-scipy;
-        dpkg --status python-matplotlib;
         dpkg --status python3-numpy;
-        dpkg --status python3-scipy;
-        dpkg --status python3-matplotlib;
     fi
   ###
   # Install package dependencies
@@ -177,7 +169,6 @@ script:
   ###
   - ${PYTHONCMD} ${EXTRA_DIR}/sbin/coveragerc_manager.py 'ci' 1 ${INTERP} ${PYTHON_SITE_PACKAGES}
   - cat ${COV_FILE}
-  - ${EXTRA_DIR}/sbin/set-matplotlib-backend.sh ${EXTRA_DIR}/docs
   - if [ "${INTERP}" == "py26" ]; then
         ${EXTRA_DIR}/sbin/patch_pylint.py ${PYTHON_SITE_PACKAGES};
     fi
@@ -208,7 +199,7 @@ script:
   - ${EXTRA_DIR}/sbin/cprint.sh line cyan "Testing coverage"
   - ${PYTESTCMD} --cov-config ${COV_FILE} --cov ${SOURCE_DIR} --cov-report xml
   - ${EXTRA_DIR}/sbin/cprint.sh line cyan "Testing documentation"
-  - ${EXTRA_DIR}/sbin/build_docs.py -r -t -d ${SOURCE_DIR}
+  - ${EXTRA_DIR}/sbin/build_docs.py -d ${SOURCE_DIR}
 
 notifications:
   email:
