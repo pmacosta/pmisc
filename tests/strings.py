@@ -114,7 +114,7 @@ def test_strframe():
         fname = pmisc.normalize_windows_fname(os.path.realpath(__file__))
         assert lines[0].startswith('\x1b[33mFrame object ID: 0x')
         assert lines[1].startswith(
-            'File name......: {0}'.format(fname)
+            'File name......: {0}'.format(fname.replace('.pyc', '.py'))
         )
         assert lines[2].startswith('Line number....: ')
         assert lines[3] == 'Function name..: test_strframe'
