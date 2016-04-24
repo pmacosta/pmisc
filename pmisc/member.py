@@ -26,10 +26,11 @@ def isalpha(obj):
         >>> pmisc.isalpha('1EA-20')
         False
     """
+    # pylint: disable=W0702
     try:
         float(obj)
-        return True
-    except ValueError:
+        return isinstance(obj, str)
+    except:
         return False
 
 

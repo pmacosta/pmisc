@@ -167,7 +167,7 @@ Contributing
 
     * `Mock`_ (Python 2.x only, 1.0.1 or newer)
 
-    * `Nose`_ (Python 2.6: 1.0.0 or newer)
+    * `Nose`_ (1.0.0 or newer)
 
     * `Numpy`_ (1.8.2 or newer)
 

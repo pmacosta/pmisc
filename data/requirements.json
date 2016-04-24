@@ -94,7 +94,7 @@
 		"name":"Py.test",
 		"optional":false,
 		"url":"http://pytest.org",
-		"cat":["tests", "rtd"],
+		"cat":["main", "tests", "rtd"],
 		"ver":">=2.7.0",
 		"pos":10
 	},

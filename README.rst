@@ -167,7 +167,7 @@ Contributing
 
     * `Mock`_ (Python 2.x only, 1.0.1 or newer)
 
-    * `Nose`_ (Python 2.6: 1.0.0 or newer)
+    * `Nose`_ (1.0.0 or newer)
 
     * `Numpy`_ (1.8.2 or newer)
 
@@ -258,12 +258,12 @@ Contributing
 
 	.. code-block:: bash
 
-	    $ tox -e py34-test -- -x test_eng.py
+	    $ tox -e py34-test -- -x test_pmisc.py
             GLOB sdist-make: [...]/pmisc/setup.py
             py34-test inst-nodeps: [...]/pmisc/.tox/dist/pmisc-[...].zip
             py34-test runtests: PYTHONHASHSEED='680528711'
-            py34-test runtests: commands[0] | [...]py.test -x test_eng.py
-            ==================== test session starts ====================
+            py34-test runtests: [...]py.test -x test_pmisc.py
+            ============== test session starts ==============
             platform linux -- Python 3.4.2 -- py-1.4.30 -- [...]
             ...
 
@@ -283,18 +283,7 @@ Contributing
    `Codecov <https://codecov.io>`_. It is assumed that the Codecov repository
    upload token in the Travis build is stored in the :bash:`${CODECOV_TOKEN}`
    environment variable (securely defined in the Travis repository settings
-   page). Travis build artifacts can be transferred to Dropbox using the
-   `Dropbox Uploader <https://github.com/andreafabrizi/Dropbox-Uploader>`_
-   script (included for convenience in the :bash:`${PMISC_DIR}/sbin` directory).
-   For an automatic transfer that does not require manual entering of
-   authentication credentials place the APPKEY, APPSECRET, ACCESS_LEVEL,
-   OAUTH_ACCESS_TOKEN and OAUTH_ACCESS_TOKEN_SECRET values required by
-   Dropbox Uploader in the in the :bash:`${DBU_APPKEY}`,
-   :bash:`${DBU_APPSECRET}`, :bash:`${DBU_ACCESS_LEVEL}`,
-   :bash:`${DBU_OAUTH_ACCESS_TOKEN}` and
-   :bash:`${DBU_OAUTH_ACCESS_TOKEN_SECRET}` environment variables,
-   respectively (also securely defined in Travis repository settings page)
-
+   page).
 
 9. Document the new feature or bug fix (if needed). The script
    :bash:`${PMISC_DIR}/sbin/build_docs.py` re-builds the whole package

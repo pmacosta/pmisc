@@ -5,5 +5,6 @@
 Changelog
 =========
 
-* 1.0.0rc1 [2016-04-15]: Initial commit, merges misc and test modules in PyPI
-  putil package
+* 1.0.0 [2016-04-23]: Final release of 1.0.0 branch
+* 1.0.0rc1 [2016-04-22]: Initial commit, merges misc and test modules of putil
+  PyPI package

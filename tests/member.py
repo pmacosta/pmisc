@@ -12,9 +12,12 @@ import pmisc
 ###
 def test_isalpha():
     """ Test isalpha function behavior """
+    assert not pmisc.isalpha(3)
+    assert not pmisc.isalpha(1.5)
+    assert not pmisc.isalpha(1+2j)
+    assert not pmisc.isalpha('1EA-20')
     assert pmisc.isalpha('1.5')
     assert pmisc.isalpha('1E-20')
-    assert not pmisc.isalpha('1EA-20')
 
 
 def test_ishex():
@@ -37,6 +40,7 @@ def test_isnumber():
     assert pmisc.isnumber(5)
     assert pmisc.isnumber(1.5)
     assert pmisc.isnumber(complex(3.2, 9.5))
+    assert not pmisc.isnumber('a')
     assert not pmisc.isnumber(True)
 
 
@@ -45,4 +49,5 @@ def test_isreal():
     assert pmisc.isreal(5)
     assert pmisc.isreal(1.5)
     assert not pmisc.isreal(complex(3.2, 9.5))
+    assert not pmisc.isreal('a')
     assert not pmisc.isreal(True)
