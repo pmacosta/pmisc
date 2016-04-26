@@ -6,7 +6,6 @@
 # Standard library imports
 from fractions import Fraction
 # PyPI imports
-from numpy import array
 import pytest
 # Intra-package imports
 import pmisc
@@ -79,20 +78,20 @@ def test_per():
     obj = pmisc.per
     AI(obj, 'prec', arga=5, argb=7, prec='Hello')
     AI(obj, 'arga', arga='Hello', argb=7, prec=1)
+    AI(obj, 'arga', arga=[1, 'a', 3], argb=[4, 6, 7], prec=1)
     AI(obj, 'argb', arga=5, argb='Hello', prec=1)
+    AI(obj, 'argb', arga=[1, 2, 3], argb=[4, 'a', 7], prec=1)
     exmsg = 'Arguments are not of the same type'
     AE(obj, TypeError, exmsg, arga=5, argb=[5, 7], prec=1)
     assert obj(3, 2, 1) == 0.5
     assert obj(3.1, 3.1, 1) == 0
     ttuple = zip(obj([3, 1.1, 5], [2, 1.1, 2], 1), [0.5, 0, 1.5])
     assert all([test == ref for test, ref in ttuple])
-    ttuple = zip(obj(array([3, 1.1, 5]), array([2, 1.1, 2]), 1), [0.5, 0, 1.5])
+    ttuple = zip(obj([3, 1.1, 5], [2, 1.1, 2], 1), [0.5, 0, 1.5])
     assert all([test == ref for test, ref in ttuple])
     assert obj(4, 3, 3) == 0.333
     assert obj(4, 0, 3) == 1e20
-    ttuple = zip(
-        obj(array([3, 1.1, 5]), array([2, 0, 2]), 1), [0.5, 1e20, 1.5]
-    )
+    ttuple = zip(obj([3, 1.1, 5], [2, 0, 2], 1), [0.5, 1e20, 1.5])
     assert all([test == ref for test, ref in ttuple])
 
 

@@ -4,12 +4,11 @@
 # pylint: disable=C0111
 
 # Standard library imports
+import copy
 from decimal import Decimal
 from fractions import Fraction
-# PyPI imports
-import numpy
 # Intra-package imports
-from .member import isreal
+from .member import isiterable, isreal
 
 
 ###
@@ -197,18 +196,20 @@ def per(arga, argb, prec=10):
 
      * TypeError (Arguments are not of the same type)
     """
-    # pylint: disable=E1101,R0204
+    # pylint: disable=C0103,C0200,E1101,R0204
     if not isinstance(prec, int):
         raise RuntimeError('Argument `prec` is not valid')
     arga_type = (
         1
-        if isreal(arga) else
-        (2 if isinstance(arga, numpy.ndarray) or isinstance(arga, list) else 0)
+        if isreal(arga) else (
+            2 if isiterable(arga) and not isinstance(arga, str) else 0
+        )
     )
     argb_type = (
         1
-        if isreal(argb) else
-        (2 if isinstance(argb, numpy.ndarray) or isinstance(argb, list) else 0)
+        if isreal(argb) else (
+            2 if isiterable(argb) and not isinstance(argb, str) else 0
+        )
     )
     if not arga_type:
         raise RuntimeError('Argument `arga` is not valid')
@@ -227,17 +228,25 @@ def per(arga, argb, prec=10):
             (1e20 if (not num_min) else round((num_max/num_min)-1, prec))
         )
     else:
-        arga = numpy.array(arga)
-        argb = numpy.array(argb)
-        num_max = numpy.maximum(arga, argb)
-        num_min = numpy.minimum(arga, argb)
-        # Numpy where() function seems to evaluate both arguments after the
-        # condition, which prints an error to the console if any element
-        # in num_min is zero
-        lim_num = 1e+20*numpy.ones(len(num_max))
-        safe_indexes = numpy.where(num_min != 0)
-        lim_num[safe_indexes] = (num_max[safe_indexes]/num_min[safe_indexes])-1
-        return numpy.round(numpy.where(arga == argb, 0, lim_num), prec)
+        # Contortions to handle lists and Numpy arrays without explicitly
+        # having to import numpy
+        ret = copy.copy(arga)
+        for num, (x, y) in enumerate(zip(arga, argb)):
+            if not isreal(x):
+                raise RuntimeError('Argument `arga` is not valid')
+            if not isreal(y):
+                raise RuntimeError('Argument `argb` is not valid')
+            x = float(x)
+            y = float(y)
+            ret[num] = (
+                0
+                if x == y else (
+                    1E20 if (x == 0) or (y == 0) else (
+                        round((max(x, y)/min(x, y))-1, prec)
+                    )
+                )
+            )
+        return ret
 
 
 def pgcd(numa, numb):

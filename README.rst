@@ -64,8 +64,6 @@ pmisc module
 .. _Docutils: http://docutils.sourceforge.net/docs
 .. _Funcsigs: https://pypi.python.org/pypi/funcsigs
 .. _Mock: http://www.voidspace.org.uk/python/mock
-.. _Nose: http://nose.readthedocs.org
-.. _Numpy: http://www.numpy.org
 .. _Pylint: http://www.pylint.org
 .. _Py.test: http://pytest.org
 .. _Pytest-coverage: https://pypi.python.org/pypi/pytest-cov
@@ -166,10 +164,6 @@ Contributing
     * `Inline Syntax Highlight Sphinx Extension`_ (0.2 or newer)
 
     * `Mock`_ (Python 2.x only, 1.0.1 or newer)
-
-    * `Nose`_ (1.0.0 or newer)
-
-    * `Numpy`_ (1.8.2 or newer)
 
     * `Py.test`_ (2.7.0 or newer)
 
