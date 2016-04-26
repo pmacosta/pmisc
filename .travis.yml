@@ -87,21 +87,6 @@ before_install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
         sudo apt-get update;
         sudo apt-get install -qq -y aspell;
-        sudo apt-get install -qq -y vim-common;
-        sudo apt-get install -qq -y curl;
-        sudo apt-get install -qq -y imagemagick;
-        sudo apt-get install -qq -y python-dev;
-        sudo apt-get install -qq -y python2.7-dev;
-        sudo apt-get install -qq -y libfreetype6-dev;
-        sudo apt-get install -qq -y libjpeg-dev;
-        sudo apt-get install -qq -y liblapack-dev;
-        sudo apt-get install -qq -y libpng12-dev;
-        sudo apt-get install -qq -y gfortran;
-        sudo apt-get install -qq -y libatlas-dev;
-        sudo apt-get install -qq -y libatlas-base-dev;
-        sudo apt-get install -qq -y libatlas3gf-base;
-        sudo apt-get install -qq -y python-numpy;
-        sudo apt-get install -qq -y python3-numpy;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "linux" ] && [ ! -f /usr/include/ft2build.h ]; then
         sudo ln -s /usr/include/freetype2/ft2build.h /usr/include/.;
@@ -113,21 +98,6 @@ install:
   ###
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
         dpkg --status aspell;
-        dpkg --status vim-common;
-        dpkg --status curl;
-        dpkg --status imagemagick;
-        dpkg --status python-dev;
-        dpkg --status python2.7-dev;
-        dpkg --status libfreetype6-dev;
-        dpkg --status libjpeg-dev;
-        dpkg --status liblapack-dev;
-        dpkg --status libpng12-dev;
-        dpkg --status gfortran;
-        dpkg --status libatlas-dev;
-        dpkg --status libatlas-base-dev;
-        dpkg --status libatlas3gf-base;
-        dpkg --status python-numpy;
-        dpkg --status python3-numpy;
     fi
   ###
   # Install package dependencies
