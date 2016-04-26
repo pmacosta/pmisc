@@ -76,7 +76,7 @@ install:
   - .\anaconda\Anaconda2-2.4.0-Windows-x86.exe /S /D=C:\Anaconda
   - set PATH=C:\\Anaconda;C:\\Anaconda\\Scripts;%PATH%
   - conda update -y conda
-  - conda create -y --name %INTERP% python=%PYVER% numpy
+  - conda create -y --name %INTERP% python=%PYVER%
   - activate %INTERP%
   ###
   # sbin/winsetup2.bat file
