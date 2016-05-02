@@ -5,7 +5,8 @@
 Changelog
 =========
 
-* 1.0.2 [2016-04-26]: Dependencies fixes
+* 1.0.4 [2016-05-02]: Minor documentation and testing enhancements
+* 1.0.3 [2016-04-26]: Dependencies fixes
 * 1.0.2 [2016-04-26]: Windows continuous integration fixes
 * 1.0.1 [2016-04-26]: Removed dependency on Numpy
 * 1.0.0 [2016-04-23]: Final release of 1.0.0 branch

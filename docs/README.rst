@@ -41,8 +41,8 @@
 
 |
 
-pmisc module
-============
+Description
+===========
 
 .. role:: bash(code)
 	:language: bash
@@ -288,7 +288,7 @@ Contributing
 	.. code-block:: bash
 
 	    $ ${PMISC_DIR}/sbin/build_docs.py -h
-	    usage: build_docs.py [-h] [-d DIRECTORY] [-n NUM_CPUS]
+	    usage: build_docs.py [-h] [-d DIRECTORY]
 
 	    Build pmisc package documentation
 
@@ -297,8 +297,6 @@ Contributing
 	      -d DIRECTORY, --directory DIRECTORY
 	                            specify source file directory
 	                            (default ../pmisc)
-	      -n NUM_CPUS, --num-cpus NUM_CPUS
-	                            number of CPUs to use (default: 1)
 
 
 	.. [[[end]]]
