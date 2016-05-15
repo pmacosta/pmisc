@@ -10,5 +10,6 @@ from .file import *
 from .member import *
 from .misc import *
 from .number import *
+from .rst import *
 from .strings import *
 from .test import *

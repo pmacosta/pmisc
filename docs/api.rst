@@ -50,6 +50,14 @@ Numbers
 .. autofunction:: pmisc.per
 .. autofunction:: pmisc.pgcd
 
+****************
+reStructuredText
+****************
+
+.. autofunction:: pmisc.incfile
+.. autofunction:: pmisc.ste
+.. autofunction:: pmisc.term_echo
+
 *******
 Strings
 *******

@@ -1,7 +1,7 @@
 # ctx.py
 # Copyright (c) 2013-2016 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,R0903
+# pylint: disable=C0111,R0903,W0105
 
 # Standard library imports
 from __future__ import print_function
@@ -16,6 +16,15 @@ import decorator
 if os.environ.get('APPVEYOR', None):    # pragma: no cover
     tempfile.tempdir = os.environ['CITMP']
 
+
+"""
+=[=cog
+import os, sys, docs.support
+fname = sys.modules['docs.support'].__file__
+mdir = os.path.realpath(os.path.dirname(fname))
+=]=
+=[=end=]=
+"""
 
 ###
 # Context managers
@@ -35,8 +44,8 @@ def ignored(*exceptions):
     For example:
 
     .. =[=cog
-    .. import docs.support.incfile
-    .. docs.support.incfile.incfile('pmisc_example_1.py', cog.out)
+    .. import pmisc
+    .. pmisc.incfile('pmisc_example_1.py', cog.out, '1, 6-', mdir)
     .. =]=
     .. code-block:: python
 
@@ -98,8 +107,8 @@ class Timer(object):
     For example:
 
     .. =[=cog
-    .. import docs.support.incfile
-    .. docs.support.incfile.incfile('pmisc_example_2.py', cog.out)
+    .. import pmisc
+    .. pmisc.incfile('pmisc_example_2.py', cog.out, '1, 6-', mdir)
     .. =]=
     .. code-block:: python
 
@@ -189,8 +198,8 @@ class TmpFile(object):
     For example:
 
     .. =[=cog
-    .. import docs.support.incfile
-    .. docs.support.incfile.incfile('pmisc_example_3.py', cog.out)
+    .. import pmisc
+    .. pmisc.incfile('pmisc_example_3.py', cog.out, '1, 6-', mdir)
     .. =]=
     .. code-block:: python
 

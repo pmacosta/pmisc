@@ -91,6 +91,7 @@ bb
 bbox
 bc
 bcd
+bdir
 bdist
 bfrac
 bgrcmykw
@@ -177,6 +178,7 @@ conftest
 congruency
 const
 consts
+contextlib
 contextmanager
 cOnTiNuOuS
 ContractNotRespected
@@ -534,6 +536,7 @@ idict
 idv
 idx
 IDX
+IEXEC
 ifname
 ifobj
 ifrow
@@ -630,6 +633,7 @@ lavenderblush
 lawngreen
 lcount
 ldelim
+LDELIM
 ldig
 le
 Leftarrow
@@ -739,6 +743,7 @@ mistyrose
 mkdir
 mkstemp
 mline
+mlines
 mlist
 mlmdfunc
 mmsg
@@ -768,6 +773,7 @@ mycontract
 mydecorator
 MyException
 myfile
+myscript
 MySource
 na
 nActual
@@ -1037,6 +1043,7 @@ rcount
 rcParams
 rdata
 rdelim
+RDELIM
 rdesc
 rdfilter
 rdict
@@ -1357,6 +1364,7 @@ url
 urows
 usr
 utf
+uuid
 uvec
 va
 ValueError

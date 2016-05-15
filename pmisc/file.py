@@ -29,7 +29,7 @@ def make_dir(fname):
     :type  fname: string
     """
     file_path, fname = os.path.split(os.path.abspath(fname))
-    if os.path.exists(file_path) is False:
+    if not os.path.exists(file_path):
         os.makedirs(file_path)
 
 
