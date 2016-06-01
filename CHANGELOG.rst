@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.1.2 [2016-06-01]: Fixed continuous integration failures in term_echo
+  function testing
+
 * 1.1.1 [2016-06-01]: Enhanced TmpFile context manager by allowing positional
   and keyword arguments to be passed to optional write function
 

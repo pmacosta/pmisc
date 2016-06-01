@@ -286,52 +286,50 @@ def test_term_echo():
     cap = Capture()
     with pmisc.TmpFile(te_data) as fname:
         cmd = LDELIM+'PYTHON_CMD'+RDELIM+' '+fname
-        if sys.hexversion <= 0x02070000: # pragma: no cover, no branch
-            ref = (
-                '\n'
-                '.. code-block:: bash\n'
-                '\n'
-                '    $ '+cmd+' -h\n'
-                '    usage: '+os.path.basename(fname)+' [-h] [-d DIRECTORY]\n'
-                '\n'
-                '    Test script\n'
-                '\n'
-                '    optional arguments:\n'
-                '      -h, --help            show this help\n'
-                '                            message and\n'
-                '                            exit\n'
-                '      -d DIRECTORY, --directory DIRECTORY\n'
-                '                            specify source\n'
-                '                            file directory\n'
-                '                            (default\n'
-                '                            ../pmisc)\n'
-                '\n'
-                '\n'
-            )
-        else:
-            ref = (
-                '\n'
-                '.. code-block:: bash\n'
-                '\n'
-                '    $ '+cmd+' -h\n'
-                '    usage: '+os.path.basename(fname)+' [-h] [-d DIRECTORY]\n'
-                '\n'
-                '    Test script\n'
-                '\n'
-                '    optional arguments:\n'
-                '      -h, --help      show this help\n'
-                '                      message and exit\n'
-                '      -d DIRECTORY, --directory DIRECTORY\n'
-                '                      specify source file\n'
-                '                      directory (default\n'
-                '                      ../pmisc)\n'
-                '\n'
-                '\n'
-            )
+        ref1 = (
+            '\n'
+            '.. code-block:: bash\n'
+            '\n'
+            '    $ '+cmd+' -h\n'
+            '    usage: '+os.path.basename(fname)+' [-h] [-d DIRECTORY]\n'
+            '\n'
+            '    Test script\n'
+            '\n'
+            '    optional arguments:\n'
+            '      -h, --help            show this help\n'
+            '                            message and\n'
+            '                            exit\n'
+            '      -d DIRECTORY, --directory DIRECTORY\n'
+            '                            specify source\n'
+            '                            file directory\n'
+            '                            (default\n'
+            '                            ../pmisc)\n'
+            '\n'
+            '\n'
+        )
+        ref2 = (
+            '\n'
+            '.. code-block:: bash\n'
+            '\n'
+            '    $ '+cmd+' -h\n'
+            '    usage: '+os.path.basename(fname)+' [-h] [-d DIRECTORY]\n'
+            '\n'
+            '    Test script\n'
+            '\n'
+            '    optional arguments:\n'
+            '      -h, --help      show this help\n'
+            '                      message and exit\n'
+            '      -d DIRECTORY, --directory DIRECTORY\n'
+            '                      specify source file\n'
+            '                      directory (default\n'
+            '                      ../pmisc)\n'
+            '\n'
+            '\n'
+        )
         obj(
             cmd+' -h',
             cols=40,
             fpointer=cap.prt,
             env={'PYTHON_CMD':sys.executable}
         )
-    assert cap.lines() == ref
+    assert (cap.lines() == ref1) or (cap.lines() == ref2)
