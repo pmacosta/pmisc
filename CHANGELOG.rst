@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.1.1 [2016-06-01]: Enhanced TmpFile context manager by allowing positional
+  and keyword arguments to be passed to optional write function
+
 * 1.1.0 [2016-05-15]: Added incfile, ste and term_echo functions. These produce
   output marked up in reStructuredText of source files (incfile) or terminal
   commands (ste, term_echo). All can be used to include relevant information in

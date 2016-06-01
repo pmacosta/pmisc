@@ -74,6 +74,8 @@ def test_tmp_file():
     """ Test TmpFile context manager behavior """
     def write_data(file_handle):
         _write(file_handle, 'Hello world!')
+    def write_data_with_args(file_handle, *args, **kwargs):
+        _write(file_handle, str(args)+str(kwargs))
     # Test argument validation
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.TmpFile(5) as fname:
@@ -95,5 +97,12 @@ def test_tmp_file():
         with open(fname, 'r') as fobj:
             line = fobj.readlines()
         assert line == ['Hello world!']
+        assert os.path.exists(fname)
+    assert not os.path.exists(fname)
+    # Test behaviour under "normal" circumstances with arguments
+    with pmisc.TmpFile(write_data_with_args, 3, data='foo') as fname:
+        with open(fname, 'r') as fobj:
+            line = fobj.readlines()
+        assert line == ['(3,){\'data\': \'foo\'}']
         assert os.path.exists(fname)
     assert not os.path.exists(fname)

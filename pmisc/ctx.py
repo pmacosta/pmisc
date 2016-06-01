@@ -180,6 +180,12 @@ class TmpFile(object):
                      receives exactly one argument, a file-like object
     :type  fpointer: function object or None
 
+    :param args: Positional arguments for pointer function
+    :type  args: any
+
+    :param kwargs: Keyword arguments for pointer function
+    :type  kwargs: any
+
     :returns:   temporary file name
 
     :raises:    RuntimeError (Argument \`fpointer\` is not valid)
@@ -225,13 +231,15 @@ class TmpFile(object):
         Hello world!
     """
     # pylint: disable=E1129
-    def __init__(self, fpointer=None):
+    def __init__(self, fpointer=None, *args, **kwargs):
         if (fpointer and
            (not isinstance(fpointer, types.FunctionType)) and
            (not isinstance(fpointer, types.LambdaType))):
             raise RuntimeError('Argument `fpointer` is not valid')
         self._fname = None
         self._fpointer = fpointer
+        self._args = args
+        self._kwargs = kwargs
 
     def __enter__(self):
         fdesc, fname = tempfile.mkstemp()
@@ -244,7 +252,7 @@ class TmpFile(object):
         self._fname = fname
         if self._fpointer:
             with open(self._fname, 'w') as fobj:
-                self._fpointer(fobj)
+                self._fpointer(fobj, *self._args, **self._kwargs)
         return self._fname
 
     def __exit__(self, exc_type, exc_value, exc_tb):
