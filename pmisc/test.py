@@ -150,7 +150,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
     :type  extype: type
 
     :param exmsg: Expected exception message (can have regular expressions)
-    :type  exmsg: string
+    :type  exmsg: any
 
     :param args: Positional arguments to pass to object
     :type  args: tuple
@@ -188,7 +188,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         arg_dict = dict(zip(fargs, args))
     arg_dict.update(kwargs)
     # Execute function and catch exception
-    regexp = re.compile(exmsg)
+    regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
     try:
         with pytest.raises(extype) as excinfo:
             fpointer(**arg_dict)
@@ -207,7 +207,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         )
     actmsg = get_exmsg(excinfo)
     if ((exception_type_str(excinfo.type) == exception_type_str(extype)) and
-       ((actmsg == exmsg) or regexp.match(actmsg))):
+       ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))):
         assert True
     else:
         assert (

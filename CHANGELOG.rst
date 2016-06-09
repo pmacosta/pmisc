@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.1.3 [2016-06-09]: assert_exception exception message is now not limited to
+  just strings
+
 * 1.1.2 [2016-06-01]: Fixed continuous integration failures in term_echo
   function testing
 
