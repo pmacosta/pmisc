@@ -76,6 +76,3 @@ def normalize_windows_fname(fname, _force=False):
     if network_share:
         ret = r'\\'+ret.lstrip(r'\\')
     return ret
-
-
-

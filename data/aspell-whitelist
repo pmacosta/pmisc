@@ -13,6 +13,7 @@ AClass
 acos
 acosh
 actmsg
+actstr
 addai
 addex
 addfinalizer
@@ -798,6 +799,7 @@ ndict
 ndiff
 ndv
 ne
+nExpected
 nf
 nfig
 nflip
@@ -805,6 +807,7 @@ nfpoints
 nfreq
 nfslice
 nfunction
+nGot
 nimages
 nindent
 nintegral
@@ -1062,6 +1065,7 @@ rebase
 Rebase
 rect
 recursed
+refstr
 regtext
 reinstall
 r'Elapsed

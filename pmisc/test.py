@@ -9,6 +9,7 @@ import copy
 import os
 import re
 import sys
+import traceback
 if sys.hexversion < 0x03000000: # pragma: no cover
     from itertools import izip_longest
 else:    # pragma: no cover
@@ -197,13 +198,13 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         if actmsg == 'DID NOT RAISE':
             raise AssertionError('Did not raise')
         eobj_extype = repr(eobj)[:repr(eobj).find('(')]
-        assert (
-            '{0} ({1})'.format(
-                eobj_extype,
-                actmsg
+        tb_msg = traceback.format_exc()
+        actstr = '{0} ({1})'.format(eobj_extype, actmsg)
+        refstr = '{0} ({1})'.format(exception_type_str(extype), exmsg)
+        assert actstr == refstr, (
+            '\nExpected: {0}\nGot: {1}\n---------\n{2}'.format(
+                refstr, actstr, tb_msg
             )
-            ==
-            '{0} ({1})'.format(exception_type_str(extype), exmsg)
         )
     actmsg = get_exmsg(excinfo)
     if ((exception_type_str(excinfo.type) == exception_type_str(extype)) and

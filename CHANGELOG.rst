@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.1.4 [2016-08-06]: assert_exception now prints traceback when exception
+  raised is different than expected exception
+
 * 1.1.3 [2016-06-09]: assert_exception exception message is now not limited to
   just strings
 
