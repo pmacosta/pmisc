@@ -5,7 +5,9 @@
 Changelog
 =========
 
-* 1.1.6 [2016-08-24]: Fixed Travis-CI failures
+* 1.1.8 [2016-08-27]: Fixed Appveyor-CI failures
+
+* 1.1.7 [2016-08-24]: Fixed Travis-CI failures
 
 * 1.1.6 [2016-08-24]: Fixed Py.test 3.0.x-related incompatibilities
 
