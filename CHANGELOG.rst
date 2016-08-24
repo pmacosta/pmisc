@@ -5,6 +5,8 @@
 Changelog
 =========
 
+* 1.1.6 [2016-08-24]: Fixed Travis-CI failures
+
 * 1.1.6 [2016-08-24]: Fixed Py.test 3.0.x-related incompatibilities
 
 * 1.1.5 [2016-08-24]: assert_exception now prints better message when actual
