@@ -211,13 +211,13 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
        ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))):
         assert True
     else:
-        assert (
-            '{0} ({1})'.format(
+        assert False, (
+            '\nExpected: {0} ({1})\nGot: {2} ({3})'.format(
+                exception_type_str(extype),
+                exmsg,
                 exception_type_str(excinfo.type),
                 actmsg
             )
-            ==
-            '{0} ({1})'.format(exception_type_str(extype), exmsg)
         )
 
 
