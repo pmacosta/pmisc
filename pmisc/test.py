@@ -1,7 +1,7 @@
 # test.py
 # Copyright (c) 2013-2016 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,E0611,F0401,W0106,W0122,W0212,W0613,W0703
+# pylint: disable=C0111,C0413,E0611,F0401,W0106,W0122,W0212,W0613,W0703
 
 # Standard library imports
 from __future__ import print_function
@@ -195,7 +195,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
             fpointer(**arg_dict)
     except Exception as eobj:
         actmsg = get_exmsg(eobj)
-        if actmsg == 'DID NOT RAISE':
+        if actmsg.startswith('DID NOT RAISE'):
             raise AssertionError('Did not raise')
         eobj_extype = repr(eobj)[:repr(eobj).find('(')]
         tb_msg = traceback.format_exc()
@@ -255,7 +255,7 @@ def assert_prop(cobj, prop_name, value, extype, exmsg):
         with pytest.raises(extype) as excinfo:
             exec(cmd, fobj.f_globals, lvars)
     except Exception as eobj:
-        if get_exmsg(eobj) == 'DID NOT RAISE':
+        if get_exmsg(eobj).startswith('DID NOT RAISE'):
             raise AssertionError('Did not raise')
         raise
     assert get_exmsg(excinfo) == exmsg
@@ -275,7 +275,7 @@ def assert_ro_prop(cobj, prop_name):
         with pytest.raises(AttributeError) as excinfo:
             exec('del cobj.'+prop_name, None, locals())
     except Exception as eobj:
-        if get_exmsg(eobj) == 'DID NOT RAISE':
+        if get_exmsg(eobj).startswith('DID NOT RAISE'):
             raise AssertionError('Property can be deleted')
         raise
     assert get_exmsg(excinfo) == "can't delete attribute"

@@ -120,7 +120,7 @@ def check_header(sdir, mdir, files, no_print=False):
     olist = []
     errors = False
     year = datetime.datetime.now().year
-    for fname in pkg_files(sdir, mdir, files, list(fdict.keys())):
+    for fname in pkg_files(sdir, mdir, files, list(fdict)):
         basename = os.path.basename(fname)
         extension = os.path.splitext(fname)[1]
         comment = fdict[extension]
