@@ -163,8 +163,8 @@ class Timer(object):
 
     elapsed_time = property(_get_elapsed_time, doc='Elapsed time')
     """
-    Returns elapsed time (in seconds) between context manager entry and exit
-    time points
+    Returns elapsed time (in milliseconds) between context manager entry and
+    exit time points
 
     :rtype: float
     """
