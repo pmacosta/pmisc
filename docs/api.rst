@@ -15,6 +15,8 @@ Context managers
 .. autoclass:: pmisc.Timer
 	:members: elapsed_time
 	:show-inheritance:
+.. autoclass:: pmisc.TmpDir
+	:show-inheritance:
 .. autoclass:: pmisc.TmpFile
 	:show-inheritance:
 

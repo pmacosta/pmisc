@@ -7,6 +7,7 @@
 from __future__ import print_function
 import os
 import platform
+import shutil
 import tempfile
 import time
 import types
@@ -168,6 +169,52 @@ class Timer(object):
 
     :rtype: float
     """
+
+
+class TmpDir(object):
+    r"""
+    Creates a temporary (sub)directory
+
+    :param dpath: Directory under which temporary (sub)directory is to
+                 be created. If None the (sub)directory is created
+                 under the default user's/system temporary directory
+    :type  dpath: string or None
+
+    :returns:   temporary directory absolute path
+
+    :raises:    RuntimeError (Argument \`dpath\` is not valid)
+
+    .. warning:: The file name returned uses the forward slash (``/``) as
+       the path separator regardless of the platform. This avoids
+       `problems <https://pythonconquerstheuniverse.wordpress.com/2008/06/04/
+       gotcha-%E2%80%94-backslashes-in-windows-filenames/>`_ with
+       escape sequences or mistaken Unicode character encodings (``\\user``
+       for example). Many functions in the os module of the standard library (
+       `os.path.normpath()
+       <https://docs.python.org/2/library/os.path.html#os.path.normpath>`_ and
+       others) can change this path separator to the operating system path
+       separator if needed
+    """
+    # pylint: disable=E1129,R0903
+    def __init__(self, dpath=None):
+        if ((dpath is not None) and ((not isinstance(dpath, str)) or
+            (isinstance(dpath, str) and not os.path.isdir(dpath)))):
+            raise RuntimeError('Argument `dpath` is not valid')
+        self._dpath = os.path.abspath(dpath) if (dpath is not None) else dpath
+        self._dname = None
+
+    def __enter__(self):
+        dname = tempfile.mkdtemp(dir=self._dpath)
+        if platform.system().lower() == 'windows':  # pragma: no cover
+            dname = dname.replace(os.sep, '/')
+        self._dname = dname
+        return self._dname
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        with ignored(OSError):
+            shutil.rmtree(self._dname)
+        if exc_type is not None:
+            return False
 
 
 class TmpFile(object):

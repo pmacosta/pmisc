@@ -9,6 +9,7 @@ import platform
 import re
 import sys
 import time
+import uuid
 # PyPI imports
 import pytest
 # Intra-package imports
@@ -68,6 +69,37 @@ def test_timer(capsys):
         time.sleep(0.5)
     out, _ = capsys.readouterr()
     assert tregexp.match(out.rstrip())
+
+def test_tmp_dir():
+    """ Test TmpDir context manager behavior """
+    # Test argument validation
+    with pytest.raises(RuntimeError) as excinfo:
+        with pmisc.TmpDir(5) as dname:
+            pass
+    assert GET_EXMSG(excinfo) == 'Argument `dpath` is not valid'
+    dname = os.path.join(os.path.dirname(os.path.abspath(__file__)), '_dir_')
+    with pytest.raises(RuntimeError) as excinfo:
+        with pmisc.TmpDir(dname) as dname:
+            pass
+    assert GET_EXMSG(excinfo) == 'Argument `dpath` is not valid'
+    # Test behavior when no function pointer is given
+    with pmisc.TmpDir() as dname:
+        assert os.path.isdir(dname)
+    assert not os.path.isdir(dname)
+    # Test that exceptions within the with statement are re-raised
+    with pytest.raises(OSError) as excinfo:
+        with pmisc.TmpDir() as dname:
+            raise OSError('No data')
+    assert GET_EXMSG(excinfo) == 'No data'
+    assert not os.path.isdir(dname)
+    # Test behaviour under "normal" circumstances
+    with pmisc.TmpDir() as dname:
+        fname = os.path.join(dname, 'file_{0}'.format(uuid.uuid4()))
+        with open(fname, 'w') as fhandle:
+            fhandle.write('pass')
+        assert os.path.isdir(dname)
+        assert os.path.exists(fname)
+    assert not os.path.exists(dname)
 
 
 def test_tmp_file():

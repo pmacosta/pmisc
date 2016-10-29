@@ -304,6 +304,7 @@ doctests
 doctrees
 Docutils
 dodgerblue
+dpath
 dpi
 dpk
 drawstyle
@@ -422,6 +423,7 @@ fexlist
 ffull
 fget
 fgrid
+fhandle
 FigureCanvasAgg
 filecmp
 filename
@@ -1307,6 +1309,7 @@ tmin
 tmod
 tmp
 tmpdir
+TmpDir
 tmpfile
 TmpFile
 tnodes

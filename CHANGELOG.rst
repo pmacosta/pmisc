@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.2.0 [2016-10-28]: Added TmpDir context manager to work with temporary
+  directories
+
 * 1.1.9 [2016-09-26]: Minor documentation update
 
 * 1.1.8 [2016-08-27]: Fixed Appveyor-CI failures
