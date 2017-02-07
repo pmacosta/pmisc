@@ -1,9 +1,11 @@
 .. CHANGELOG.rst
-.. Copyright (c) 2013-2016 Pablo Acosta-Serafini
+.. Copyright (c) 2013-2017 Pablo Acosta-Serafini
 .. See LICENSE for details
 
 Changelog
 =========
+
+* 1.2.1 [2017-02-05]: Python 3.6 support
 
 * 1.2.0 [2016-10-28]: Added TmpDir context manager to work with temporary
   directories

@@ -1,5 +1,5 @@
 .. README.rst
-.. Copyright (c) 2013-2016 Pablo Acosta-Serafini
+.. Copyright (c) 2013-2017 Pablo Acosta-Serafini
 .. See LICENSE for details
 
 
@@ -22,22 +22,22 @@
 |
 
 .. image::
-   https://travis-ci.org/pmacosta/pmisc.svg?branch=master
+    https://travis-ci.org/pmacosta/pmisc.svg?branch=master
 
 .. image::
-   https://ci.appveyor.com/api/projects/status/
-   7dpk342kxs8kcg5t/branch/master?svg=true
-   :alt: Windows continuous integration
+    https://ci.appveyor.com/api/projects/status/
+    7dpk342kxs8kcg5t/branch/master?svg=true
+    :alt: Windows continuous integration
 
 .. image::
-   https://codecov.io/github/pmacosta/pmisc/coverage.svg?branch=master
-   :target: https://codecov.io/github/pmacosta/pmisc?branch=master
-   :alt: Continuous integration coverage
+    https://codecov.io/github/pmacosta/pmisc/coverage.svg?branch=master
+    :target: https://codecov.io/github/pmacosta/pmisc?branch=master
+    :alt: Continuous integration coverage
 
 .. image::
-   https://readthedocs.org/projects/pip/badge/?version=stable
-   :target: http://pip.readthedocs.org/en/stable/?badge=stable
-   :alt: Documentation status
+    https://readthedocs.org/projects/pip/badge/?version=stable
+    :target: http://pip.readthedocs.org/en/stable/?badge=stable
+    :alt: Documentation status
 
 |
 
@@ -83,8 +83,8 @@ functions and functions to aid in the unit testing of modules
 Interpreter
 ===========
 
-The package has been developed and tested with Python 2.6, 2.7, 3.3, 3.4
-and 3.5 under Linux (Debian, Ubuntu), Apple OS X and Microsoft Windows
+The package has been developed and tested with Python 2.6, 2.7, 3.3, 3.4, 3.5
+and 3.6 under Linux (Debian, Ubuntu), macOS and Microsoft Windows
 
 Installing
 ==========
@@ -155,7 +155,10 @@ Contributing
 
     * `Decorator`_ (3.4.2 or newer)
 
-    * `Docutils`_ (0.12 or newer)
+    * `Docutils`_ (Python 2.6: 0.12 or newer and older than 0.13, Python
+      2.7: 0.12 or newer, Python 3.3: 0.12 or newer and older than 0.13,
+      Python 3.4: 0.12 or newer, Python 3.5: 0.12 or newer, Python 3.6:
+      0.12 or newer)
 
     * `Funcsigs`_ (Python 2.x only, 0.4 or newer)
 
@@ -174,7 +177,10 @@ Contributing
 
     * `ReadTheDocs Sphinx theme`_ (0.1.9 or newer)
 
-    * `Sphinx`_ (1.2.3 or newer)
+    * `Sphinx`_ (Python 2.6: 1.2.3 or newer and 1.4.9 or older, Python
+      2.7: 1.5 or newer, Python 3.3: 1.2.3 or newer and 1.4.9 or older,
+      Python 3.4: 1.5 or newer, Python 3.5: 1.5 or newer, Python 3.6:
+      1.5 or newer)
 
     * `Tox`_ (1.9.0 or newer)
 

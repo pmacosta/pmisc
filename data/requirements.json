@@ -1,4 +1,19 @@
 {
+	"docutils":{
+		"name":"Docutils",
+		"optional":false,
+		"url":"http://docutils.sourceforge.net/docs",
+		"cat":["tests"],
+		"ver":{
+			"py26":">=0.12,<0.13",
+			"py27":">=0.12",
+			"py33":">=0.12,<0.13",
+			"py34":">=0.12",
+			"py35":">=0.12",
+			"py36":">=0.12"
+		},
+		"pos":0
+	},
 	"astroid":{
 		"name":"Astroid",
 		"optional":false,
@@ -9,9 +24,10 @@
 			"py27":">=1.3.8",
 			"py33":">=1.3.8",
 			"py34":">=1.3.8",
-			"py35":">=1.3.8"
+			"py35":">=1.3.8",
+			"py36":">=1.3.8"
 		},
-		"pos":0
+		"pos":1
 	},
 	"cogapp":{
 		"name":"Cog",
@@ -19,7 +35,7 @@
 		"url":"http://nedbatchelder.com/code/cog",
 		"cat":["tests"],
 		"ver":">=2.4",
-		"pos":1
+		"pos":2
 	},
 	"coverage":{
 		"name":"Coverage",
@@ -27,7 +43,7 @@
 		"url":"http://coverage.readthedocs.org/en/coverage-4.0a5",
 		"cat":["tests"],
 		"ver":">=3.7.1",
-		"pos":2
+		"pos":3
 	},
 	"decorator":{
 		"name":"Decorator",
@@ -35,14 +51,6 @@
 		"url":"https://pythonhosted.org/decorator",
 		"cat":["main", "rtd"],
 		"ver":">=3.4.2",
-		"pos":3
-	},
-	"docutils":{
-		"name":"Docutils",
-		"optional":false,
-		"url":"http://docutils.sourceforge.net/docs",
-		"cat":["tests"],
-		"ver":">=0.12",
 		"pos":4
 	},
 	"funcsigs":{
@@ -77,7 +85,8 @@
 			"py27":">=1.3.1",
 			"py33":">=1.3.1",
 			"py34":">=1.3.1",
-			"py35":">=1.3.1"
+			"py35":">=1.3.1",
+			"py36":">=1.3.1"
 		},
 		"pos":7
 	},
@@ -110,8 +119,15 @@
 		"optional":false,
 		"url":"http://sphinx-doc.org",
 		"cat":["docs", "rtd"],
-		"ver":">=1.2.3",
-		"pos":11
+		"ver":{
+			"py26":">=1.2.3,<=1.4.9",
+			"py27":">=1.5",
+			"py33":">=1.2.3,<=1.4.9",
+			"py34":">=1.5",
+			"py35":">=1.5",
+			"py36":">=1.5"
+		},
+		"pos":10
 	},
 	"sphinxcontrib-inlinesyntaxhighlight":{
 		"name":"Inline Syntax Highlight Sphinx Extension",

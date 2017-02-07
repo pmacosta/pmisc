@@ -2,5 +2,5 @@ decorator>=3.4.2
 funcsigs>=0.4
 mock>=1.0.1
 pytest>=2.7.0
-sphinx>=1.2.3
+sphinx>=1.5
 sphinxcontrib-inlinesyntaxhighlight>=0.2

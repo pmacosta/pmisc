@@ -1,5 +1,5 @@
 # functions.py
-# Copyright (c) 2013-2016 Pablo Acosta-Serafini
+# Copyright (c) 2013-2017 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,E0602,E1111,R0904,W0201,W0621
 
@@ -15,7 +15,7 @@ import sys
 ###
 # Global variables
 ###
-SUPPORTED_VERS = ['2.6', '2.7', '3.3', '3.4', '3.5']
+SUPPORTED_VERS = ['2.6', '2.7', '3.3', '3.4', '3.5', '3.6']
 
 
 ###
@@ -106,7 +106,7 @@ def gen_manifest(make_wheel=False):
     fdata = json_load(os.path.join('data', 'data_files.json'))
     ret = [
         '# MANIFEST.in',
-        '# Copyright (c) 2013-2016 Pablo Acosta-Serafini',
+        '# Copyright (c) 2013-2017 Pablo Acosta-Serafini',
         '# See LICENSE for details'
     ]
     if not make_wheel:
@@ -159,7 +159,7 @@ def load_requirements(pkg_dir, pyver, cat='source'):
     elif cat.lower() == 'testing':
         reqs_files = [
             'tests_py{0}.pip'.format(pyver),
-            'docs.pip',
+            'docs_py{0}.pip'.format(pyver),
         ]
     else:
         raise RuntimeError('Unknown requirements category: {0}'.format(cat))

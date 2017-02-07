@@ -1,5 +1,5 @@
 # version.py
-# Copyright (c) 2013-2016 Pablo Acosta-Serafini
+# Copyright (c) 2013-2017 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -7,7 +7,7 @@
 ###
 # Global variables
 ###
-VERSION_INFO = (1, 2, 0, 'final', 0)
+VERSION_INFO = (1, 2, 1, 'candidate', 1)
 
 
 ###

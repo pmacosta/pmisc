@@ -1,0 +1,2 @@
+decorator>=3.4.2
+pytest>=2.7.0
