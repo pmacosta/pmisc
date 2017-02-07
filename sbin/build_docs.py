@@ -2,11 +2,15 @@
 # build_docs.py
 # Copyright (c) 2013-2017 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,F0401,R0914,W0141
+# pylint: disable=C0111,C0411,C0413,F0401,R0912,R0914,R0915,W0141
 
 # Standard library imports
 from __future__ import print_function
 import argparse
+import datetime
+import difflib
+import glob
+import multiprocessing
 import os
 import re
 import shutil
@@ -15,11 +19,23 @@ import sys
 from cogapp import Cog
 # Intra-package imports
 import sbin.functions
+try:
+    from sbin.refresh_moddb import refresh_moddb
+except ImportError:
+    def refresh_moddb():
+        pass
+try:
+    from sbin.build_moddb import build_moddb
+except ImportError:
+    def build_moddb():
+        pass
+
 
 ###
 # Global variables
 ###
 VALID_MODULES = ['pmisc']
+PKG_SUBMODULES = []
 
 
 ###
@@ -27,7 +43,6 @@ VALID_MODULES = ['pmisc']
 ###
 def build_pkg_docs(args):
     """ Build documentation """
-    # pylint: disable=R0912,R0915
     debug = False
     retcode = 0
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,9 +50,16 @@ def build_pkg_docs(args):
     cog_exe = which('cog.py')
     if not cog_exe:
         raise RuntimeError('cog binary could not be found')
+    os.environ['NOPTION'] = (
+        '-n {0}'.format(args.num_cpus) if args.num_cpus > 1 else ''
+    )
+    rebuild = args.rebuild
+    test = args.test
     tracer_dir = os.path.join(pkg_dir, 'docs', 'support')
     os.environ['TRACER_DIR'] = tracer_dir
     # Processing
+    del_pkl_files(test, tracer_dir)
+    print('Rebuilding documentation')
     if debug:
         print('Python: {0}'.format(sys.executable))
         print('PATH: {0}'.format(os.environ['PATH']))
@@ -49,10 +71,28 @@ def build_pkg_docs(args):
                 sbin.functions.subprocess.__file__
             )
         )
-    print('Inserting files into docstrings')
-    insert_files_in_docstrings(src_dir, cog_exe)
-    insert_files_in_rsts(pkg_dir, cog_exe)
+    if rebuild or test:
+        refresh_moddb()
+        print_cyan(
+            'Rebuilding exceptions documentation{0}'.format(
+                ' (test mode)' if test else ''
+            ),
+        )
+        start_time = datetime.datetime.today()
+        tmp_retcode = rebuild_module_doc(
+            test, src_dir, tracer_dir, cog_exe, debug
+        )
+        retcode = tmp_retcode if not retcode else retcode
+        stop_time = datetime.datetime.today()
+        print(
+            'Elapsed time: {0}'.format(
+                elapsed_time_string(start_time, stop_time)
+            )
+        )
+        build_moddb()
     generate_top_level_readme(pkg_dir)
+    print('Inserting files into docstrings')
+    insert_files_in_rsts(pkg_dir, cog_exe)
     print('Generating HTML output')
     shutil.rmtree(os.path.join(pkg_dir, 'docs', '_build'), ignore_errors=True)
     cwd = os.getcwd()
@@ -94,6 +134,25 @@ def del_file(fname):
         pass
 
 
+def del_pkl_files(test, tracer_dir):
+    """ Delete all old pickle files """
+    if test:
+        pkl_files = (glob.glob(os.path.join(tracer_dir, '*.pkl')))
+        for pkl_file in pkl_files:
+            os.remove(pkl_file)
+
+
+def diff(file1, file2):
+    """ Diff two files """
+    with open(file1, 'r') as fobj1:
+        flines1 = [item.rstrip() for item in fobj1.readlines()]
+    with open(file2, 'r') as fobj2:
+        flines2 = [item.rstrip() for item in fobj2.readlines()]
+    return list(
+        difflib.unified_diff(flines1, flines2, fromfile=file1, tofile=file2)
+    )
+
+
 def elapsed_time_string(start_time, stop_time):
     """
     Returns a formatted string with the elapsed time between two time points
@@ -133,46 +192,11 @@ def elapsed_time_string(start_time, stop_time):
         return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
 
 
-def insert_files_in_docstrings(src_dir, cog_exe):
-    """ Cog-insert source files in docstrings """
-    modules = ['ctx']
-    for module in modules:
-        module_dir = src_dir
-        submodules = [module]
-        for submodule in submodules:
-            smf = os.path.join(module_dir, submodule+'.py')
-            print('   Processing module {0}'.format(smf))
-            retcode = Cog().main(
-                [
-                    cog_exe,
-                    "--markers==[=cog =]= =[=end=]=",
-                    '-e', '-x', '-o', smf+'.tmp', smf
-                ],
-            )
-            if retcode:
-                raise RuntimeError(
-			        'Error deleting insertion of source files in '
-			        'docstrings in module {0}'.format(submodule)
-                )
-            retcode = Cog().main(
-                [
-                    cog_exe,
-                    "--markers==[=cog =]= =[=end=]=",
-                    '-e', '-o', smf+'.tmp', smf
-                ]
-            )
-            if retcode:
-                raise RuntimeError(
-			        'Error inserting source files in '
-			        'docstrings in module {0}'.format(submodule)
-                )
-            move_file(smf+'.tmp', smf)
-
-
 def insert_files_in_rsts(pkg_dir, cog_exe):
     """ Cog-insert source files in Sphinx files """
     fnames = [
         os.path.join(pkg_dir, 'docs', 'README.rst'),
+        os.path.join(pkg_dir, 'README.rst'),
     ]
     print('Inserting source files in documentation files')
     for fname in fnames:
@@ -213,7 +237,7 @@ def move_file(src, dest):
 
 def pcolor(text, color, indent=0):
     r"""
-    Returns a string that once printed is colorized (copied from pmisc)
+    Returns a string that once printed is colorized (copied from pmisc module)
 
     :param text: Text to colorize
     :type  text: string
@@ -262,6 +286,16 @@ def pcolor(text, color, indent=0):
     return '{indent}{text}'.format(indent=' '*indent, text=text)
 
 
+def print_diff(tlist, indent=3):
+    """ Pretty prints file differences """
+    ret = []
+    ret.append((indent*' ')+tlist[0][1:-2])
+    ret.append((indent*' ')+tlist[1][1:-2])
+    for line in tlist[2:]:
+        ret.append((indent*' ')+str(line.rstrip()))
+    return '\n'.join(ret)
+
+
 def print_cyan(text):
     """ Print text to STDOUT in cyan color """
     print(pcolor(text, 'cyan'))
@@ -277,6 +311,45 @@ def print_red(text):
     print(pcolor(text, 'red'))
 
 
+def rebuild_module_doc(test, src_dir, tracer_dir, cog_exe, debug):
+    # pylint: disable=R0913
+    retcode = 0
+    pkl_dir = tracer_dir
+    submodules = PKG_SUBMODULES
+    for submodule in submodules:
+        smf = os.path.join(src_dir, submodule+'.py')
+        pkl_file = os.path.join(pkl_dir, submodule+'.pkl')
+        print_cyan('Processing module {0}'.format(submodule))
+        orig_file = smf+'.orig'
+        if test:
+            shutil.copy(smf, orig_file)
+        stdout = sbin.functions.shcmd(
+            [sys.executable, cog_exe, '-e', '-o', smf+'.tmp', smf],
+            (
+                'Error generating exceptions documentation '
+                'in module {0}'.format(smf)
+            ),
+            async_stdout=debug
+        )
+        move_file(smf+'.tmp', smf)
+        if test:
+            diff_list = diff(smf, orig_file)
+            if not diff_list:
+                print_green('   File {0} identical from original'.format(smf))
+                del_file(pkl_file)
+            else:
+                print_red('   File {0} differs from original'.format(smf))
+                print('   Differences:')
+                print(print_diff(diff_list))
+                copy_file(smf, smf+'.error')
+                retcode = 1
+            move_file(orig_file, smf)
+        else:
+            print(stdout)
+            del_file(pkl_file)
+    return retcode
+
+
 def generate_top_level_readme(pkg_dir):
     """
     Remove Sphinx-specific cross-references from top-level README.rst file,
@@ -288,29 +361,72 @@ def generate_top_level_readme(pkg_dir):
     print('Generating top-level README.rst file')
     with open(fname, 'r') as fobj:
         lines = [item.rstrip() for item in fobj.readlines()]
-    ref_regexp = re.compile('.*:py:mod:`(.+) <pmisc.(.+)>`.*')
+    ref1_regexp = re.compile('.*:py:mod:`(.+) <pcsv.(.+)>`.*')
+    ref2_regexp = re.compile('.*:py:mod:`pcsv.(.+)`.*')
+    ref3_regexp = re.compile(r'.*:ref:`(.+?)(\s+<.+>)*`.*')
     rst_cmd_regexp = re.compile('^\\s*.. \\S+::.*')
     indent_regexp = re.compile('^(\\s*)\\S+')
     ret = []
     autofunction = False
+    literalinclude = False
     for line in lines:
-        match = ref_regexp.match(line)
+        match1 = ref1_regexp.match(line)
+        match2 = ref2_regexp.match(line)
+        match3 = ref3_regexp.match(line)
         if autofunction:
             match = indent_regexp.match(line)
             if (not match) or (match and len(match.group(1)) == 0):
                 autofunction = False
                 ret.append(line)
-        elif match:
+        elif literalinclude:
+            if line.lstrip().startswith(':lines:'):
+                literalinclude = False
+                lrange = line.lstrip().replace(':lines:', '').strip()
+                tstr = (
+                    '.. docs.support.incfile.incfile(\n'
+                    '..     "{0}",\n'
+                    '..     cog.out,\n'
+                    '..     "{1}",\n'
+                    '..     None\n'
+                    '.. )'
+                )
+                ret.append('.. [[[cog')
+                ret.append('.. import docs.support.incfile')
+                ret.append(tstr.format(os.path.basename(fname), lrange))
+                ret.append('.. ]]]')
+                ret.append('.. [[[end]]]')
+        elif match1:
             # Remove cross-references
-            label = match.group(1)
-            mname = match.group(2)
+            label = match1.group(1)
+            mname = match1.group(2)
             line = line.replace(
-                ':py:mod:`{label} <pmisc.{mname}>`'.format(
+                ':py:mod:`{label} <pcsv.{mname}>`'.format(
                     label=label, mname=mname
                 ),
                 label
             )
             ret.append(line)
+        elif match2:
+            # Remove cross-references
+            mname = match2.group(1)
+            line = line.replace(
+                ':py:mod:`pcsv.{mname}`'.format(mname=mname), mname
+            )
+            ret.append(line)
+        elif match3:
+            # Remove cross-references
+            mname = match3.group(1)
+            target = match3.group(2)
+            line = line.replace(
+                ':ref:`{mname}{target}`'.format(
+                    mname=mname,
+                    target='' if target is None else target
+                ), mname
+            )
+            ret.append(line)
+        elif line.lstrip().startswith('.. literalinclude::'):
+            fname = line.lstrip().replace('.. literalinclude::', '').strip()
+            literalinclude = True
         elif line.lstrip().startswith('.. include::'):
             # Include files
             base_fname = line.split()[-1].strip()
@@ -337,7 +453,7 @@ def generate_top_level_readme(pkg_dir):
         fobj.write('\n'.join(ret))
     # Check that generated file produces HTML version without errors
     sbin.functions.shcmd(
-        ['rst2html.py', '--exit-status=3', fname],
+        ['rst2html.py', '--exit-status=3', '-v', fname],
         'Error validating top-level README.rst HTML conversion',
     )
 
@@ -349,6 +465,28 @@ def valid_dir(value):
             'directory {0} does not exist'.format(value)
         )
     return os.path.abspath(value)
+
+
+def valid_num_cpus(value):
+    """ Argparse checker for num_cpus argument """
+    # pylint: disable=E1101
+    try:
+        value = int(value)
+    except:
+        raise argparse.ArgumentTypeError(
+            'invalid positive integer value: {0}'.format(value)
+        )
+    if value < 1:
+        raise argparse.ArgumentTypeError(
+            'invalid positive integer value: {0}'.format(value)
+        )
+    max_cpus = multiprocessing.cpu_count()
+    if value > max_cpus:
+        raise argparse.ArgumentTypeError(
+            'requested CPUs ({0}) greater than '
+            'available CPUs ({1})'.format(value, max_cpus)
+        )
+    return value
 
 
 def which(name):
@@ -368,21 +506,49 @@ def which(name):
 
 if __name__ == "__main__":
     # pylint: disable=E0602
-    # Remove -n from arguments
-    if '-n' in sys.argv:
-        IDX = sys.argv.index('-n')
-        sys.argv = sys.argv[:IDX]+sys.argv[IDX+2:]
     PKG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PARSER = argparse.ArgumentParser(
-        description='Build pmisc package documentation'
+        description='Build pcsv package documentation'
     )
     PARSER.add_argument(
         '-d', '--directory',
-        help='specify source file directory (default ../pmisc)',
+        help='specify source file directory (default ../pcsv)',
         type=valid_dir,
         nargs=1,
-        default=[os.path.join(PKG_DIR, 'pmisc')]
+        default=[os.path.join(PKG_DIR, 'pcsv')]
+    )
+    PARSER.add_argument(
+        '-r', '--rebuild',
+        help=(
+            'rebuild exceptions documentation. If no module name '
+            'is given all modules with auto-generated exceptions '
+            'documentation are rebuilt'
+        ),
+        action="store_true"
+    )
+    PARSER.add_argument(
+        '-n', '--num-cpus',
+        help='number of CPUs to use (default: 1)',
+        type=valid_num_cpus,
+        default=1
+    )
+    PARSER.add_argument(
+        '-t', '--test',
+        help=(
+            'diff original and rebuilt file(s) (exit code 0 '
+            'indicates file(s) are identical, exit code 1 '
+            'indicates file(s) are different)'
+
+        ),
+        action="store_true"
     )
     ARGS = PARSER.parse_args()
     ARGS.directory = ARGS.directory[0]
+    if ARGS.rebuild and (not ARGS.test):
+        if sys.hexversion < 0x03000000: # pragma: no cover
+            VAR = raw_input('Are you sure [Y/N]? ')
+        else:
+            VAR = input('Are you sure [Y/N]? ')
+        if VAR.lower() != 'y':
+            sys.exit(0)
     sys.exit(build_pkg_docs(ARGS))

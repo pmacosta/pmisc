@@ -292,15 +292,27 @@ Contributing
 	.. code-block:: bash
 
 	    $ ${PKG_BIN_DIR}/build_docs.py -h
-	    usage: build_docs.py [-h] [-d DIRECTORY]
+	    usage: build_docs.py [-h] [-d DIRECTORY] [-r]
+	                         [-n NUM_CPUS] [-t]
 
-	    Build pmisc package documentation
+	    Build pcsv package documentation
 
 	    optional arguments:
 	      -h, --help            show this help message and exit
 	      -d DIRECTORY, --directory DIRECTORY
 	                            specify source file directory
-	                            (default ../pmisc)
+	                            (default ../pcsv)
+	      -r, --rebuild         rebuild exceptions documentation.
+	                            If no module name is given all
+	                            modules with auto-generated
+	                            exceptions documentation are
+	                            rebuilt
+	      -n NUM_CPUS, --num-cpus NUM_CPUS
+	                            number of CPUs to use (default: 1)
+	      -t, --test            diff original and rebuilt file(s)
+	                            (exit code 0 indicates file(s) are
+	                            identical, exit code 1 indicates
+	                            file(s) are different)
 
 
 	.. [[[end]]]
