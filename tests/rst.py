@@ -1,7 +1,7 @@
 # rst.py
 # Copyright (c) 2013-2017 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,W0108,W0212
+# pylint: disable=C0111,C0411,W0108,W0212
 
 # Standard library imports
 from __future__ import print_function

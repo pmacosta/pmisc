@@ -1,7 +1,7 @@
 # ctx.py
 # Copyright (c) 2013-2017 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,R0903,W0105
+# pylint: disable=C0111,E1129,R0903,W0105
 
 # Standard library imports
 from __future__ import print_function
@@ -195,7 +195,6 @@ class TmpDir(object):
        others) can change this path separator to the operating system path
        separator if needed
     """
-    # pylint: disable=E1129,R0903
     def __init__(self, dpath=None):
         if ((dpath is not None) and ((not isinstance(dpath, str)) or
             (isinstance(dpath, str) and not os.path.isdir(dpath)))):
@@ -277,7 +276,6 @@ class TmpFile(object):
         >>> show_tmpfile()
         Hello world!
     """
-    # pylint: disable=E1129
     def __init__(self, fpointer=None, *args, **kwargs):
         if (fpointer and
            (not isinstance(fpointer, types.FunctionType)) and
