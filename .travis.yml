@@ -113,9 +113,9 @@ install:
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
         ${REPO_DIR}/sbin/gen_req_files.py freeze;
     fi
-  - travis_wait ${PIPCMD} install --upgrade -r${MAIN_REQUIREMENTS_FILE}
-  - travis_wait ${PIPCMD} install --upgrade -r${TESTS_REQUIREMENTS_FILE}
-  - travis_wait ${PIPCMD} install --upgrade -r${DOCS_REQUIREMENTS_FILE}
+  - travis_wait ${PIPCMD} install -r${MAIN_REQUIREMENTS_FILE}
+  - travis_wait ${PIPCMD} install -r${TESTS_REQUIREMENTS_FILE}
+  - travis_wait ${PIPCMD} install -r${DOCS_REQUIREMENTS_FILE}
   - ${PIPCMD} install codecov
   - ${PIPCMD} freeze
 

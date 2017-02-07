@@ -36,9 +36,9 @@ set OLD_PTYHON_PATH=%PYTHONPATH%
 set PYTHONPATH=%REPO_DIR%;%REPO_DIR%\sbin;%PYTHONPATH%
 cd %REPO_DIR%
 python %REPO_DIR%\sbin\gen_req_files.py freeze
-pip install --upgrade -r%MAIN_REQUIREMENTS_FILE%
-pip install --upgrade -r%TESTS_REQUIREMENTS_FILE%
-pip install --upgrade -r%DOCS_REQUIREMENTS_FILE%
+pip install -r%MAIN_REQUIREMENTS_FILE%
+pip install -r%TESTS_REQUIREMENTS_FILE%
+pip install -r%DOCS_REQUIREMENTS_FILE%
 pip freeze
 REM ###
 REM # Create directories for reports and artifacts
