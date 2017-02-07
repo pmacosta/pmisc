@@ -5,7 +5,7 @@
 Changelog
 =========
 
-* 1.2.1 [2017-02-05]: Python 3.6 support
+* 1.2.1 [2017-02-07]: Python 3.6 support
 
 * 1.2.0 [2016-10-28]: Added TmpDir context manager to work with temporary
   directories
