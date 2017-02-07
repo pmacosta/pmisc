@@ -162,7 +162,9 @@ script:
   - pylint --rcfile=${EXTRA_DIR}/.pylintrc -f colorized -r no ${EXTRA_DIR}/tests
   - pylint --rcfile=${EXTRA_DIR}/.pylintrc -f colorized -r no ${EXTRA_DIR}/docs/support
   - ${SBIN_DIR}/cprint.sh line cyan "Testing reStructuredText files"
-  - ${PYTESTCMD} --doctest-glob="*.rst" ${EXTRA_DIR}/docs
+  - if [ ${PYTESTCMD} --collect-only --doctest-glob="*.rst" ${EXTRA_DIR}/docs ]; then
+        ${PYTESTCMD} --doctest-glob="*.rst" ${EXTRA_DIR}/docs;
+    fi
   - ${SBIN_DIR}/cprint.sh line cyan "Testing docstrings"
   - ${PYTESTCMD} --doctest-modules ${SOURCE_DIR}
   # Coverage tests runs all the unit tests, no need to run the non-coverage

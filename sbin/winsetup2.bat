@@ -87,7 +87,9 @@ pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SOURCE_DIR%
 pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SBIN_DIR%
 pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\tests
 pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\docs\support
-py.test --doctest-glob="*.rst" %EXTRA_DIR%\docs
+set DODOCTEST=1
+py.test --collect-only --doctest-glob="*.rst" %EXTRA_DIR%\docs > doctest.log 2>&1 || set DODOCTEST=0
+if %DODOCTEST%==1 py.test --doctest-glob="*.rst" %EXTRA_DIR%\docs
 py.test --doctest-modules %SOURCE_DIR%
 REM # Coverage tests runs all the unit tests, no need to run the non-coverage
 REM # tests since the report is not being used
