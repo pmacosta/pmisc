@@ -7,7 +7,7 @@
 ###
 # Global variables
 ###
-VERSION_INFO = (1, 2, 1, 'final', 0)
+VERSION_INFO = (1, 2, 2, 'candidate', 1)
 
 
 ###

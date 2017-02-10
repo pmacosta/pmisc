@@ -77,7 +77,7 @@ wheel: meta
 	@cd $(PKG_DIR)/sbin; ./gen_pkg_manifest.py wheel
 	@cp -f $(PKG_DIR)/setup.py $(PKG_DIR)/setup.py.tmp
 	@sed -r -i 's/data_files=DATA_FILES,/data_files=None,/g' $(PKG_DIR)/setup.py
-	@cd $(PKG_DIR); python setup.py bdist_wheel
+	@$(PKG_DIR)/sbin/make_wheels.sh
 	@mv -f $(PKG_DIR)/setup.py.tmp $(PKG_DIR)/setup.py
 	@mv $(PKG_DIR)/MANIFEST.in.tmp $(PKG_DIR)/MANIFEST.in
 	@$(PKG_DIR)/sbin/list-authors.sh

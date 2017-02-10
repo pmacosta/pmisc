@@ -194,3 +194,11 @@ after_success:
         sed -r -i -e "s|${DOT_SOURCE_DIR}|${DOT_REPO_DIR}.${PKG_NAME}|g" coverage.xml;
         codecov --token=${CODECOV_TOKEN} --file=${REPO_DIR}/coverage.xml;
     fi
+
+after_failure:
+  - ${SBIN_DIR}/zip-artifacts.sh ${INTERP}
+  - if [ -f "${AFILE}" ]; then
+        ${REPO_DIR}/sbin/dropbox_uploader.sh upload ${AFILE} .;
+    else
+        echo "Artifacts could not be exported";
+    fi

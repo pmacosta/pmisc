@@ -295,13 +295,13 @@ Contributing
 	    usage: build_docs.py [-h] [-d DIRECTORY] [-r]
 	                         [-n NUM_CPUS] [-t]
 
-	    Build pcsv package documentation
+	    Build pmisc package documentation
 
 	    optional arguments:
 	      -h, --help            show this help message and exit
 	      -d DIRECTORY, --directory DIRECTORY
 	                            specify source file directory
-	                            (default ../pcsv)
+	                            (default ../pmisc)
 	      -r, --rebuild         rebuild exceptions documentation.
 	                            If no module name is given all
 	                            modules with auto-generated

@@ -99,3 +99,7 @@ py.test --cov-config %COV_FILE% --cov %SOURCE_DIR% --cov-report term
 REM # Re-building exceptions auto-documentation takes a long time in Appveyor.
 REM # They have (and should be) spot-checked every now and then
 REM # - python %SBIN_DIR%\build_docs.py -r -t -d %SOURCE_DIR%
+
+REM on_failure:
+7z a %EXTRA_DIR%\artifacts.zip %EXTRA_DIR%\artifacts\*.*
+appveyor PushArtifact %EXTRA_DIR%\artifacts.zip

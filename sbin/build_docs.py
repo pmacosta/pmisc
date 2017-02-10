@@ -34,7 +34,8 @@ except ImportError:
 ###
 # Global variables
 ###
-VALID_MODULES = ['pmisc']
+PKG_NAME = 'pmisc'
+VALID_MODULES = [PKG_NAME]
 PKG_SUBMODULES = []
 
 
@@ -361,19 +362,28 @@ def generate_top_level_readme(pkg_dir):
     print('Generating top-level README.rst file')
     with open(fname, 'r') as fobj:
         lines = [item.rstrip() for item in fobj.readlines()]
-    ref1_regexp = re.compile('.*:py:mod:`(.+) <pcsv.(.+)>`.*')
-    ref2_regexp = re.compile('.*:py:mod:`pcsv.(.+)`.*')
+    ref1_regexp = re.compile('.*:py:mod:`(.+) <'+PKG_NAME+'.(.+)>`.*')
+    ref2_regexp = re.compile('.*:py:mod:`'+PKG_NAME+'.(.+)`.*')
     ref3_regexp = re.compile(r'.*:ref:`(.+?)(\s+<.+>)*`.*')
+    ref4_regexp = re.compile(r'.*:py:class:`(.+?)`.*')
+    ref5_regexp = re.compile(r'.*:py:data:`(.+?)`.*')
     rst_cmd_regexp = re.compile('^\\s*.. \\S+::.*')
     indent_regexp = re.compile('^(\\s*)\\S+')
     ret = []
     autofunction = False
     literalinclude = False
+    remove_block = False
     for line in lines:
         match1 = ref1_regexp.match(line)
         match2 = ref2_regexp.match(line)
         match3 = ref3_regexp.match(line)
-        if autofunction:
+        match4 = ref4_regexp.match(line)
+        match5 = ref5_regexp.match(line)
+        if line.lstrip().startswith('.. [REMOVE STOP]'):
+            remove_block = False
+        elif remove_block:
+            continue
+        elif autofunction:
             match = indent_regexp.match(line)
             if (not match) or (match and len(match.group(1)) == 0):
                 autofunction = False
@@ -382,16 +392,17 @@ def generate_top_level_readme(pkg_dir):
             if line.lstrip().startswith(':lines:'):
                 literalinclude = False
                 lrange = line.lstrip().replace(':lines:', '').strip()
+                mdir = os.path.join('..', 'docs', 'support')
                 tstr = (
-                    '.. docs.support.incfile.incfile(\n'
+                    '.. pmisc.incfile(\n'
                     '..     "{0}",\n'
                     '..     cog.out,\n'
                     '..     "{1}",\n'
-                    '..     None\n'
+                    '..     "'+mdir+'"\n'
                     '.. )'
                 )
                 ret.append('.. [[[cog')
-                ret.append('.. import docs.support.incfile')
+                ret.append('.. import pmisc')
                 ret.append(tstr.format(os.path.basename(fname), lrange))
                 ret.append('.. ]]]')
                 ret.append('.. [[[end]]]')
@@ -400,9 +411,8 @@ def generate_top_level_readme(pkg_dir):
             label = match1.group(1)
             mname = match1.group(2)
             line = line.replace(
-                ':py:mod:`{label} <pcsv.{mname}>`'.format(
-                    label=label, mname=mname
-                ),
+                ':py:mod:`{label} <'.format(label=label)+
+                PKG_NAME+'.{mname}>`'.format(mname=mname),
                 label
             )
             ret.append(line)
@@ -410,7 +420,7 @@ def generate_top_level_readme(pkg_dir):
             # Remove cross-references
             mname = match2.group(1)
             line = line.replace(
-                ':py:mod:`pcsv.{mname}`'.format(mname=mname), mname
+                ':py:mod:`'+PKG_NAME+'.{mname}`'.format(mname=mname), mname
             )
             ret.append(line)
         elif match3:
@@ -424,9 +434,31 @@ def generate_top_level_readme(pkg_dir):
                 ), mname
             )
             ret.append(line)
+        elif match4:
+            # Remove classes cross-references
+            mname = match4.group(1)
+            line = line.replace(
+                ':py:class:`{mname}`'.format(mname=mname), mname
+            )
+            ret.append(line)
+        elif match5:
+            # Remove constants cross-references
+            mname = match5.group(1)
+            line = line.replace(
+                ':py:data:`{mname}`'.format(mname=mname), mname
+            )
+            ret.append(line)
         elif line.lstrip().startswith('.. literalinclude::'):
             fname = line.lstrip().replace('.. literalinclude::', '').strip()
             literalinclude = True
+        elif line.lstrip().startswith(':file:'):
+            # csv-table
+            fname = line.lstrip().replace(':file:', '').strip()
+            ret.append(
+                line.replace(
+                    fname, os.path.join('.', 'docs', 'support', 'data.csv')
+                )
+            )
         elif line.lstrip().startswith('.. include::'):
             # Include files
             base_fname = line.split()[-1].strip()
@@ -446,6 +478,8 @@ def generate_top_level_readme(pkg_dir):
             # Remove auto-functions, PyPI reStructuredText parser
             # does not appear to like it
             autofunction = True
+        elif line.lstrip().startswith('.. [REMOVE START]'):
+            remove_block = True
         else:
             ret.append(line)
     fname = os.path.join(pkg_dir, 'README.rst')
@@ -508,14 +542,14 @@ if __name__ == "__main__":
     # pylint: disable=E0602
     PKG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PARSER = argparse.ArgumentParser(
-        description='Build pcsv package documentation'
+        description='Build '+PKG_NAME+' package documentation'
     )
     PARSER.add_argument(
         '-d', '--directory',
-        help='specify source file directory (default ../pcsv)',
+        help='specify source file directory (default ../'+PKG_NAME+')',
         type=valid_dir,
         nargs=1,
-        default=[os.path.join(PKG_DIR, 'pcsv')]
+        default=[os.path.join(PKG_DIR, PKG_NAME)]
     )
     PARSER.add_argument(
         '-r', '--rebuild',
