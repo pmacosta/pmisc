@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # build_wheel_cache.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -94,7 +94,7 @@ def load_requirements(pkg_dir, pyver):
 def build_wheel_cache(pyvers):
     """ Build pip wheel cache """
     pkg_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    pyvers = ['2.6', '2.7', '3.3', '3.4', '3.5'] if not len(pyvers) else pyvers
+    pyvers = ['2.6', '2.7', '3.3', '3.4', '3.5'] if not pyvers else pyvers
     old_python_path = os.environ['PYTHONPATH']
     template = 'Building {0} wheel cache for Python {1}'
     for pyver in pyvers:

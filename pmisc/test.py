@@ -1,5 +1,5 @@
 # test.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0413,E0611,F0401,W0106,W0122,W0212,W0613,W0703
 
@@ -20,6 +20,7 @@ except ImportError: # pragma: no cover
     from funcsigs import signature
 # PyPI imports
 import pytest
+from _pytest.main import Failed
 # Intra-package imports
 if sys.hexversion < 0x03000000: # pragma: no cover
     from .compat2 import _ex_type_str, _get_ex_msg
@@ -167,13 +168,13 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         ...         pmisc.normalize,
         ...         RuntimeError,
         ...         'Argument `offset` is not valid',
-        ...         dict(value=15, series=[10, 20], offset='a')
+        ...         15, [10, 20], 0
         ...     )   #doctest: +ELLIPSIS
-        ... except AssertionError:
-        ...     raise RuntimeError('Test failed')
+        ... except:
+        ...     raise RuntimeError('Exception not raised')
         Traceback (most recent call last):
             ...
-        RuntimeError: Test failed
+        RuntimeError: Exception not raised
 
     :raises:
      * AssertionError (Did not raise)
@@ -193,7 +194,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
     try:
         with pytest.raises(extype) as excinfo:
             fpointer(**arg_dict)
-    except Exception as eobj:
+    except (BaseException, Exception, Failed) as eobj:
         actmsg = get_exmsg(eobj)
         if actmsg.startswith('DID NOT RAISE'):
             raise AssertionError('Did not raise')
@@ -254,7 +255,7 @@ def assert_prop(cobj, prop_name, value, extype, exmsg):
     try:
         with pytest.raises(extype) as excinfo:
             exec(cmd, fobj.f_globals, lvars)
-    except Exception as eobj:
+    except (BaseException, Exception, Failed) as eobj:
         if get_exmsg(eobj).startswith('DID NOT RAISE'):
             raise AssertionError('Did not raise')
         raise
@@ -274,7 +275,7 @@ def assert_ro_prop(cobj, prop_name):
     try:
         with pytest.raises(AttributeError) as excinfo:
             exec('del cobj.'+prop_name, None, locals())
-    except Exception as eobj:
+    except (BaseException, Exception, Failed) as eobj:
         if get_exmsg(eobj).startswith('DID NOT RAISE'):
             raise AssertionError('Property can be deleted')
         raise

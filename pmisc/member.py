@@ -1,5 +1,5 @@
 # member.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -77,11 +77,8 @@ def isnumber(obj):
     :rtype: boolean
     """
     return (
-        (((obj is not None) and
-        (not isinstance(obj, bool)) and
-        (isinstance(obj, int) or
-        isinstance(obj, float) or
-        isinstance(obj, complex))))
+        (obj is not None) and (not isinstance(obj, bool)) and
+        isinstance(obj, (int, float, complex))
     )
 
 
@@ -95,8 +92,6 @@ def isreal(obj):
     :rtype: boolean
     """
     return (
-        ((obj is not None) and
-        (not isinstance(obj, bool)) and (
-        isinstance(obj, int) or
-        isinstance(obj, float)))
+        (obj is not None) and (not isinstance(obj, bool)) and
+        isinstance(obj, (int, float))
     )

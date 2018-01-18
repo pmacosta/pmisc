@@ -1,7 +1,7 @@
 # ctx.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,E1129,R0903,W0105
+# pylint: disable=C0111,E1129,R0903,W0105,W1113
 
 # Standard library imports
 from __future__ import print_function
@@ -156,8 +156,7 @@ class Timer(object):
         self._elapsed_time = 1000.0*(self._tstop-self._tstart)
         if self._verbose:
             print('Elapsed time: {time}[msec]'.format(time=self._elapsed_time))
-        if exc_type is not None:
-            return False
+        return not exc_type is not None
 
     def _get_elapsed_time(self):
         return self._elapsed_time
@@ -212,8 +211,7 @@ class TmpDir(object):
     def __exit__(self, exc_type, exc_value, exc_tb):
         with ignored(OSError):
             shutil.rmtree(self._dname)
-        if exc_type is not None:
-            return False
+        return not exc_type is not None
 
 
 class TmpFile(object):
@@ -303,5 +301,4 @@ class TmpFile(object):
     def __exit__(self, exc_type, exc_value, exc_tb):
         with ignored(OSError):
             os.remove(self._fname)
-        if exc_type is not None:
-            return False
+        return not exc_type is not None

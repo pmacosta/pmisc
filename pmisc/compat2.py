@@ -1,5 +1,5 @@
 # compat2.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -39,8 +39,7 @@ def _unicode_to_ascii(obj): # pragma: no cover
         return [_unicode_to_ascii(element) for element in obj]
     elif isinstance(obj, unicode):
         return obj.encode('utf-8')
-    else:
-        return obj
+    return obj
 
 
 def _write(fobj, data): # pragma: no cover

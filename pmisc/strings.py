@@ -1,5 +1,5 @@
 # strings.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -151,14 +151,13 @@ def elapsed_time_string(start_time, stop_time):
             token=num, token_name=desc, plural='s' if num > 1 else ''
         ) for num, desc in token_iter if num > 0
     ]
-    if len(ret_list) == 0:
+    if not ret_list:
         return 'None'
     elif len(ret_list) == 1:
         return ret_list[0]
     elif len(ret_list) == 2:
         return ret_list[0]+' and '+ret_list[1]
-    else:
-        return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
+    return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
 
 
 def pcolor(text, color, indent=0):
@@ -232,12 +231,11 @@ def quote_str(obj):
     """
     if not isinstance(obj, str):
         return obj
-    else:
-        return (
-            "'{obj}'".format(obj=obj)
-            if '"' in obj else
-            '"{obj}"'.format(obj=obj)
-        )
+    return (
+        "'{obj}'".format(obj=obj)
+        if '"' in obj else
+        '"{obj}"'.format(obj=obj)
+    )
 
 
 def strframe(obj, extended=False):

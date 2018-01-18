@@ -1,5 +1,5 @@
 .. README.rst
-.. Copyright (c) 2013-2017 Pablo Acosta-Serafini
+.. Copyright (c) 2013-2018 Pablo Acosta-Serafini
 .. See LICENSE for details
 
 
@@ -78,13 +78,14 @@ This module contains miscellaneous utility functions that can be applied in a
 variety of circumstances; there are context managers, membership functions
 (test if an argument is of a given type), numerical functions, string
 functions and functions to aid in the unit testing of modules
-(`Py.test`_-based)
+
+`Py.test`_ is the supported test runner
 
 Interpreter
 ===========
 
-The package has been developed and tested with Python 2.6, 2.7, 3.3, 3.4, 3.5
-and 3.6 under Linux (Debian, Ubuntu), macOS and Microsoft Windows
+The package has been developed and tested with Python 2.7, 3.5 and 3.6 under
+Linux (Debian, Ubuntu), Apple OS X and Microsoft Windows
 
 Installing
 ==========
@@ -146,8 +147,7 @@ Contributing
     .. ]]]
 
 
-    * `Astroid`_ (Python 2.6: older than 1.4, Python 2.7 or newer: 1.3.8
-      or newer)
+    * `Astroid`_ (1.3.8 or newer)
 
     * `Cog`_ (2.4 or newer)
 
@@ -155,21 +155,17 @@ Contributing
 
     * `Decorator`_ (3.4.2 or newer)
 
-    * `Docutils`_ (Python 2.6: 0.12 or newer and older than 0.13, Python
-      2.7: 0.12 or newer, Python 3.3: 0.12 or newer and older than 0.13,
-      Python 3.4: 0.12 or newer, Python 3.5: 0.12 or newer, Python 3.6:
-      0.12 or newer)
+    * `Docutils`_ (0.12 or newer)
 
-    * `Funcsigs`_ (Python 2.x only, 0.4 or newer)
+    * `Funcsigs`_ (0.4 or newer)
 
     * `Inline Syntax Highlight Sphinx Extension`_ (0.2 or newer)
 
-    * `Mock`_ (Python 2.x only, 1.0.1 or newer)
+    * `Mock`_ (1.0.1 or newer)
 
     * `Py.test`_ (2.7.0 or newer)
 
-    * `Pylint`_ (Python 2.6: 1.3 or newer and older than 1.4, Python 2.7
-      or newer: 1.3.1 or newer)
+    * `Pylint`_ (1.3.1 or newer)
 
     * `Pytest-coverage`_ (1.8.0 or newer)
 
@@ -177,10 +173,7 @@ Contributing
 
     * `ReadTheDocs Sphinx theme`_ (0.1.9 or newer)
 
-    * `Sphinx`_ (Python 2.6: 1.2.3 or newer and 1.4.9 or older, Python
-      2.7: 1.5 or newer, Python 3.3: 1.2.3 or newer and 1.4.9 or older,
-      Python 3.4: 1.5 or newer, Python 3.5: 1.5 or newer, Python 3.6:
-      1.5 or newer)
+    * `Sphinx`_ (1.5 or newer)
 
     * `Tox`_ (1.9.0 or newer)
 
@@ -215,13 +208,12 @@ Contributing
             ...
 
    Tox (or Setuptools via Tox) runs with the following default environments:
-   ``py26-pkg``, ``py27-pkg``, ``py33-pkg``, ``py34-pkg`` and ``py35-pkg``
-   [#f2]_. These use the Python 2.6, 2.7, 3.3, 3.4 and 3.5 interpreters,
-   respectively, to test all code in the documentation (both in Sphinx
-   ``*.rst`` source files and in docstrings), run all unit tests, measure test
-   coverage and re-build the exceptions documentation. To pass arguments to
-   Py.test (the test runner) use a double dash (``--``) after all the Tox
-   arguments, for example:
+   ``py27-pkg``, ``py35-pkg`` and ``py36-pkg`` [#f3]_. These use the 2.7, 3.5
+   and 3.6 interpreters, respectively, to test all code in the documentation
+   (both in Sphinx ``*.rst`` source files and in docstrings), run all unit
+   tests, measure test coverage and re-build the exceptions documentation. To
+   pass arguments to Py.test (the test runner) use a double dash (``--``) after
+   all the Tox arguments, for example:
 
 	.. code-block:: bash
 
@@ -241,38 +233,39 @@ Contributing
 
    There are other convenience environments defined for Tox [#f3]_:
 
-    * ``py26-repl``, ``py27-repl``, ``py33-repl``, ``py34-repl`` and
-      ``py35-repl`` run the Python 2.6, 2.7, 3.3, 3.4 or 3.5 REPL,
-      respectively, in the appropriate virtual environment. The ``pmisc``
+    * ``py27-repl``, ``py35-repl`` and ``py36-repl`` run the 2.7, 3.6 or 3.6
+      REPL, respectively, in the appropriate virtual environment. The ``pmisc``
       package is pip-installed by Tox when the environments are created.
-      Arguments to the interpreter can be passed in the command line
-      after a double dash (``--``)
+      Arguments to the interpreter can be passed in the command line after a
+      double dash (``--``)
 
-    * ``py26-test``, ``py27-test``, ``py33-test``, ``py34-test`` and
-      ``py35-test`` run py.test using the Python 2.6, 2.7, 3.3, 3.4
-      or Python 3.5 interpreter, respectively, in the appropriate virtual
-      environment. Arguments to py.test can be passed in the command line
-      after a double dash (``--``) , for example:
+    * ``py27-test``, ``py35-test`` and ``py36-test`` run py.test using the
+      Python 2.7, 3.5 or Python 3.6 interpreter, respectively, in the
+      appropriate virtual environment. Arguments to py.test can be passed in the
+      command line after a double dash (``--``) , for example:
 
 	.. code-block:: bash
 
-	    $ tox -e py34-test -- -x test_pmisc.py
+	    $ tox -e py36-test -- -x test_pmisc.py
             GLOB sdist-make: [...]/pmisc/setup.py
-            py34-test inst-nodeps: [...]/pmisc/.tox/dist/pmisc-[...].zip
-            py34-test runtests: PYTHONHASHSEED='680528711'
-            py34-test runtests: [...]py.test -x test_pmisc.py
-            ============== test session starts ==============
-            platform linux -- Python 3.4.2 -- py-1.4.30 -- [...]
+            py36-test inst-nodeps: [...]/pmisc/.tox/dist/pmisc-1.1rc1.zip
+            py36-test installed: -f file:[...]
+            py36-test runtests: PYTHONHASHSEED='1264622266'
+            py36-test runtests: commands[0] | [...]py.test -x test_pmisc.py
+            ===================== test session starts =====================
+            platform linux -- Python 3.6.4, pytest-3.3.1, py-1.5.2, pluggy-0.6.0
+            rootdir: [...]/pmisc/.tox/py36/share/pmisc/tests, inifile: pytest.ini
+            plugins: xdist-1.21.0, forked-0.2, cov-2.5.1
+            collected 414 items
             ...
 
-    * ``py26-cov``, ``py27-cov``, ``py33-cov``, ``py34-cov`` and
-      ``py35-cov`` test code and branch coverage using the Python 2.6,
-      2.7, 3.3, 3.4 or 3.5 interpreter, respectively, in the appropriate
+    * ``py27-cov``, ``py35-cov`` and ``py36-cov`` test code and branch coverage
+      using the 2.7, 3.5 or 3.6 interpreter, respectively, in the appropriate
       virtual environment. Arguments to py.test can be passed in the command
       line after a double dash (``--``). The report can be found in
-      :bash:`${PMISC_DIR}/.tox/py[PV]/usr/share/pmisc/tests/htmlcov/index.html`
-      where ``[PV]`` stands for ``26``, ``27``, ``33``, ``34`` or ``35``
-      depending on the interpreter used
+      :bash:`${pmisc_DIR}/.tox/py[PV]/usr/share/pmisc/tests/htmlcov/index.html`
+      where ``[PV]`` stands for ``27``, ``35`` or ``36`` depending on the
+      interpreter used
 
 8. Verify that continuous integration tests pass. The package has continuous
    integration configured for Linux (via `Travis <http://www.travis-ci.org>`_)

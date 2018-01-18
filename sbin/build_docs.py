@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # build_docs.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0411,C0413,E0611,F0401,R0912,R0914,R0915,W0141
 
@@ -183,14 +183,13 @@ def elapsed_time_string(start_time, stop_time):
             plural='s' if num > 1 else ''
         ) for num, desc in token_iter if num > 0
     ]
-    if len(ret_list) == 0:
+    if not ret_list == 0:
         return 'None'
     elif len(ret_list) == 1:
         return ret_list[0]
     elif len(ret_list) == 2:
         return ret_list[0]+' and '+ret_list[1]
-    else:
-        return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
+    return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
 
 
 def insert_files_in_rsts(pkg_dir, cog_exe):
@@ -385,7 +384,7 @@ def generate_top_level_readme(pkg_dir):
             continue
         elif autofunction:
             match = indent_regexp.match(line)
-            if (not match) or (match and len(match.group(1)) == 0):
+            if (not match) or (match and not match.group(1)):
                 autofunction = False
                 ret.append(line)
         elif literalinclude:

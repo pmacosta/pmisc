@@ -1,5 +1,5 @@
 # number.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -97,7 +97,7 @@ def gcd(vector):
     :param vector: Vector of numbers
     :type  vector: list of numbers or Numpy vector of numbers
     """
-    if len(vector) == 0:
+    if not vector:
         return None
     if len(vector) == 1:
         return vector[0]
@@ -227,26 +227,25 @@ def per(arga, argb, prec=10):
             if arga == argb else
             (1e20 if (not num_min) else round((num_max/num_min)-1, prec))
         )
-    else:
-        # Contortions to handle lists and Numpy arrays without explicitly
-        # having to import numpy
-        ret = copy.copy(arga)
-        for num, (x, y) in enumerate(zip(arga, argb)):
-            if not isreal(x):
-                raise RuntimeError('Argument `arga` is not valid')
-            if not isreal(y):
-                raise RuntimeError('Argument `argb` is not valid')
-            x = float(x)
-            y = float(y)
-            ret[num] = (
-                0
-                if x == y else (
-                    1E20 if (x == 0) or (y == 0) else (
-                        round((max(x, y)/min(x, y))-1, prec)
-                    )
+    # Contortions to handle lists and Numpy arrays without explicitly
+    # having to import numpy
+    ret = copy.copy(arga)
+    for num, (x, y) in enumerate(zip(arga, argb)):
+        if not isreal(x):
+            raise RuntimeError('Argument `arga` is not valid')
+        if not isreal(y):
+            raise RuntimeError('Argument `argb` is not valid')
+        x = float(x)
+        y = float(y)
+        ret[num] = (
+            0
+            if x == y else (
+                1E20 if (x == 0) or (y == 0) else (
+                    round((max(x, y)/min(x, y))-1, prec)
                 )
             )
-        return ret
+        )
+    return ret
 
 
 def pgcd(numa, numb):

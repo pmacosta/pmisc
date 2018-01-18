@@ -1,5 +1,5 @@
 # dicts.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -14,6 +14,7 @@ import collections
 # questions/3387691/python-how-to-perfectly-override-a-dict
 class CiDict(collections.MutableMapping):
     def __init__(self, *args, **kwargs):
+        # pylint: disable=W0231
         self._store = dict()
         self.update(dict(*args, **kwargs))
 

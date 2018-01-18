@@ -1,5 +1,5 @@
 # ctx.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,E1129
 
@@ -115,7 +115,7 @@ def test_tmp_file():
     assert GET_EXMSG(excinfo) == 'Argument `fpointer` is not valid'
     # Test behavior when no function pointer is given
     with pmisc.TmpFile() as fname:
-        assert isinstance(fname, str) and (len(fname) > 0)
+        assert isinstance(fname, str) and fname
         assert os.path.exists(fname)
     assert not os.path.exists(fname)
     # Test that exceptions within the with statement are re-raised

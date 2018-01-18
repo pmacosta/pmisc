@@ -1,5 +1,5 @@
 # rst.py
-# Copyright (c) 2013-2017 Pablo Acosta-Serafini
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0411,W0108,W0212
 
@@ -286,16 +286,24 @@ def test_term_echo():
     cap = Capture()
     with pmisc.TmpFile(te_data) as fname:
         cmd = LDELIM+'PYTHON_CMD'+RDELIM+' '+fname
-        ref1 = (
+        line = (
+            '    Coverage.py warning: --include is ignored because --source '
+            'is set (include-ignored)\n'
+        )
+        header1 = (
             '\n'
             '.. code-block:: bash\n'
             '\n'
             '    $ '+cmd+' -h\n'
+        )
+        header2 = (
             '    usage: '+os.path.basename(fname)+' [-h] [-d DIRECTORY]\n'
             '\n'
             '    Test script\n'
             '\n'
             '    optional arguments:\n'
+        )
+        footer1 = (
             '      -h, --help            show this help\n'
             '                            message and\n'
             '                            exit\n'
@@ -307,16 +315,7 @@ def test_term_echo():
             '\n'
             '\n'
         )
-        ref2 = (
-            '\n'
-            '.. code-block:: bash\n'
-            '\n'
-            '    $ '+cmd+' -h\n'
-            '    usage: '+os.path.basename(fname)+' [-h] [-d DIRECTORY]\n'
-            '\n'
-            '    Test script\n'
-            '\n'
-            '    optional arguments:\n'
+        footer2 = (
             '      -h, --help      show this help\n'
             '                      message and exit\n'
             '      -d DIRECTORY, --directory DIRECTORY\n'
@@ -326,10 +325,21 @@ def test_term_echo():
             '\n'
             '\n'
         )
+        msgs = [
+            header1+header2+footer1,
+            header1+header2+footer2,
+            header1+line+header2+footer1,
+            header1+line+header2+footer2,
+        ]
         obj(
             cmd+' -h',
             cols=40,
             fpointer=cap.prt,
             env={'PYTHON_CMD':sys.executable}
         )
-    assert (cap.lines() == ref1) or (cap.lines() == ref2)
+        print(msgs[0])
+        print(msgs[1])
+        print(msgs[2])
+        print(msgs[3])
+        print(cap.lines())
+    assert any(cap.lines() == item for item in msgs)
