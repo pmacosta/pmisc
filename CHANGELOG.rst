@@ -5,6 +5,8 @@
 Changelog
 =========
 
+* 1.3.1 [2018-01-18]: Minor package build fix
+
 * 1.3.0 [2018-01-18]: Dropped support for Python interpreter versions 2.6, 3.3
   and 3.4. Updated dependencies versions to their current versions. Fixed
   failing tests under newer Pytest versions
