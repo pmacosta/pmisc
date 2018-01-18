@@ -312,8 +312,6 @@ def test_term_echo():
             '                            file directory\n'
             '                            (default\n'
             '                            ../pmisc)\n'
-            '\n'
-            '\n'
         )
         footer2 = (
             '      -h, --help      show this help\n'
@@ -322,14 +320,17 @@ def test_term_echo():
             '                      specify source file\n'
             '                      directory (default\n'
             '                      ../pmisc)\n'
+        )
+        footer3 = (
             '\n'
             '\n'
         )
         msgs = [
-            header1+header2+footer1,
-            header1+header2+footer2,
-            header1+line+header2+footer1,
-            header1+line+header2+footer2,
+            header1+header2+footer1+footer3,
+            header1+header2+footer2+footer3,
+            header1+header2+footer2+line+footer3,
+            header1+line+header2+footer1+footer3,
+            header1+line+header2+footer2+footer3,
         ]
         obj(
             cmd+' -h',
@@ -337,9 +338,11 @@ def test_term_echo():
             fpointer=cap.prt,
             env={'PYTHON_CMD':sys.executable}
         )
-        print(msgs[0])
-        print(msgs[1])
-        print(msgs[2])
-        print(msgs[3])
+    ret = any(cap.lines() == item for item in msgs)
+    if not ret:
+        for num, text in enumerate(msgs):
+            print('Reference {0}'.format(num))
+            print(text)
+            print(30*'-')
         print(cap.lines())
-    assert any(cap.lines() == item for item in msgs)
+    assert ret
