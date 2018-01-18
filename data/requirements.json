@@ -4,7 +4,7 @@
 		"optional":false,
 		"url":"http://docutils.sourceforge.net/docs",
 		"cat":["tests"],
-		"ver":">=0.12",
+		"ver":">=0.14",
 		"pos":0
 	},
 	"astroid":{
@@ -12,7 +12,7 @@
 		"optional":false,
 		"url":"https://bitbucket.org/logilab/astroid",
 		"cat":["tests"],
-		"ver":">=1.3.8",
+		"ver":">=1.6.0",
 		"pos":1
 	},
 	"cogapp":{
@@ -20,7 +20,7 @@
 		"optional":false,
 		"url":"http://nedbatchelder.com/code/cog",
 		"cat":["tests"],
-		"ver":">=2.4",
+		"ver":">=2.5.1",
 		"pos":2
 	},
 	"coverage":{
@@ -28,7 +28,7 @@
 		"optional":false,
 		"url":"http://coverage.readthedocs.org/en/coverage-4.0a5",
 		"cat":["tests"],
-		"ver":">=3.7.1",
+		"ver":">=4.4.2",
 		"pos":3
 	},
 	"decorator":{
@@ -36,7 +36,7 @@
 		"optional":false,
 		"url":"https://pythonhosted.org/decorator",
 		"cat":["main", "rtd"],
-		"ver":">=3.4.2",
+		"ver":">=4.2.1",
 		"pos":4
 	},
 	"funcsigs":{
@@ -44,7 +44,7 @@
 		"optional":false,
 		"url":"https://pypi.python.org/pypi/funcsigs",
 		"cat":["main", "rtd"],
-		"ver":">=0.4",
+		"ver":">=1.0.2",
 		"pos":5
 	},
 	"mock":{
@@ -52,7 +52,7 @@
 		"optional":false,
 		"url":"http://www.voidspace.org.uk/python/mock",
 		"cat":["tests", "rtd"],
-		"ver":">=1.0.1",
+		"ver":">=2.0.0",
 		"pos":6
 	},
 	"pylint":{
@@ -60,7 +60,7 @@
 		"optional":false,
 		"url":"http://www.pylint.org",
 		"cat":["tests"],
-		"ver":">=1.3.1",
+		"ver":">=1.8.1",
 		"pos":7
 	},
 	"pytest":{
@@ -68,7 +68,7 @@
 		"optional":false,
 		"url":"http://pytest.org",
 		"cat":["main", "tests", "rtd"],
-		"ver":">=2.7.0",
+		"ver":">=3.3.2",
 		"pos":8
 	},
 	"pytest-cov":{
@@ -76,7 +76,7 @@
 		"optional":false,
 		"url":"https://pypi.python.org/pypi/pytest-cov",
 		"cat":["tests"],
-		"ver":">=1.8.0",
+		"ver":">=2.5.1",
 		"pos":9
 	},
 	"pytest-xdist":{
@@ -84,7 +84,7 @@
 		"optional":true,
 		"url":"https://pypi.python.org/pypi/pytest-xdist",
 		"cat":["tests"],
-		"ver":">=1.8.0",
+		"ver":">=1.22.0",
 		"pos":10
 	},
 	"sphinx":{
@@ -92,7 +92,7 @@
 		"optional":false,
 		"url":"http://sphinx-doc.org",
 		"cat":["docs", "rtd"],
-		"ver":">=1.5",
+		"ver":">=1.6.6",
 		"pos":11
 	},
 	"sphinxcontrib-inlinesyntaxhighlight":{
@@ -116,7 +116,7 @@
 		"optional":false,
 		"url":"https://testrun.org/tox",
 		"cat":["tests"],
-		"ver":">=1.9.0",
+		"ver":">=2.9.1",
 		"pos":14
 	},
 	"virtualenv":{
@@ -124,7 +124,7 @@
 		"optional":false,
 		"url":"http://docs.python-guide.org/en/latest/dev/virtualenvs",
 		"cat":["tests"],
-		"ver":">=13.1.2",
+		"ver":">=15.1.0",
 		"pos":15
 	}
 }

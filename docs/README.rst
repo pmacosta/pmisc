@@ -147,37 +147,37 @@ Contributing
     .. ]]]
 
 
-    * `Astroid`_ (1.3.8 or newer)
+    * `Astroid`_ (1.6.0 or newer)
 
-    * `Cog`_ (2.4 or newer)
+    * `Cog`_ (2.5.1 or newer)
 
-    * `Coverage`_ (3.7.1 or newer)
+    * `Coverage`_ (4.4.2 or newer)
 
-    * `Decorator`_ (3.4.2 or newer)
+    * `Decorator`_ (4.2.1 or newer)
 
-    * `Docutils`_ (0.12 or newer)
+    * `Docutils`_ (0.14 or newer)
 
-    * `Funcsigs`_ (0.4 or newer)
+    * `Funcsigs`_ (1.0.2 or newer)
 
     * `Inline Syntax Highlight Sphinx Extension`_ (0.2 or newer)
 
-    * `Mock`_ (1.0.1 or newer)
+    * `Mock`_ (2.0.0 or newer)
 
-    * `Py.test`_ (2.7.0 or newer)
+    * `Py.test`_ (3.3.2 or newer)
 
-    * `Pylint`_ (1.3.1 or newer)
+    * `Pylint`_ (1.8.1 or newer)
 
-    * `Pytest-coverage`_ (1.8.0 or newer)
+    * `Pytest-coverage`_ (2.5.1 or newer)
 
-    * `Pytest-xdist`_ (optional, 1.8.0 or newer)
+    * `Pytest-xdist`_ (optional, 1.22.0 or newer)
 
     * `ReadTheDocs Sphinx theme`_ (0.1.9 or newer)
 
-    * `Sphinx`_ (1.5 or newer)
+    * `Sphinx`_ (1.6.6 or newer)
 
-    * `Tox`_ (1.9.0 or newer)
+    * `Tox`_ (2.9.1 or newer)
 
-    * `Virtualenv`_ (13.1.2 or newer)
+    * `Virtualenv`_ (15.1.0 or newer)
 
     .. [[[end]]]
 
