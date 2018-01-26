@@ -344,6 +344,7 @@ eobj
 eol
 EOL
 eopts
+eprint
 eps
 EPS
 eq
@@ -354,12 +355,15 @@ esc
 eval
 exa
 exc
+EXC
+excepthook
 exceptionA
 ExceptionAu
 ExceptionAutoDocClass
 exceptionB
 exceptionC
 exceptionD
+ExceptionInfo
 excinfo
 exdata
 exdb
@@ -506,6 +510,7 @@ getframeinfo
 getitem
 getmembers
 getpid
+getreprcrash
 getsourcelines
 getter
 Getter
@@ -522,6 +527,7 @@ hexversion
 HH
 hier
 hnf
+hookimpl
 horizontalalignment
 hotpink
 html
@@ -689,6 +695,7 @@ loc
 locs
 lOg
 loglog
+longrepr
 loren
 lpar
 lparent
@@ -710,6 +717,7 @@ macOS
 makedir
 makedirs
 Makefile
+makereport
 mant
 mapleleaf
 markeredgecolor
@@ -828,6 +836,7 @@ nmin
 nname
 nobj
 NoCol
+nodeid
 NodeName
 nodeps
 NodesWithData
@@ -845,6 +854,7 @@ noopt
 nops
 noption
 NOPTION
+nOr
 norder
 np
 npoints
@@ -859,6 +869,7 @@ nsys
 ntest
 nthe
 nthis
+ntokens
 ntree
 ntuple
 ntype
@@ -1147,9 +1158,11 @@ RTOL
 rtruediv
 rtype
 rU
+runtest
 runtests
 RuntimeError
 rvalue
+rwhen
 rwtb
 rxor
 saa
@@ -1270,11 +1283,13 @@ sysconfig
 tanh
 tb
 tbobj
+tbt
 tchk
 tdata
 tdict
 tdir
 te
+teardown
 tempdir
 tempfile
 tera
@@ -1294,6 +1309,7 @@ TestGetFunctionArgs
 testnodedown
 TestPanel
 TestParameterizedColorSpace
+TestReport
 TestSeries
 TestSource
 TestTreeNode
@@ -1316,6 +1332,7 @@ tmpdir
 TmpDir
 tmpfile
 TmpFile
+TmpMock
 tnodes
 tobj
 toctree
@@ -1337,6 +1354,7 @@ tregexp
 triang
 trie
 truediv
+tryfirst
 tstart
 tstop
 tstr

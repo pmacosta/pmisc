@@ -163,7 +163,7 @@ Contributing
 
     * `Mock`_ (2.0.0 or newer)
 
-    * `Py.test`_ (3.3.2 or newer)
+    * `Py.test`_ (3.4.0 or newer)
 
     * `Pylint`_ (1.8.1 or newer)
 

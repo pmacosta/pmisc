@@ -68,7 +68,7 @@
 		"optional":false,
 		"url":"http://pytest.org",
 		"cat":["main", "tests", "rtd"],
-		"ver":">=3.3.2",
+		"ver":">=3.4.0",
 		"pos":8
 	},
 	"pytest-cov":{

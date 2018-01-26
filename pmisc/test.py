@@ -9,7 +9,6 @@ import copy
 import os
 import re
 import sys
-import traceback
 if sys.hexversion < 0x03000000: # pragma: no cover
     from itertools import izip_longest
 else:    # pragma: no cover
@@ -199,13 +198,11 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         if actmsg.startswith('DID NOT RAISE'):
             raise AssertionError('Did not raise')
         eobj_extype = repr(eobj)[:repr(eobj).find('(')]
-        tb_msg = traceback.format_exc()
         actstr = '{0} ({1})'.format(eobj_extype, actmsg)
         refstr = '{0} ({1})'.format(exception_type_str(extype), exmsg)
         assert actstr == refstr, (
-            '\nExpected: {0}\nGot: {1}\n---------\n{2}'.format(
-                refstr, actstr, tb_msg
-            )
+            'Raised exception mismatch'
+            '\nExpected: {0}\nGot: {1}'.format(refstr, actstr)
         )
     actmsg = get_exmsg(excinfo)
     if ((exception_type_str(excinfo.type) == exception_type_str(extype)) and
@@ -213,6 +210,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         assert True
     else:
         assert False, (
+            'Raised exception mismatch'
             '\nExpected: {0} ({1})\nGot: {2} ({3})'.format(
                 exception_type_str(extype),
                 exmsg,
@@ -278,8 +276,17 @@ def assert_ro_prop(cobj, prop_name):
     except (BaseException, Exception, Failed) as eobj:
         if get_exmsg(eobj).startswith('DID NOT RAISE'):
             raise AssertionError('Property can be deleted')
-        raise
-    assert get_exmsg(excinfo) == "can't delete attribute"
+    extype = 'AttributeError'
+    exmsg = "can't delete attribute"
+    acttype = exception_type_str(excinfo.type)
+    actmsg = get_exmsg(excinfo)
+    if not ((acttype == extype) and (actmsg == exmsg)):
+        assert False, (
+            'Raised exception mismatch'
+            '\nExpected: {0} ({1})\nGot: {2} ({3})'.format(
+                extype, exmsg, exception_type_str(excinfo.type), actmsg
+            )
+        )
 
 
 def compare_strings(actual, ref, diff_mode=False):
@@ -324,19 +331,23 @@ def compare_strings(actual, ref, diff_mode=False):
                 line += _pcolor(line2[len(line1):], 'red')
             yield template.format(num+1, line)
     def print_non_diff(msg, list1, list2, template):
-        print(_pcolor(msg, 'cyan'))
-        print(_pcolor('-'*len(msg), 'cyan'))
+        ret = ''
+        ret += _pcolor(msg, 'cyan')+'\n'
+        ret += _pcolor('-'*len(msg), 'cyan')+'\n'
         for line in colorize_lines(list1, list2, template):
-            print(line)
+            ret += line+'\n'
+        return ret
     def print_diff(list1, list2, template1, template2, sep):
         iobj = zip(
             colorize_lines(list1, list2, template1, False),
             colorize_lines(list2, list1, template2, False)
         )
+        ret = ''
         for rline, aline in iobj:
-            print(_pcolor(sep, 'cyan'))
-            print(rline)
-            print(aline)
+            ret += _pcolor(sep, 'cyan')+'\n'
+            ret += rline+'\n'
+            ret += aline+'\n'
+        return ret
     if not isinstance(actual, str):
         raise RuntimeError('Argument `actual` is not valid')
     if not isinstance(ref, str):
@@ -347,17 +358,14 @@ def compare_strings(actual, ref, diff_mode=False):
         actual = actual.split('\n')
         ref = ref.split('\n')
         length = len(str(max(len(actual), len(ref))))
-        print('')
-        msg = 'String comparison'
-        print(_pcolor(msg, 'cyan'))
-        print(_pcolor('-'*len(msg), 'cyan'))
-        print('Matching character')
-        print(_pcolor('Mismatched character', 'yellow'))
-        print(_pcolor('Extra character', 'red'))
+        ret = _pcolor('<<<', 'cyan')+'\n'
+        ret += 'Matching character'+'\n'
+        ret += _pcolor('Mismatched character', 'yellow')+'\n'
+        ret += _pcolor('Extra character', 'red')+'\n'
         if not diff_mode:
             template = _pcolor('{0:'+str(length)+'}:', 'cyan')+' {1}'
-            print_non_diff('Reference text', actual, ref, template)
-            print_non_diff('Actual text', ref, actual, template)
+            ret += print_non_diff('Reference text', actual, ref, template)
+            ret += print_non_diff('Actual text', ref, actual, template)
         else:
             mline = max(
                 [
@@ -368,8 +376,9 @@ def compare_strings(actual, ref, diff_mode=False):
             sep = '-'*(mline+length+9)
             template1 = _pcolor('{0:'+str(length)+'} Ref.  :', 'cyan')+' {1}'
             template2 = _pcolor(' '*length+' Actual:', 'cyan')+' {1}'
-            print_diff(actual, ref, template1, template2, sep)
-        raise AssertionError('Strings do not match')
+            ret += print_diff(actual, ref, template1, template2, sep)
+        ret += _pcolor('>>>', 'cyan')+'\n'
+        raise AssertionError('Strings do not match'+'\n'+ret)
 
 
 def comp_list_of_dicts(list1, list2):
