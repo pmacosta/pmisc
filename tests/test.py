@@ -300,6 +300,13 @@ def test_excepthook():
         assert tokens[0] == ref[0]
         assert tokens[1].startswith('  File ')
         assert tokens[1].endswith(ref[1])
+        if tokens[2:] != ref[2:]:
+            print('Expected')
+            print('--------')
+            print(ref[2:])
+            print('Got')
+            print('---')
+            print(tokens[2:])
         assert tokens[2:] == ref[2:]
     class TmpMock(object):
         def __init__(self):
