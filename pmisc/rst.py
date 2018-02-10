@@ -1,7 +1,7 @@
 # rst.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111
+# pylint: disable=C0111,C0304,C0305
 
 # Standard library imports
 import os
@@ -9,6 +9,7 @@ import platform
 import re
 import subprocess
 import sys
+import uuid
 
 
 ###
@@ -21,6 +22,13 @@ RDELIM = '%' if platform.system().lower() == 'windows' else '}'
 ###
 # Functions
 ###
+def _homogenize_linesep(line):
+    """ Enforces line separators to be the right one depending on platform """
+    token = str(uuid.uuid4())
+    line = line.replace(os.linesep, token).replace('\n', '').replace('\r', '')
+    return line.replace(token, os.linesep)
+
+
 def _proc_token(spec, mlines):
     """ Process line range tokens """
     spec = spec.strip().replace(' ', '')
@@ -103,8 +111,10 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
         )
     )
     fname = os.path.join(file_dir, fname)
-    with open(fname) as fobj:
+    with open(fname, 'r') as fobj:
         lines = fobj.readlines()
+    # Eliminate spurious carriage returns in Microsoft Windows
+    lines = [_homogenize_linesep(line) for line in lines]
     # Parse line specification
     inc_lines = (
         _proc_token(lrange, len(lines))
@@ -112,14 +122,16 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
         list(range(1, len(lines)+1))
     )
     # Produce output
-    fpointer('.. code-block:: python\n')
-    fpointer('\n')
+    fpointer('.. code-block:: python'+os.linesep)
+    fpointer(os.linesep)
     for num, line in enumerate(lines):
         if num+1 in inc_lines:
             fpointer(
-                '    '+line.replace('\t', '    ') if line.strip() else '\n'
+                '    '+line.replace('\t', '    ').rstrip()+os.linesep
+                 if line.strip() else
+                 os.linesep
             )
-    fpointer('\n')
+    fpointer(os.linesep)
 
 
 def ste(command, nindent, mdir, fpointer):
@@ -229,16 +241,15 @@ def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
         stdout = stdout.decode('utf-8')
     stdout = stdout.split('\n')
     indent = nindent*' '
-    fpointer('\n')
-    fpointer('{0}.. code-block:: bash\n'.format(indent))
-    fpointer('\n')
-    fpointer('{0}    $ {1}\n'.format(indent, command))
+    fpointer(os.linesep)
+    fpointer('{0}.. code-block:: bash{1}'.format(indent, os.linesep))
+    fpointer(os.linesep)
+    fpointer('{0}    $ {1}{2}'.format(indent, command, os.linesep))
     for line in stdout:
-        line = line.replace('\r', '')
+        line = _homogenize_linesep(line)
         if line.strip():
             fpointer(
-                indent+'    '+line.replace('\t', '    ')+'\n'
+                indent+'    '+line.replace('\t', '    ')+os.linesep
             )
         else:
-            fpointer('\n')
-    fpointer('\n')
+            fpointer(os.linesep)

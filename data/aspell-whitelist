@@ -14,6 +14,7 @@ acos
 acosh
 actmsg
 actstr
+acttype
 addai
 addex
 addfinalizer
@@ -93,6 +94,7 @@ bb
 bbox
 bc
 bcd
+bclass
 bdir
 bdist
 bfrac
@@ -108,6 +110,7 @@ bnode
 bobj
 bool
 boolean
+btype
 buf
 BuGn
 builtin
@@ -357,6 +360,7 @@ exa
 exc
 EXC
 excepthook
+EXCEPTHOOK
 exceptionA
 ExceptionAu
 ExceptionAutoDocClass
@@ -673,6 +677,7 @@ lin
 lindex
 LiNeAr
 lineno
+linesep
 linestyle
 LineStyleOption
 linewidth
@@ -705,6 +710,7 @@ lprops
 lrange
 lsec
 lsep
+LSEP
 lshift
 lstrip
 lt
@@ -943,6 +949,7 @@ pargs
 parseString
 partuple
 ParTuple
+passthrough
 pb
 pcol
 pcolor
@@ -1282,6 +1289,7 @@ sys
 sysconfig
 tanh
 tb
+tblines
 tbobj
 tbt
 tchk

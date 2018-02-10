@@ -3,13 +3,25 @@
 # See LICENSE for details
 # pylint: disable=C0111
 
+# Standard library imports
+import re
+
 
 ###
 # Functions
 ###
 def _ex_type_str(exobj):
     """ Returns a string corresponding to the exception type """
-    return str(exobj).split('.')[-1][:-2]
+    regexp = re.compile(r"<(?:\bclass\b|\btype\b)\s+'?([\w|\.]+)'?>")
+    exc_type = str(exobj)
+    if regexp.match(exc_type):
+        exc_type = regexp.match(exc_type).groups()[0]
+        exc_type = (
+            exc_type[11:] if exc_type.startswith('exceptions.') else exc_type
+        )
+    if '.' in exc_type:
+        exc_type = exc_type.split('.')[-1]
+    return exc_type
 
 
 def _get_ex_msg(obj):

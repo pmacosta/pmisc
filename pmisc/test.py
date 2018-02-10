@@ -1,7 +1,8 @@
 # test.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,C0413,E0611,F0401,W0106,W0122,W0212,W0613,W0703
+# pylint: disable=C0111,C0304,C0305,C0413,E0611,F0401
+# pylint: disable=R0914,W0106,W0122,W0212,W0613,W0703
 
 # Standard library imports
 from __future__ import print_function
@@ -104,6 +105,29 @@ def _pcolor(text, color, indent=0): # pragma: no cover
     return '{indent}{text}'.format(indent=' '*indent, text=text)
 
 
+def _raise_exception_mismatch(excinfo, extype, exmsg):
+    regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
+    actmsg = get_exmsg(excinfo)
+    acttype = (
+        exception_type_str(excinfo.type)
+        if hasattr(excinfo, 'type') else
+        repr(excinfo)[:repr(excinfo).find('(')]
+    )
+    if not ((acttype == exception_type_str(extype))
+       and ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))):
+        assert False, (
+            'Raised exception mismatch'
+            '{0}Expected: {1} ({2}){0}Got: {3} ({4})'.format(
+                os.linesep, exception_type_str(extype), exmsg, acttype, actmsg
+            )
+        )
+
+
+def _raise_if_not_raised(eobj, exmsg=None):
+    if get_exmsg(eobj).upper().startswith('DID NOT RAISE'):
+        raise AssertionError(exmsg or 'Did not raise')
+
+
 def assert_arg_invalid(fpointer, pname, *args, **kwargs):
     r"""
     Asserts whether a function raises a :code:`RuntimeError` exception with the
@@ -189,35 +213,19 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
         arg_dict = dict(zip(fargs, args))
     arg_dict.update(kwargs)
     # Execute function and catch exception
-    regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
+    inner_ex = False
+    eobj = None
     try:
         with pytest.raises(extype) as excinfo:
             fpointer(**arg_dict)
-    except (BaseException, Exception, Failed) as eobj:
-        actmsg = get_exmsg(eobj)
-        if actmsg.startswith('DID NOT RAISE'):
-            raise AssertionError('Did not raise')
-        eobj_extype = repr(eobj)[:repr(eobj).find('(')]
-        actstr = '{0} ({1})'.format(eobj_extype, actmsg)
-        refstr = '{0} ({1})'.format(exception_type_str(extype), exmsg)
-        assert actstr == refstr, (
-            'Raised exception mismatch'
-            '\nExpected: {0}\nGot: {1}'.format(refstr, actstr)
-        )
-    actmsg = get_exmsg(excinfo)
-    if ((exception_type_str(excinfo.type) == exception_type_str(extype)) and
-       ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))):
-        assert True
+    except (BaseException, Exception, Failed) as tmp_eobj:
+        eobj = tmp_eobj
+        inner_ex = True
+    if inner_ex:
+        _raise_if_not_raised(eobj)
+        _raise_exception_mismatch(eobj, extype, exmsg)
     else:
-        assert False, (
-            'Raised exception mismatch'
-            '\nExpected: {0} ({1})\nGot: {2} ({3})'.format(
-                exception_type_str(extype),
-                exmsg,
-                exception_type_str(excinfo.type),
-                actmsg
-            )
-        )
+        _raise_exception_mismatch(excinfo, extype, exmsg)
 
 
 def assert_prop(cobj, prop_name, value, extype, exmsg):
@@ -254,10 +262,9 @@ def assert_prop(cobj, prop_name, value, extype, exmsg):
         with pytest.raises(extype) as excinfo:
             exec(cmd, fobj.f_globals, lvars)
     except (BaseException, Exception, Failed) as eobj:
-        if get_exmsg(eobj).startswith('DID NOT RAISE'):
-            raise AssertionError('Did not raise')
-        raise
-    assert get_exmsg(excinfo) == exmsg
+        _raise_if_not_raised(eobj)
+        _raise_exception_mismatch(eobj, extype, exmsg)
+    _raise_exception_mismatch(excinfo, extype, exmsg)
 
 
 def assert_ro_prop(cobj, prop_name):
@@ -274,19 +281,10 @@ def assert_ro_prop(cobj, prop_name):
         with pytest.raises(AttributeError) as excinfo:
             exec('del cobj.'+prop_name, None, locals())
     except (BaseException, Exception, Failed) as eobj:
-        if get_exmsg(eobj).startswith('DID NOT RAISE'):
-            raise AssertionError('Property can be deleted')
+        _raise_if_not_raised(eobj, 'Property can be deleted')
     extype = 'AttributeError'
     exmsg = "can't delete attribute"
-    acttype = exception_type_str(excinfo.type)
-    actmsg = get_exmsg(excinfo)
-    if not ((acttype == extype) and (actmsg == exmsg)):
-        assert False, (
-            'Raised exception mismatch'
-            '\nExpected: {0} ({1})\nGot: {2} ({3})'.format(
-                extype, exmsg, exception_type_str(excinfo.type), actmsg
-            )
-        )
+    _raise_exception_mismatch(excinfo, extype, exmsg)
 
 
 def compare_strings(actual, ref, diff_mode=False):
@@ -316,7 +314,7 @@ def compare_strings(actual, ref, diff_mode=False):
 
      * RuntimeError(Argument \`ref\` is not valid)
     """
-    # pylint: disable=R0912,R0914
+    # pylint: disable=R0912
     pyellow = lambda x, y: x if x == y else _pcolor(x, 'yellow')
     def colorize_lines(list1, list2, template, mode=True):
         iobj = izip_longest(list1, list2, fillvalue='')
@@ -332,10 +330,10 @@ def compare_strings(actual, ref, diff_mode=False):
             yield template.format(num+1, line)
     def print_non_diff(msg, list1, list2, template):
         ret = ''
-        ret += _pcolor(msg, 'cyan')+'\n'
-        ret += _pcolor('-'*len(msg), 'cyan')+'\n'
+        ret += _pcolor(msg, 'cyan')+os.linesep
+        ret += _pcolor('-'*len(msg), 'cyan')+os.linesep
         for line in colorize_lines(list1, list2, template):
-            ret += line+'\n'
+            ret += line+os.linesep
         return ret
     def print_diff(list1, list2, template1, template2, sep):
         iobj = zip(
@@ -344,9 +342,9 @@ def compare_strings(actual, ref, diff_mode=False):
         )
         ret = ''
         for rline, aline in iobj:
-            ret += _pcolor(sep, 'cyan')+'\n'
-            ret += rline+'\n'
-            ret += aline+'\n'
+            ret += _pcolor(sep, 'cyan')+os.linesep
+            ret += rline+os.linesep
+            ret += aline+os.linesep
         return ret
     if not isinstance(actual, str):
         raise RuntimeError('Argument `actual` is not valid')
@@ -355,13 +353,13 @@ def compare_strings(actual, ref, diff_mode=False):
     if not isinstance(diff_mode, bool):
         raise RuntimeError('Argument `diff_mode` is not valid')
     if actual != ref:
-        actual = actual.split('\n')
-        ref = ref.split('\n')
+        actual = actual.split(os.linesep)
+        ref = ref.split(os.linesep)
         length = len(str(max(len(actual), len(ref))))
-        ret = _pcolor('<<<', 'cyan')+'\n'
-        ret += 'Matching character'+'\n'
-        ret += _pcolor('Mismatched character', 'yellow')+'\n'
-        ret += _pcolor('Extra character', 'red')+'\n'
+        ret = _pcolor('<<<', 'cyan')+os.linesep
+        ret += 'Matching character'+os.linesep
+        ret += _pcolor('Mismatched character', 'yellow')+os.linesep
+        ret += _pcolor('Extra character', 'red')+os.linesep
         if not diff_mode:
             template = _pcolor('{0:'+str(length)+'}:', 'cyan')+' {1}'
             ret += print_non_diff('Reference text', actual, ref, template)
@@ -377,8 +375,8 @@ def compare_strings(actual, ref, diff_mode=False):
             template1 = _pcolor('{0:'+str(length)+'} Ref.  :', 'cyan')+' {1}'
             template2 = _pcolor(' '*length+' Actual:', 'cyan')+' {1}'
             ret += print_diff(actual, ref, template1, template2, sep)
-        ret += _pcolor('>>>', 'cyan')+'\n'
-        raise AssertionError('Strings do not match'+'\n'+ret)
+        ret += _pcolor('>>>', 'cyan')+os.linesep
+        raise AssertionError('Strings do not match'+os.linesep+ret)
 
 
 def comp_list_of_dicts(list1, list2):
