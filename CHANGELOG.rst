@@ -5,7 +5,7 @@
 Changelog
 =========
 
-* 1.4.0 [2018-02-05]: Shortened traceback of test methods to point only to the
+* 1.4.0 [2018-02-16]: Shortened traceback of test methods to point only to the
   line that uses the function that generates the exception
 
 * 1.3.1 [2018-01-18]: Minor package build fix

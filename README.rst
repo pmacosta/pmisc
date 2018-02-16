@@ -307,7 +307,6 @@ Contributing
 	                            identical, exit code 1 indicates
 	                            file(s) are different)
 
-
 	.. [[[end]]]
 
 .. rubric:: Footnotes
