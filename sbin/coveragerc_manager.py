@@ -13,27 +13,38 @@ import sys
 ###
 # Functions
 ###
+def _exclude_files(sdir=None):
+    ver = 3 if sys.hexversion < 0x03000000 else 2
+    isf = [
+        'conftest.py',
+        'version.py',
+        'compat{0}.py'.format(ver),
+    ]
+    if sdir:
+        isf = [os.path.join(sdir, item) for item in isf]
+    return sorted(isf)
+
 def _write(fobj, data):
     """ Simple file write """
     fobj.write(data)
 
 
-def get_source_files(sdir):
+def get_source_files(sdir, inc_init=False):
     """
     Get Python source files that are not __init__.py and
     interpreter-specific
     """
-    ver = 3 if sys.hexversion < 0x03000000 else 2
-    isf = []
-    isf.append('conftest.py')
-    isf.append('version.py')
-    isf.append('compat{0}.py'.format(ver))
-    return [
-        file_name
-        for file_name in os.listdir(sdir)
-        if file_name.endswith('.py') and (file_name != '__init__.py') and
-        (not any([file_name.endswith(item) for item in isf]))
+    exclude_list = _exclude_files()
+    fnames = [item for item in os.listdir(sdir) if item.endswith('.py')]
+    fnames = [
+        fname
+        for fname in fnames
+        if not any([fname.endswith(item) for item in exclude_list])
     ]
+    if not inc_init:
+        fnames = [fname for fname in fnames if fname != '__init__.py']
+    return sorted(fnames)
+
 
 def main(argv):
     """ Processing """
@@ -94,6 +105,7 @@ def main(argv):
     conf_file.append(os.path.join(source_dir, 'plot', 'conftest.py'))
     if mode_flag == '1':
         lines = []
+        lines.append('# File {0}'.format(output_file_name))
         lines.append(
             '# .coveragerc_{0} to control coverage.py during {1} runs'.format(
                 env,
@@ -107,7 +119,9 @@ def main(argv):
         lines.append('data_file = {0}'.format(coverage_file_name))
         start_flag = True
         # Include modules
-        source_files = get_source_files(os.path.join(site_pkg_dir, 'pmisc'))
+        source_files = get_source_files(
+            os.path.join(site_pkg_dir, 'pmisc'), True
+        )
         for file_name in [item for item in source_files]:
             start_flag, prefix = (
                 (False, 'include = ') if start_flag else (False, 10*' ')
@@ -119,6 +133,12 @@ def main(argv):
                     )
                 )
             )
+        start_flag = True
+        for file_name in _exclude_files(os.path.join(site_pkg_dir, 'pmisc')):
+            start_flag, prefix = (
+                (False, 'omit = ') if start_flag else (False, 7*' ')
+            )
+            lines.append('{0}{1}'.format(prefix, file_name))
         # Generate XML reports for continuous integration
         if env == 'ci':
             lines.append('[xml]')
