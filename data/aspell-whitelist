@@ -226,6 +226,7 @@ ctxt
 ctype
 cumsum
 customizations
+CustomTraceback
 cvec
 cvector
 CVECTOR
@@ -598,6 +599,7 @@ iomm
 Ionel's
 ipsum
 irec
+iret
 irmm
 iro
 isalpha
@@ -644,6 +646,7 @@ kxs
 labelsize
 LambdaType
 lang
+lasti
 lavenderblush
 lawngreen
 lcount
@@ -1359,6 +1362,8 @@ tpars
 tpl
 traceback
 Traceback
+tracebacks
+trbk
 tregexp
 triang
 trie

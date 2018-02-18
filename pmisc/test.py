@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0304,C0305,C0413,E0611,F0401
-# pylint: disable=R0914,W0106,W0122,W0212,W0613,W0703
+# pylint: disable=W0106,W0122,W0212,W0613,W0703
 
 # Standard library imports
 from __future__ import print_function
@@ -239,8 +239,8 @@ def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
 
 def _homogenize_breaks(msg):
     """
-    Replace stray newline characters for the line seprator corresponding to the
-    platform the script is being executed on
+    Replace stray newline characters for the line separator corresponding to
+    the platform the script is being executed on
     """
     token = '_{0}_'.format(uuid.uuid4())
     msg = msg.replace(os.linesep, token)
