@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0304,C0305,C0413,E0611,F0401
-# pylint: disable=W0106,W0122,W0212,W0613,W0703
+# pylint: disable=R0914,W0106,W0122,W0212,W0613,W0703
 
 # Standard library imports
 from __future__ import print_function
@@ -39,70 +39,70 @@ _EXC_TRAPS = [
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        318,
+        317,
         '_raise_if_not_raised',
         "raise AssertionError(exmsg or 'Did not raise')"
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        369,
+        368,
         'assert_arg_invalid',
         '**kwargs'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        434,
+        433,
         'assert_exception',
         '_raise_if_not_raised(eobj)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        435,
+        434,
         'assert_exception',
         '_raise_exception_mismatch(eobj, extype, exmsg)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        437,
+        436,
         'assert_exception',
         '_raise_exception_mismatch(excinfo, extype, exmsg)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        474,
+        473,
         'assert_prop',
         '_raise_if_not_raised(eobj)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        476,
+        475,
         'assert_prop',
         '_raise_exception_mismatch(excinfo, extype, exmsg)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        493,
+        492,
         'assert_ro_prop',
         "_raise_if_not_raised(eobj, 'Property can be deleted')"
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        496,
+        495,
         'assert_ro_prop',
         '_raise_exception_mismatch(excinfo, extype, exmsg)'
     ),
     (
        2,
        'pmisc{0}test.py'.format(os.sep),
-        588,
+        587,
         'compare_strings',
         "raise AssertionError('Strings do not match'+os.linesep+ret)"
     ),
@@ -140,7 +140,6 @@ def _excepthook(exc_type, exc_value, exc_traceback):
     Custom exception handler to remove unwanted traceback elements
     past a given specific module call
     """
-    # pylint: disable=R0914
     tbs = traceback.extract_tb(exc_traceback)
     offset = _find_test_module_frame(tbs)
     if not offset:

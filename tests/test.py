@@ -479,9 +479,9 @@ def test_del_pmisc_test_frames():
     eobj = RuntimeError('DID NOT RAISE')
     with pytest.raises(AssertionError) as excinfo:
         pmisc.test._raise_if_not_raised(eobj)
-    assert get_last_tb(excinfo.tb).tb_lineno == 318
-    assert get_last_tb(excinfo.traceback[-1]._rawentry).tb_lineno == 318
-    assert '318 in _raise_if_not_raised' in str(excinfo.traceback[-1])
+    assert get_last_tb(excinfo.tb).tb_lineno == 317
+    assert get_last_tb(excinfo.traceback[-1]._rawentry).tb_lineno == 317
+    assert '317 in _raise_if_not_raised' in str(excinfo.traceback[-1])
     excinfo = obj(excinfo)
     print(get_last_tb(excinfo.tb).tb_lineno)
     assert get_last_tb(excinfo.tb).tb_lineno == 481
