@@ -5,6 +5,10 @@
 Changelog
 =========
 
+* 1.4.1 [2018-02-16]: Moved traceback shortening functions to test module so
+  as to enable the pytest-pmisc Pytest plugin to shorten the tracebacks of the
+  test module functions in that environment
+
 * 1.4.0 [2018-02-16]: Shortened traceback of test methods to point only to the
   line that uses the function that generates the exception
 

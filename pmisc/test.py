@@ -10,6 +10,8 @@ import copy
 import os
 import re
 import sys
+import traceback
+import uuid
 if sys.hexversion < 0x03000000: # pragma: no cover
     from itertools import izip_longest
 else:    # pragma: no cover
@@ -21,6 +23,7 @@ except ImportError: # pragma: no cover
 # PyPI imports
 import pytest
 from _pytest.main import Failed
+from _pytest._code import Traceback
 # Intra-package imports
 if sys.hexversion < 0x03000000: # pragma: no cover
     from .compat2 import _ex_type_str, _get_ex_msg
@@ -29,8 +32,159 @@ else:   # pragma: no cover
 
 
 ###
-# Functions
+# Constants
 ###
+_ORIG_EXCEPTHOOK = sys.__excepthook__
+_EXC_TRAPS = [
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        318,
+        '_raise_if_not_raised',
+        "raise AssertionError(exmsg or 'Did not raise')"
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        369,
+        'assert_arg_invalid',
+        '**kwargs'
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        434,
+        'assert_exception',
+        '_raise_if_not_raised(eobj)'
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        435,
+        'assert_exception',
+        '_raise_exception_mismatch(eobj, extype, exmsg)'
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        437,
+        'assert_exception',
+        '_raise_exception_mismatch(excinfo, extype, exmsg)'
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        474,
+        'assert_prop',
+        '_raise_if_not_raised(eobj)'
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        476,
+        'assert_prop',
+        '_raise_exception_mismatch(excinfo, extype, exmsg)'
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        493,
+        'assert_ro_prop',
+        "_raise_if_not_raised(eobj, 'Property can be deleted')"
+    ),
+    (
+        2,
+        'pmisc{0}test.py'.format(os.sep),
+        496,
+        'assert_ro_prop',
+        '_raise_exception_mismatch(excinfo, extype, exmsg)'
+    ),
+    (
+       2,
+       'pmisc{0}test.py'.format(os.sep),
+        588,
+        'compare_strings',
+        "raise AssertionError('Strings do not match'+os.linesep+ret)"
+    ),
+]
+
+
+###
+# Helper functions
+###
+def _del_pmisc_test_frames(excinfo):
+    """ Remove the pmisc.test module frames from pytest excinfo structure """
+    offset = _find_test_module_frame(traceback.extract_tb(excinfo._excinfo[2]))
+    if offset:
+        new_tb = _process_tb(excinfo.tb, offset)
+        excinfo.tb = new_tb[0] if new_tb else None
+        excinfo._excinfo = (
+            excinfo._excinfo[0], excinfo._excinfo[1], excinfo.tb
+        )
+        excinfo.traceback = Traceback(excinfo.traceback[:offset])
+        for num, _ in enumerate(new_tb):
+            excinfo.traceback[num]._rawentry = new_tb[num]
+    return excinfo
+
+
+def _eprint(msg): # pragma: no cover
+    """
+    Print passthrough function, for ease of testing of
+    custom excepthook function
+    """
+    print(msg, file=sys.stderr)
+
+
+def _excepthook(exc_type, exc_value, exc_traceback):
+    """
+    Custom exception handler to remove unwanted traceback elements
+    past a given specific module call
+    """
+    # pylint: disable=R0914
+    tbs = traceback.extract_tb(exc_traceback)
+    offset = _find_test_module_frame(tbs)
+    if not offset:
+        _ORIG_EXCEPTHOOK(exc_type, exc_value, exc_traceback)
+    new_tb = _process_tb(exc_traceback, offset)
+    if new_tb:
+        exc_traceback = new_tb[0]
+    tbs = traceback.extract_tb(exc_traceback)
+    tblines = ['Traceback (most recent call last):']
+    tblines += traceback.format_list(tbs)
+    tblines = [_homogenize_breaks(item) for item in tblines if item.strip()]
+    regexp = re.compile(r"<(?:\bclass\b|\btype\b)\s+'?([\w|\.]+)'?>")
+    exc_type = regexp.match(str(exc_type)).groups()[0]
+    exc_type = (
+        exc_type[11:] if exc_type.startswith('exceptions.') else exc_type
+    )
+    tblines += ['{0}: {1}'.format(exc_type, exc_value)]
+    lines = os.linesep.join(tblines)
+    _eprint(lines)
+
+
+def _find_test_module_frame(tbs):
+    """ Find the first pmisc.test module frame in Pytest excinfo structure """
+    def make_test_tuple(tbt, ntokens=1):
+        """ Create exception comparison tuple """
+        fname, line, func, exc = tbt
+        fname = os.sep.join(fname.split(os.sep)[-ntokens:])
+        return (fname, line, func, exc)
+    offset = 0
+    for num, item in enumerate(tbs):
+        found = False
+        for trap in _EXC_TRAPS:
+            ntokens = trap[0]
+            ref = make_test_tuple(trap[1:], ntokens)
+            fname, line, func, exc = make_test_tuple(item, ntokens)
+            if (fname, line, func, exc) == ref:
+                offset = num
+                found = True
+                break
+        if found:
+            break
+    return offset
+
+
 def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
     """
     Returns a tuple of the function argument names in the order they are
@@ -83,6 +237,18 @@ def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
     return varargs_filtered_args
 
 
+def _homogenize_breaks(msg):
+    """
+    Replace stray newline characters for the line seprator corresponding to the
+    platform the script is being executed on
+    """
+    token = '_{0}_'.format(uuid.uuid4())
+    msg = msg.replace(os.linesep, token)
+    msg = msg.replace('\n', os.linesep)
+    msg = msg.replace(token, os.linesep).rstrip()
+    return msg
+
+
 def _invalid_frame(fobj):
     """ Selects valid stack frame to process """
     fin = fobj.f_code.co_filename
@@ -105,7 +271,27 @@ def _pcolor(text, color, indent=0): # pragma: no cover
     return '{indent}{text}'.format(indent=' '*indent, text=text)
 
 
+def _process_tb(trbk, offset=-1):
+    """
+    Creates a "copy" of the traceback chain and cut it at a predefined depth
+    """
+    obj = trbk
+    iret = []
+    while obj:
+        iret.append((obj.tb_frame, obj.tb_lasti, obj.tb_lineno, obj.tb_next))
+        obj = obj.tb_next
+    ret = [_CustomTraceback(*item) for item in iret[:offset]]
+    if ret:
+        ret[-1].tb_next = None
+    return ret
+
+
 def _raise_exception_mismatch(excinfo, extype, exmsg):
+    """
+    Creates a verbose message when the expected exception does not match the
+    actual exception, be it due to a different exception type or a different
+    exception message or both
+    """
     regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
     actmsg = get_exmsg(excinfo)
     acttype = (
@@ -124,10 +310,33 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
 
 
 def _raise_if_not_raised(eobj, exmsg=None):
+    """
+    Raise an exception if there was no exception raised (and it should
+    have been)
+    """
     if get_exmsg(eobj).upper().startswith('DID NOT RAISE'):
         raise AssertionError(exmsg or 'Did not raise')
 
 
+###
+# Helper classes
+###
+class _CustomTraceback(object):
+    """
+    This class mimics a traceback object so that it is possible to break the
+    traceback chain (by making tb_next None) as desired
+    """
+    # pylint: disable=R0903
+    def __init__(self, tb_frame, tb_lasti, tb_lineno, tb_next):
+        self.tb_frame = tb_frame
+        self.tb_lasti = tb_lasti
+        self.tb_lineno = tb_lineno
+        self.tb_next = tb_next
+
+
+###
+# Functions
+###
 def assert_arg_invalid(fpointer, pname, *args, **kwargs):
     r"""
     Asserts whether a function raises a :code:`RuntimeError` exception with the
