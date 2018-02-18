@@ -5,7 +5,7 @@
 Changelog
 =========
 
-* 1.4.1 [2018-02-16]: Moved traceback shortening functions to test module so
+* 1.4.1 [2018-02-18]: Moved traceback shortening functions to test module so
   as to enable the pytest-pmisc Pytest plugin to shorten the tracebacks of the
   test module functions in that environment
 
