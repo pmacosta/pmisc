@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.4.2 [2018-03-01]: Fixed bugs in gcd and per functions which were not
+  correctly handling Numpy data types. Minor code refactoring
+
 * 1.4.1 [2018-02-18]: Moved traceback shortening functions to test module so
   as to enable the pytest-pmisc Pytest plugin to shorten the tracebacks of the
   test module functions in that environment

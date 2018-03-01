@@ -188,6 +188,7 @@ contextmanager
 cOnTiNuOuS
 ContractNotRespected
 ContractSyntaxError
+conv
 copyfile
 copysign
 copytree
@@ -528,6 +529,7 @@ GnBu
 greenyellow
 hasattr
 Hettinger
+hexdigits
 hexversion
 HH
 hier
@@ -1091,6 +1093,7 @@ rebase
 Rebase
 rect
 recursed
+refactoring
 refstr
 regtext
 reinstall
@@ -1232,7 +1235,9 @@ slaveinput
 slaveoutput
 slist
 smant
+smax
 smf
+smin
 snum
 sobj
 soline

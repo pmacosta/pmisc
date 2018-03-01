@@ -8,12 +8,32 @@ import copy
 from decimal import Decimal
 from fractions import Fraction
 # Intra-package imports
-from .member import isiterable, isreal
+from .member import isiterable
 
 
 ###
 # Functions
 ###
+def _isreal(obj):
+    """
+    Determines if an object is a real number (both Python standard data types
+    and Numpy data types)
+
+    :param obj: Object
+    :type  obj: any
+
+    :rtype: boolean
+    """
+    # pylint: disable=W0702
+    if (obj is None) or isinstance(obj, bool):
+        return False
+    try:
+        cond = (int(obj) == obj) or (float(obj) == obj)
+    except:
+        return False
+    return cond
+
+
 def _no_exp(number):
     r"""
     Converts a number to a string guaranteeing that the result is not
@@ -26,7 +46,7 @@ def _no_exp(number):
 
     :raises: RuntimeError (Argument \`number\` is not valid)
     """
-    if not any([isinstance(number, item) for item in [int, float]]):
+    if isinstance(number, bool) or (not isinstance(number, (int, float))):
         raise RuntimeError('Argument `number` is not valid')
     mant, exp = _to_scientific_tuple(number)
     if not exp:
@@ -44,7 +64,7 @@ def _no_exp(number):
 
 
 def _to_scientific_tuple(number):
-    """
+    r"""
     Returns mantissa and exponent of a number when expressed in
     scientific notation. Full precision is maintained if the number is
     represented as a string
@@ -52,16 +72,18 @@ def _to_scientific_tuple(number):
     :param number: Number
     :type  number: integer, float or string
 
-    :rtype: named tuple in which the first item is the mantissa (*string*)
-            and the second item is the exponent (*integer*) of the number
-            when expressed in scientific notation
+    :rtype: Tuple whose first item is the mantissa (*string*) and the second
+            item is the exponent (*integer*) of the number when expressed in
+            scientific notation
+
+    :raises: RuntimeError (Argument \`number\` is not valid)
     """
     # pylint: disable=W0632
-    if not any([isinstance(number, item) for item in [int, float, str]]):
+    if isinstance(number, bool) or (not isinstance(number, (int, float, str))):
         raise RuntimeError('Argument `number` is not valid')
     convert = not isinstance(number, str)
     # Detect zero and return, simplifies subsequent algorithm
-    if ((convert and (number == 0)) or
+    if ((convert and (not number)) or
        ((not convert) and (not number.strip('0').strip('.')))):
         return ('0', 0)
     # Break down number into its components, use Decimal type to
@@ -70,14 +92,10 @@ def _to_scientific_tuple(number):
     # digits: tuple with digits of number
     # exp   : exponent that gives null fractional part
     sign, digits, exp = Decimal(str(number) if convert else number).as_tuple()
-    mant = '{sign}{itg}{frac}'.format(
+    mant = '{sign}{itg}.{frac}'.format(
         sign='-' if sign else '',
         itg=digits[0],
-        frac=(
-            '.{frac}'.format(frac=''.join([str(num) for num in digits[1:]]))
-            if len(digits) > 1 else
-            ''
-        )
+        frac=''.join(str(item) for item in digits[1:])
     ).rstrip('0').rstrip('.')
     exp += len(digits)-1
     return (mant, exp)
@@ -97,7 +115,8 @@ def gcd(vector):
     :param vector: Vector of numbers
     :type  vector: list of numbers or Numpy vector of numbers
     """
-    if not vector:
+    # pylint: disable=C1801
+    if not len(vector):
         return None
     if len(vector) == 1:
         return vector[0]
@@ -145,25 +164,24 @@ def normalize(value, series, offset=0):
         >>> pmisc.normalize(15, [10, 20], 0.5)
         0.75
     """
-    if not isreal(value):
+    if not _isreal(value):
         raise RuntimeError('Argument `value` is not valid')
-    if not isreal(offset):
+    if not _isreal(offset):
         raise RuntimeError('Argument `offset` is not valid')
     try:
-        assert isreal(min(series))
-        assert isreal(max(series))
-    except AssertionError:
+        smin = float(min(series))
+        smax = float(max(series))
+    except:
         raise RuntimeError('Argument `series` is not valid')
-    if (offset < 0) or (offset > 1):
+    value = float(value)
+    offset = float(offset)
+    if not 0 <= offset <= 1:
         raise ValueError('Argument `offset` has to be in the [0.0, 1.0] range')
-    if (value < min(series)) or (value > max(series)):
+    if not smin <= value <= smax:
         raise ValueError(
             'Argument `value` has to be within the bounds of argument `series`'
         )
-    return (
-        offset+((1.0-offset)*
-        ((value-float(min(series)))/(float(max(series))-float(min(series)))))
-    )
+    return offset+((1.0-offset)*(value-smin)/(smax-smin))
 
 
 def per(arga, argb, prec=10):
@@ -199,29 +217,17 @@ def per(arga, argb, prec=10):
     # pylint: disable=C0103,C0200,E1101,R0204
     if not isinstance(prec, int):
         raise RuntimeError('Argument `prec` is not valid')
-    arga_type = (
-        1
-        if isreal(arga) else (
-            2 if isiterable(arga) and not isinstance(arga, str) else 0
-        )
-    )
-    argb_type = (
-        1
-        if isreal(argb) else (
-            2 if isiterable(argb) and not isinstance(argb, str) else 0
-        )
-    )
-    if not arga_type:
+    a_type = 1*_isreal(arga)+2*(isiterable(arga) and not isinstance(arga, str))
+    b_type = 1*_isreal(argb)+2*(isiterable(argb) and not isinstance(argb, str))
+    if not a_type:
         raise RuntimeError('Argument `arga` is not valid')
-    if not argb_type:
+    if not b_type:
         raise RuntimeError('Argument `argb` is not valid')
-    if arga_type != argb_type:
+    if a_type != b_type:
         raise TypeError('Arguments are not of the same type')
-    if arga_type == 1:
-        arga = float(arga)
-        argb = float(argb)
-        num_max = max(arga, argb)
-        num_min = min(arga, argb)
+    if a_type == 1:
+        arga, argb = float(arga), float(argb)
+        num_min, num_max = min(arga, argb), max(arga, argb)
         return (
             0
             if arga == argb else
@@ -231,12 +237,11 @@ def per(arga, argb, prec=10):
     # having to import numpy
     ret = copy.copy(arga)
     for num, (x, y) in enumerate(zip(arga, argb)):
-        if not isreal(x):
+        if not _isreal(x):
             raise RuntimeError('Argument `arga` is not valid')
-        if not isreal(y):
+        if not _isreal(y):
             raise RuntimeError('Argument `argb` is not valid')
-        x = float(x)
-        y = float(y)
+        x, y = float(x), float(y)
         ret[num] = (
             0
             if x == y else (
@@ -280,8 +285,15 @@ def pgcd(numa, numb):
         ... )
         Fraction(1, 3)
     """
-    int_args = isinstance(numa, int) and isinstance(numb, int)
+    # Test for integers this way to be valid also for Numpy data types without
+    # actually importing (and package depending on) Numpy
+    int_args = (int(numa) == numa) and (int(numb) == numb)
     fraction_args = isinstance(numa, Fraction) and isinstance(numb, Fraction)
+    # Force conversion for Numpy data types
+    if int_args:
+        numa, numb = int(numa), int(numb)
+    elif not fraction_args:
+        numa, numb = float(numa), float(numb)
     # Limit floating numbers to a "sane" fractional part resolution
     if (not int_args) and (not fraction_args):
         numa, numb = (

@@ -68,10 +68,10 @@ sterile: clean
 test: FORCE
 	@$(PKG_DIR)/sbin/rtest.sh $(ARGS)
 
-upload: distro
+upload: check distro
 	@twine upload $(PKG_DIR)/dist/*
 
-wheel: meta
+wheel: check meta
 	@echo "Creating wheel distribution"
 	@cp $(PKG_DIR)/MANIFEST.in $(PKG_DIR)/MANIFEST.in.tmp
 	@cd $(PKG_DIR)/sbin; ./gen_pkg_manifest.py wheel

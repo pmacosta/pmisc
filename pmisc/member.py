@@ -3,6 +3,9 @@
 # See LICENSE for details
 # pylint: disable=C0111
 
+# Standard library imports
+import string
+
 
 ###
 # Functions
@@ -44,9 +47,7 @@ def ishex(obj):
     :rtype: boolean
     """
     return (
-        (isinstance(obj, str) and
-        (len(obj) == 1) and
-        (obj.upper() in '0123456789ABCDEF'))
+        isinstance(obj, str) and (len(obj) == 1) and (obj in string.hexdigits)
     )
 
 
@@ -63,8 +64,7 @@ def isiterable(obj):
         iter(obj)
     except TypeError:
         return False
-    else:
-        return True
+    return True
 
 
 def isnumber(obj):

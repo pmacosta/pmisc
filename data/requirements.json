@@ -119,12 +119,20 @@
 		"ver":">=2.9.1",
 		"pos":14
 	},
+	"numpy":{
+		"name":"Numpy",
+		"optional":false,
+		"url":"http://www.numpy.org",
+		"cat":["tests"],
+		"ver":">=1.8.2",
+		"pos":15
+    },
 	"virtualenv":{
 		"name":"Virtualenv",
 		"optional":false,
 		"url":"http://docs.python-guide.org/en/latest/dev/virtualenvs",
 		"cat":["tests"],
 		"ver":">=15.1.0",
-		"pos":15
+		"pos":16
 	}
 }

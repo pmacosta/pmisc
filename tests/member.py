@@ -25,6 +25,7 @@ def test_ishex():
     assert not pmisc.ishex(5)
     assert not pmisc.ishex('45')
     assert pmisc.ishex('F')
+    assert pmisc.ishex('f')
 
 
 def test_isiterable():

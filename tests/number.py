@@ -7,6 +7,7 @@
 from fractions import Fraction
 # PyPI imports
 import pytest
+import numpy as np
 # Intra-package imports
 import pmisc
 from pmisc import AE, AI
@@ -15,6 +16,20 @@ from pmisc import AE, AI
 ###
 # Test functions
 ###
+@pytest.mark.parametrize(
+    'obj, ref', [
+        (1, True),
+        (1.0, True),
+        (np.array([1.0, 7])[0], True),
+        (True, False),
+        ('a', False),
+    ]
+)
+def test_private_isreal(obj, ref):
+    """ Test _isreal function behavior """
+    assert pmisc.number._isreal(obj) == ref
+
+
 @pytest.mark.parametrize(
     'num, ref', [
     (0, '0'),
@@ -41,22 +56,36 @@ def test_no_exp(num, ref):
 
 def test_no_exp_exceptions():
     """ Test _no_exp function exceptions """
+    AI(pmisc.number._no_exp, 'number', number=None)
+    AI(pmisc.number._no_exp, 'number', number=True)
     AI(pmisc.number._no_exp, 'number', number='a')
 
 
 def test_to_scientific_tuple_exceptions():
     """ Test _to_scientific_tuple function exceptions """
+    AI(pmisc.number._to_scientific_tuple, 'number', number=None)
+    AI(pmisc.number._to_scientific_tuple, 'number', number=True)
     AI(pmisc.number._to_scientific_tuple, 'number', number=5+3j)
 
 
-def test_gcd():
+@pytest.mark.parametrize(
+    'vector, ref, conv', [
+        ([], None, True),
+        ([7], 7, True),
+        ([48, 18], 6, True),
+        ([20, 12, 16], 4, True),
+        (
+            [Fraction(5, 3), Fraction(2, 3), Fraction(10, 3)],
+            Fraction(1, 3),
+            False
+        ),
+    ]
+)
+def test_gcd(vector, ref, conv):
     """ Test gcd function behavior """
-    assert pmisc.gcd([]) is None
-    assert pmisc.gcd([7]) == 7
-    assert pmisc.gcd([48, 18]) == 6
-    assert pmisc.gcd([20, 12, 16]) == 4
-    ref = [Fraction(5, 3), Fraction(2, 3), Fraction(10, 3)]
-    assert pmisc.gcd(ref) == Fraction(1, 3)
+    assert pmisc.gcd(vector) == ref
+    if conv:
+        assert pmisc.gcd(np.array(vector)) == ref
 
 
 def test_normalize():
@@ -71,6 +100,8 @@ def test_normalize():
     AE(obj, ValueError, exmsg, value=0, series=[2, 5], offset=0)
     assert pmisc.normalize(15, [10, 20]) == 0.5
     assert pmisc.normalize(15, [10, 20], 0.5) == 0.75
+    assert pmisc.normalize(15, np.array([10, 20])) == 0.5
+    assert pmisc.normalize(15, np.array([10, 20]), 0.5) == 0.75
 
 
 def test_per():
@@ -85,14 +116,17 @@ def test_per():
     AE(obj, TypeError, exmsg, arga=5, argb=[5, 7], prec=1)
     assert obj(3, 2, 1) == 0.5
     assert obj(3.1, 3.1, 1) == 0
-    ttuple = zip(obj([3, 1.1, 5], [2, 1.1, 2], 1), [0.5, 0, 1.5])
-    assert all([test == ref for test, ref in ttuple])
-    ttuple = zip(obj([3, 1.1, 5], [2, 1.1, 2], 1), [0.5, 0, 1.5])
-    assert all([test == ref for test, ref in ttuple])
     assert obj(4, 3, 3) == 0.333
     assert obj(4, 0, 3) == 1e20
-    ttuple = zip(obj([3, 1.1, 5], [2, 0, 2], 1), [0.5, 1e20, 1.5])
-    assert all([test == ref for test, ref in ttuple])
+    data = (
+        ([3, 1.1, 5], [2, 1.1, 2], 1, [0.5, 0, 1.5]),
+        ([3, 1.1, 5], [2, 0, 2], 1, [0.5, 1e20, 1.5]),
+    )
+    for arga, argb, prec, ref in data:
+        test = obj(arga, argb, prec)
+        assert test == ref
+        test = obj(np.array(arga), np.array(argb), prec)
+        assert (test == np.array(ref)).all()
 
 
 def test_pgcd():
