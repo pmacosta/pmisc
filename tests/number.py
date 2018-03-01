@@ -1,13 +1,13 @@
 # number.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0103,C0111,E0611,W0212
+# pylint: disable=C0103,C0111,C0411,E0611,W0212
 
 # Standard library imports
 from fractions import Fraction
 # PyPI imports
-import pytest
 import numpy as np
+import pytest
 # Intra-package imports
 import pmisc
 from pmisc import AE, AI
