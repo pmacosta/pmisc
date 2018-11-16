@@ -2,7 +2,7 @@
 # requirements_to_rst.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0103,C0111,R0912,R0914,R0915
+# pylint: disable=C0103,C0111,R0912,R0914,R0915,R1717,R1718
 
 import os
 import textwrap
@@ -80,9 +80,9 @@ def op_to_words(item):
         if item.startswith(prefix):
             if prefix == '==':
                 return item[2:]
-            elif prefix == '!=':
+            if prefix == '!=':
                 return suffix+item[2:]
-            elif prefix in ['>', '<']:
+            if prefix in ['>', '<']:
                 return suffix+item[1:]
             return item[2:]+suffix
     raise RuntimeError('Inequality not supported')

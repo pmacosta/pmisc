@@ -39,7 +39,7 @@ def _readlines(fname): # pragma: no cover
 # how-to-get-string-objects-instead-of-unicode-ones-from-json-in-python
 # with Python 2.6 compatibility changes
 def _unicode_to_ascii(obj): # pragma: no cover
-    # pylint: disable=E0602
+    # pylint: disable=E0602,R1717
     if isinstance(obj, dict):
         return dict(
             [
@@ -47,9 +47,9 @@ def _unicode_to_ascii(obj): # pragma: no cover
                 for key, value in obj.items()
             ]
         )
-    elif isinstance(obj, list):
+    if isinstance(obj, list):
         return [_unicode_to_ascii(element) for element in obj]
-    elif isinstance(obj, unicode):
+    if isinstance(obj, unicode):
         return obj.encode('utf-8')
     return obj
 

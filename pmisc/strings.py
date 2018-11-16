@@ -12,7 +12,7 @@ from .file import normalize_windows_fname
 ###
 _OCTAL_ALPHABET = [
     chr(_NUM)
-    if (_NUM >= 32) and (_NUM <= 126) else
+    if (32 <= _NUM <= 126) else
     '\\'+str(oct(_NUM)).lstrip('0')
     for _NUM in range(0, 256)
 ]
@@ -153,9 +153,9 @@ def elapsed_time_string(start_time, stop_time):
     ]
     if not ret_list:
         return 'None'
-    elif len(ret_list) == 1:
+    if len(ret_list) == 1:
         return ret_list[0]
-    elif len(ret_list) == 2:
+    if len(ret_list) == 2:
         return ret_list[0]+' and '+ret_list[1]
     return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
 

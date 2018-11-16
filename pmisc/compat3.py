@@ -38,8 +38,6 @@ def _readlines(fname, fpointer1=open, fpointer2=open): # pragma: no cover
     except UnicodeDecodeError: # pragma: no cover
         with fpointer2(fname, 'r', encoding='utf-8') as fobj:
             return fobj.readlines()
-    except: # pragma: no cover
-        raise
 
 
 def _unicode_to_ascii(obj): # pragma: no cover

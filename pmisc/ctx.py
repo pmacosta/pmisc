@@ -1,7 +1,7 @@
 # ctx.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,E1129,R0903,W0105,W1113
+# pylint: disable=C0111,E1129,R0205,R0903,W0105,W1113
 
 # Standard library imports
 from __future__ import print_function
@@ -33,11 +33,12 @@ mdir = os.path.realpath(os.path.dirname(fname))
 @decorator.contextmanager
 def ignored(*exceptions):
     """
-    Executes commands and selectively ignores exceptions
-    (Inspired by `"Transforming Code into Beautiful, Idiomatic Python"
+    Execute commands and selectively ignore exceptions.
+
+    Inspired by `"Transforming Code into Beautiful, Idiomatic Python"
     <http://pyvideo.org/video/1780/
     transforming-code-into-beautiful-idiomatic-pytho>`_ talk at PyCon US
-    2013 by Raymond Hettinger)
+    2013 by Raymond Hettinger.
 
     :param exceptions: Exception type(s) to ignore
     :type  exceptions: Exception object, i.e. RuntimeError, OSError, etc.
@@ -94,8 +95,10 @@ def ignored(*exceptions):
 class Timer(object):
     r"""
     Profiles blocks of code by calculating elapsed time between the context
-    manager entry and exit time points. Inspired by `Huy Nguyen's blog
-    <http://www.huyng.com/posts/python-performance-analysis/>`_
+    manager entry and exit time points.
+
+    Inspired by `Huy Nguyen's blog
+    <http://www.huyng.com/posts/python-performance-analysis/>`_.
 
     :param verbose: Flag that indicates whether the elapsed time is printed
                     upon exit (True) or not (False)

@@ -9,7 +9,7 @@
 ###
 def flatten_list(lobj):
     """
-    Recursively flattens a list
+    Recursively flattens a list.
 
     :param lobj: List to flatten
     :type  lobj: list

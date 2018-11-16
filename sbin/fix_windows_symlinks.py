@@ -29,8 +29,6 @@ def read_file(fname):
         except UnicodeDecodeError:
             with open(fname, 'r', encoding='utf-8') as fobj:
                 return fobj.readlines()
-        except:
-            raise
 
 
 def resolve_win_symlinks():

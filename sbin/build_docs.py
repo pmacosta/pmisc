@@ -185,9 +185,9 @@ def elapsed_time_string(start_time, stop_time):
     ]
     if not ret_list == 0:
         return 'None'
-    elif len(ret_list) == 1:
+    if len(ret_list) == 1:
         return ret_list[0]
-    elif len(ret_list) == 2:
+    if len(ret_list) == 2:
         return ret_list[0]+' and '+ret_list[1]
     return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
 

@@ -1,7 +1,7 @@
 # test.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,C0413,E0401,E0611,R0201,R0903,R0915,W0212
+# pylint: disable=C0111,C0413,C0414,E0401,E0611,R0201,R0205,R0903,R0915,W0212
 
 # Standard library imports
 from __future__ import print_function
@@ -161,12 +161,12 @@ def test_assert_ro_prop():
         )
         ref1 = base+'Got: SyntaxError ()'
         ref2 = base+'Got: SyntaxError (invalid syntax)'
-        if (actmsg != ref1) and (actmsg != ref2):
+        if actmsg not in (ref1, ref2):
             print(
                 'Expected:'+os.linesep+ref1+os.linesep+'Or'+os.linesep+
                 ref2+os.linesep+'Got:'+os.linesep+actmsg
             )
-        assert (actmsg == ref1) or (actmsg == ref2)
+        assert actmsg in (ref1, ref2)
 
 
 def test_comp_list_of_dicts():

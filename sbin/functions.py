@@ -1,7 +1,7 @@
 # functions.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,E0602,E1111,R0904,W0201,W0621
+# pylint: disable=C0111,E0602,E1111,R0904,R1717,R1718,W0201,W0621
 
 # Standard library imports
 from __future__ import print_function
@@ -15,7 +15,7 @@ import sys
 ###
 # Global variables
 ###
-SUPPORTED_VERS = ['2.7', '3.5', '3.6']
+SUPPORTED_VERS = ['2.7', '3.5', '3.6', '3.7']
 
 
 ###
@@ -38,8 +38,6 @@ else:
         except UnicodeDecodeError: # pragma: no cover
             with fpointer2(fname, 'r', encoding='utf-8') as fobj:
                 return fobj.readlines()
-        except: # pragma: no cover
-            raise
 
 # This function is copied from pmisc.compat2 and pmisc.compat3
 # Repeated here so as make functions in this file self-contained
@@ -55,9 +53,9 @@ if sys.hexversion < 0x03000000:
                     for key, value in obj.items()
                 ]
             )
-        elif isinstance(obj, list):
+        if isinstance(obj, list):
             return [_unicode_to_ascii(element) for element in obj]
-        elif isinstance(obj, unicode):
+        if isinstance(obj, unicode):
             return obj.encode('utf-8')
         return obj
 else:
@@ -219,7 +217,7 @@ def shcmd(cmd_list, exmsg, async_stdout=False):
             line = proc.stdout.readline()
         else:
             line = proc.stdout.readline().decode('utf-8')
-        if (line == '') and (proc.poll() != None):
+        if (line == '') and (proc.poll() is not None):
             break
         sys.stdout.write(line)
         sys.stdout.flush()
