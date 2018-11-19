@@ -11,19 +11,17 @@ from .file import normalize_windows_fname
 # Global constants
 ###
 _OCTAL_ALPHABET = [
-    chr(_NUM)
-    if (32 <= _NUM <= 126) else
-    '\\'+str(oct(_NUM)).lstrip('0')
+    chr(_NUM) if (32 <= _NUM <= 126) else "\\" + str(oct(_NUM)).lstrip("0")
     for _NUM in range(0, 256)
 ]
-_OCTAL_ALPHABET[0] = '\\0'   # Null character
-_OCTAL_ALPHABET[7] = '\\a'   # Bell/alarm
-_OCTAL_ALPHABET[8] = '\\b'   # Back space
-_OCTAL_ALPHABET[9] = '\\t'   # Horizontal tab
-_OCTAL_ALPHABET[10] = '\\n'  # Line feed
-_OCTAL_ALPHABET[11] = '\\v'  # Vertical tab
-_OCTAL_ALPHABET[12] = '\\f'  # Form feed
-_OCTAL_ALPHABET[13] = '\\r'  # Carriage return
+_OCTAL_ALPHABET[0] = "\\0"  # Null character
+_OCTAL_ALPHABET[7] = "\\a"  # Bell/alarm
+_OCTAL_ALPHABET[8] = "\\b"  # Back space
+_OCTAL_ALPHABET[9] = "\\t"  # Horizontal tab
+_OCTAL_ALPHABET[10] = "\\n"  # Line feed
+_OCTAL_ALPHABET[11] = "\\v"  # Vertical tab
+_OCTAL_ALPHABET[12] = "\\f"  # Form feed
+_OCTAL_ALPHABET[13] = "\\r"  # Carriage return
 
 
 ###
@@ -73,12 +71,12 @@ def binary_string_to_octal_string(text):
         '\\1\\0\\2\\0\\3\\0\\4\\0\\5\\0\\6\\0\\a\\0\\b\\0\\t\\0\\...
     """
     # pylint: disable=C0103
-    return ''.join([_OCTAL_ALPHABET[ord(char)] for char in text])
+    return "".join([_OCTAL_ALPHABET[ord(char)] for char in text])
 
 
 def char_to_decimal(text):
     """
-    Convert a string to its decimal ASCII representation, with spaces between characters.
+    Convert a string to its decimal ASCII representation with spaces between characters.
 
     :param text: Text to convert
     :type  text: string
@@ -91,7 +89,7 @@ def char_to_decimal(text):
         >>> pmisc.char_to_decimal('Hello world!')
         '72 101 108 108 111 32 119 111 114 108 100 33'
     """
-    return ' '.join([str(ord(char)) for char in text])
+    return " ".join([str(ord(char)) for char in text])
 
 
 def elapsed_time_string(start_time, stop_time):
@@ -125,38 +123,39 @@ def elapsed_time_string(start_time, stop_time):
         '1 year, 2 days and 2 seconds'
     """
     if start_time > stop_time:
-        raise RuntimeError('Invalid time delta specification')
-    delta_time = stop_time-start_time
+        raise RuntimeError("Invalid time delta specification")
+    delta_time = stop_time - start_time
     # Python 2.6 datetime objects do not have total_seconds() method
     tot_seconds = int(
         (
-            delta_time.microseconds+
-            (delta_time.seconds+delta_time.days*24*3600)*10**6
+            delta_time.microseconds
+            + (delta_time.seconds + delta_time.days * 24 * 3600) * 10 ** 6
         )
-        /
-        10**6
+        / 10 ** 6
     )
-    years, remainder = divmod(tot_seconds, 365*24*60*60)
-    months, remainder = divmod(remainder, 30*24*60*60)
-    days, remainder = divmod(remainder, 24*60*60)
-    hours, remainder = divmod(remainder, 60*60)
+    years, remainder = divmod(tot_seconds, 365 * 24 * 60 * 60)
+    months, remainder = divmod(remainder, 30 * 24 * 60 * 60)
+    days, remainder = divmod(remainder, 24 * 60 * 60)
+    hours, remainder = divmod(remainder, 60 * 60)
     minutes, seconds = divmod(remainder, 60)
     token_iter = zip(
         [years, months, days, hours, minutes, seconds],
-        ['year', 'month', 'day', 'hour', 'minute', 'second']
+        ["year", "month", "day", "hour", "minute", "second"],
     )
     ret_list = [
-        '{token} {token_name}{plural}'.format(
-            token=num, token_name=desc, plural='s' if num > 1 else ''
-        ) for num, desc in token_iter if num > 0
+        "{token} {token_name}{plural}".format(
+            token=num, token_name=desc, plural="s" if num > 1 else ""
+        )
+        for num, desc in token_iter
+        if num > 0
     ]
     if not ret_list:
-        return 'None'
+        return "None"
     if len(ret_list) == 1:
         return ret_list[0]
     if len(ret_list) == 2:
-        return ret_list[0]+' and '+ret_list[1]
-    return (', '.join(ret_list[0:-1]))+' and '+ret_list[-1]
+        return ret_list[0] + " and " + ret_list[1]
+    return (", ".join(ret_list[0:-1])) + " and " + ret_list[-1]
 
 
 def pcolor(text, color, indent=0):
@@ -187,25 +186,30 @@ def pcolor(text, color, indent=0):
      * ValueError (Unknown color *[color]*)
     """
     esc_dict = {
-        'black':30, 'red':31, 'green':32, 'yellow':33, 'blue':34, 'magenta':35,
-        'cyan':36, 'white':37, 'none':-1
+        "black": 30,
+        "red": 31,
+        "green": 32,
+        "yellow": 33,
+        "blue": 34,
+        "magenta": 35,
+        "cyan": 36,
+        "white": 37,
+        "none": -1,
     }
     if not isinstance(text, str):
-        raise RuntimeError('Argument `text` is not valid')
+        raise RuntimeError("Argument `text` is not valid")
     if not isinstance(color, str):
-        raise RuntimeError('Argument `color` is not valid')
+        raise RuntimeError("Argument `color` is not valid")
     if not isinstance(indent, int):
-        raise RuntimeError('Argument `indent` is not valid')
+        raise RuntimeError("Argument `indent` is not valid")
     color = color.lower()
     if color not in esc_dict:
-        raise ValueError('Unknown color {color}'.format(color=color))
+        raise ValueError("Unknown color {color}".format(color=color))
     if esc_dict[color] != -1:
-        return (
-            '\033[{color_code}m{indent}{text}\033[0m'.format(
-                color_code=esc_dict[color], indent=' '*indent, text=text
-            )
+        return "\033[{color_code}m{indent}{text}\033[0m".format(
+            color_code=esc_dict[color], indent=" " * indent, text=text
         )
-    return '{indent}{text}'.format(indent=' '*indent, text=text)
+    return "{indent}{text}".format(indent=" " * indent, text=text)
 
 
 def quote_str(obj):
@@ -231,11 +235,7 @@ def quote_str(obj):
     """
     if not isinstance(obj, str):
         return obj
-    return (
-        "'{obj}'".format(obj=obj)
-        if '"' in obj else
-        '"{obj}"'.format(obj=obj)
-    )
+    return "'{obj}'".format(obj=obj) if '"' in obj else '"{obj}"'.format(obj=obj)
 
 
 def strframe(obj, extended=False):
@@ -259,23 +259,21 @@ def strframe(obj, extended=False):
     # code [4], index of current line within list [5])
     fname = normalize_windows_fname(obj[1])
     ret = list()
-    ret.append(
-        pcolor('Frame object ID: {0}'.format(hex(id(obj[0]))), 'yellow')
-    )
-    ret.append('File name......: {0}'.format(fname))
-    ret.append('Line number....: {0}'.format(obj[2]))
-    ret.append('Function name..: {0}'.format(obj[3]))
-    ret.append('Context........: {0}'.format(obj[4]))
-    ret.append('Index..........: {0}'.format(obj[5]))
+    ret.append(pcolor("Frame object ID: {0}".format(hex(id(obj[0]))), "yellow"))
+    ret.append("File name......: {0}".format(fname))
+    ret.append("Line number....: {0}".format(obj[2]))
+    ret.append("Function name..: {0}".format(obj[3]))
+    ret.append("Context........: {0}".format(obj[4]))
+    ret.append("Index..........: {0}".format(obj[5]))
     if extended:
-        ret.append('f_back ID......: {0}'.format(hex(id(obj[0].f_back))))
-        ret.append('f_builtins.....: {0}'.format(obj[0].f_builtins))
-        ret.append('f_code.........: {0}'.format(obj[0].f_code))
-        ret.append('f_globals......: {0}'.format(obj[0].f_globals))
-        ret.append('f_lasti........: {0}'.format(obj[0].f_lasti))
-        ret.append('f_lineno.......: {0}'.format(obj[0].f_lineno))
-        ret.append('f_locals.......: {0}'.format(obj[0].f_locals))
-        if hasattr(obj[0], 'f_restricted'): # pragma: no cover
-            ret.append('f_restricted...: {0}'.format(obj[0].f_restricted))
-        ret.append('f_trace........: {0}'.format(obj[0].f_trace))
-    return '\n'.join(ret)
+        ret.append("f_back ID......: {0}".format(hex(id(obj[0].f_back))))
+        ret.append("f_builtins.....: {0}".format(obj[0].f_builtins))
+        ret.append("f_code.........: {0}".format(obj[0].f_code))
+        ret.append("f_globals......: {0}".format(obj[0].f_globals))
+        ret.append("f_lasti........: {0}".format(obj[0].f_lasti))
+        ret.append("f_lineno.......: {0}".format(obj[0].f_lineno))
+        ret.append("f_locals.......: {0}".format(obj[0].f_locals))
+        if hasattr(obj[0], "f_restricted"):  # pragma: no cover
+            ret.append("f_restricted...: {0}".format(obj[0].f_restricted))
+        ret.append("f_trace........: {0}".format(obj[0].f_trace))
+    return "\n".join(ret)

@@ -49,31 +49,30 @@ def normalize_windows_fname(fname, _force=False):
 
     :rtype: string
     """
-    if ((platform.system().lower() != 'windows')
-       and (not _force)):   # pragma: no cover
+    if (platform.system().lower() != "windows") and (not _force):  # pragma: no cover
         return fname
     # Replace unintended escape sequences that could be in
     # the file name, like "C:\appdata"
     rchars = {
-        '\x07': r'\\a',
-        '\x08': r'\\b',
-        '\x0C': r'\\f',
-        '\x0A': r'\\n',
-        '\x0D': r'\\r',
-        '\x09': r'\\t',
-        '\x0B': r'\\v',
+        "\x07": r"\\a",
+        "\x08": r"\\b",
+        "\x0C": r"\\f",
+        "\x0A": r"\\n",
+        "\x0D": r"\\r",
+        "\x09": r"\\t",
+        "\x0B": r"\\v",
     }
-    ret = ''
+    ret = ""
     for char in os.path.normpath(fname):
-        ret = ret+rchars.get(char, char)
+        ret = ret + rchars.get(char, char)
     # Remove superfluous double backslashes
     network_share = False
     tmp = None
-    network_share = fname.startswith(r'\\')
+    network_share = fname.startswith(r"\\")
     while tmp != ret:
-        tmp, ret = ret, ret.replace(r'\\\\', r'\\')
-    ret = ret.replace(r'\\\\', r'\\')
+        tmp, ret = ret, ret.replace(r"\\\\", r"\\")
+    ret = ret.replace(r"\\\\", r"\\")
     # Put back network share if needed
     if network_share:
-        ret = r'\\'+ret.lstrip(r'\\')
+        ret = r"\\" + ret.lstrip(r"\\")
     return ret

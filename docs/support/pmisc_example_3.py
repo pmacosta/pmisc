@@ -6,11 +6,13 @@
 from __future__ import print_function
 import pmisc
 
+
 def write_data(file_handle):
-    file_handle.write('Hello world!')
+    file_handle.write("Hello world!")
+
 
 def show_tmpfile():
     with pmisc.TmpFile(write_data) as fname:
-        with open(fname, 'r') as fobj:
+        with open(fname, "r") as fobj:
             lines = fobj.readlines()
-    print('\n'.join(lines))
+    print("\n".join(lines))

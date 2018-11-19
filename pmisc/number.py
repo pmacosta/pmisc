@@ -8,6 +8,7 @@ import copy
 from decimal import Decimal
 from fractions import Fraction
 import sys
+
 # Intra-package imports
 from .member import isiterable
 
@@ -15,6 +16,11 @@ from .member import isiterable
 ###
 # Functions
 ###
+def _isclose(obja, objb, rtol=1e-05, atol=1e-08):
+    """Return floating point equality."""
+    return abs(obja - objb) <= (atol + rtol * abs(objb))
+
+
 def _isreal(obj):
     """
     Determine if an object is a real number.
@@ -48,19 +54,19 @@ def _no_exp(number):
     :raises: RuntimeError (Argument \`number\` is not valid)
     """
     if isinstance(number, bool) or (not isinstance(number, (int, float))):
-        raise RuntimeError('Argument `number` is not valid')
+        raise RuntimeError("Argument `number` is not valid")
     mant, exp = _to_scientific_tuple(number)
     if not exp:
         return str(number)
-    floating_mant = '.' in mant
-    mant = mant.replace('.', '')
+    floating_mant = "." in mant
+    mant = mant.replace(".", "")
     if exp < 0:
-        return '0.'+'0'*(-exp-1)+mant
+        return "0." + "0" * (-exp - 1) + mant
     if not floating_mant:
-        return mant+'0'*exp+('.0' if isinstance(number, float) else '')
-    lfpart = len(mant)-1
+        return mant + "0" * exp + (".0" if isinstance(number, float) else "")
+    lfpart = len(mant) - 1
     if lfpart < exp:
-        return (mant+'0'*(exp-lfpart)).rstrip('.')
+        return (mant + "0" * (exp - lfpart)).rstrip(".")
     return mant
 
 
@@ -81,24 +87,29 @@ def _to_scientific_tuple(number):
     """
     # pylint: disable=W0632
     if isinstance(number, bool) or (not isinstance(number, (int, float, str))):
-        raise RuntimeError('Argument `number` is not valid')
+        raise RuntimeError("Argument `number` is not valid")
     convert = not isinstance(number, str)
     # Detect zero and return, simplifies subsequent algorithm
-    if ((convert and (not number)) or
-       ((not convert) and (not number.strip('0').strip('.')))):
-        return ('0', 0)
+    if (convert and (not number)) or (
+        (not convert) and (not number.strip("0").strip("."))
+    ):
+        return ("0", 0)
     # Break down number into its components, use Decimal type to
     # preserve resolution:
     # sign  : 0 -> +, 1 -> -
     # digits: tuple with digits of number
     # exp   : exponent that gives null fractional part
     sign, digits, exp = Decimal(str(number) if convert else number).as_tuple()
-    mant = '{sign}{itg}.{frac}'.format(
-        sign='-' if sign else '',
-        itg=digits[0],
-        frac=''.join(str(item) for item in digits[1:])
-    ).rstrip('0').rstrip('.')
-    exp += len(digits)-1
+    mant = (
+        "{sign}{itg}.{frac}".format(
+            sign="-" if sign else "",
+            itg=digits[0],
+            frac="".join(str(item) for item in digits[1:]),
+        )
+        .rstrip("0")
+        .rstrip(".")
+    )
+    exp += len(digits) - 1
     return (mant, exp)
 
 
@@ -167,23 +178,23 @@ def normalize(value, series, offset=0):
         0.75
     """
     if not _isreal(value):
-        raise RuntimeError('Argument `value` is not valid')
+        raise RuntimeError("Argument `value` is not valid")
     if not _isreal(offset):
-        raise RuntimeError('Argument `offset` is not valid')
+        raise RuntimeError("Argument `offset` is not valid")
     try:
         smin = float(min(series))
         smax = float(max(series))
     except:
-        raise RuntimeError('Argument `series` is not valid')
+        raise RuntimeError("Argument `series` is not valid")
     value = float(value)
     offset = float(offset)
     if not 0 <= offset <= 1:
-        raise ValueError('Argument `offset` has to be in the [0.0, 1.0] range')
+        raise ValueError("Argument `offset` has to be in the [0.0, 1.0] range")
     if not smin <= value <= smax:
         raise ValueError(
-            'Argument `value` has to be within the bounds of argument `series`'
+            "Argument `value` has to be within the bounds of argument `series`"
         )
-    return offset+((1.0-offset)*(value-smin)/(smax-smin))
+    return offset + ((1.0 - offset) * (value - smin) / (smax - smin))
 
 
 def per(arga, argb, prec=10):
@@ -221,38 +232,43 @@ def per(arga, argb, prec=10):
     """
     # pylint: disable=C0103,C0200,E1101,R0204
     if not isinstance(prec, int):
-        raise RuntimeError('Argument `prec` is not valid')
-    a_type = 1*_isreal(arga)+2*(isiterable(arga) and not isinstance(arga, str))
-    b_type = 1*_isreal(argb)+2*(isiterable(argb) and not isinstance(argb, str))
+        raise RuntimeError("Argument `prec` is not valid")
+    a_type = 1 * _isreal(arga) + 2 * (isiterable(arga) and not isinstance(arga, str))
+    b_type = 1 * _isreal(argb) + 2 * (isiterable(argb) and not isinstance(argb, str))
     if not a_type:
-        raise RuntimeError('Argument `arga` is not valid')
+        raise RuntimeError("Argument `arga` is not valid")
     if not b_type:
-        raise RuntimeError('Argument `argb` is not valid')
+        raise RuntimeError("Argument `argb` is not valid")
     if a_type != b_type:
-        raise TypeError('Arguments are not of the same type')
+        raise TypeError("Arguments are not of the same type")
     if a_type == 1:
         arga, argb = float(arga), float(argb)
         num_min, num_max = min(arga, argb), max(arga, argb)
         return (
             0
-            if arga == argb else
-            (1e20 if (not num_min) else round((num_max/num_min)-1, prec))
+            if _isclose(arga, argb)
+            else (
+                sys.float_info.max
+                if _isclose(num_min, 0.0)
+                else round((num_max / num_min) - 1, prec)
+            )
         )
     # Contortions to handle lists and Numpy arrays without explicitly
     # having to import numpy
     ret = copy.copy(arga)
     for num, (x, y) in enumerate(zip(arga, argb)):
         if not _isreal(x):
-            raise RuntimeError('Argument `arga` is not valid')
+            raise RuntimeError("Argument `arga` is not valid")
         if not _isreal(y):
-            raise RuntimeError('Argument `argb` is not valid')
+            raise RuntimeError("Argument `argb` is not valid")
         x, y = float(x), float(y)
         ret[num] = (
             0
-            if x == y else (
-                sys.float_info.max if (x == 0) or (y == 0) else (
-                    round((max(x, y)/min(x, y))-1, prec)
-                )
+            if _isclose(x, y)
+            else (
+                sys.float_info.max
+                if _isclose(x, 0.0) or _isclose(y, 0)
+                else (round((max(x, y) / min(x, y)) - 1, prec))
             )
         )
     return ret
@@ -303,11 +319,11 @@ def pgcd(numa, numb):
     if (not int_args) and (not fraction_args):
         numa, numb = (
             Fraction(_no_exp(numa)).limit_denominator(),
-            Fraction(_no_exp(numb)).limit_denominator()
+            Fraction(_no_exp(numb)).limit_denominator(),
         )
     while numb:
         numa, numb = (
             numb,
-            (numa % numb if int_args else (numa % numb).limit_denominator())
+            (numa % numb if int_args else (numa % numb).limit_denominator()),
         )
     return int(numa) if int_args else (numa if fraction_args else float(numa))

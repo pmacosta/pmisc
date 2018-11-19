@@ -10,6 +10,7 @@ import datetime
 import os
 import re
 import sys
+
 # Intra-package imports
 import sbin.functions
 
@@ -19,38 +20,32 @@ import sbin.functions
 def read_file(fname):
     """Read file in Python 2 or Python 3."""
     if sys.hexversion < 0x03000000:
-        with open(fname, 'r') as fobj:
+        with open(fname, "r") as fobj:
             return fobj.readlines()
     else:
         try:
-            with open(fname, 'r') as fobj:
+            with open(fname, "r") as fobj:
                 return fobj.readlines()
         except UnicodeDecodeError:
-            with open(fname, 'r', encoding='utf-8') as fobj:
+            with open(fname, "r", encoding="utf-8") as fobj:
                 return fobj.readlines()
 
 
 def update_copyright_notice():
     """Update copyright notice in project files."""
-    pkg_dir = os.path.dirname(
-        os.path.dirname(os.path.abspath(__file__))
-    )
-    regexp = re.compile(
-        '.*Copyright \\(c\\) 2013-(\\d\\d\\d\\d) Pablo Acosta-Serafini'
-    )
-    ext_exclude = [
-        'pyc', 'png', 'html', 'odg', 'pdf', 'svg', 'so', 'npz', 'pip'
-    ]
+    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    regexp = re.compile(".*Copyright \\(c\\) 2013-(\\d\\d\\d\\d) Pablo Acosta-Serafini")
+    ext_exclude = ["pyc", "png", "html", "odg", "pdf", "svg", "so", "npz", "pip"]
     dir_exclude = [
-        '.tox',
-        '.eggs',
-        '.cache',
-        os.path.join('docs', '_build'),
-        'pmisc.egg-info',
-        '.git',
+        ".tox",
+        ".eggs",
+        ".cache",
+        os.path.join("docs", "_build"),
+        "pmisc.egg-info",
+        ".git",
     ]
     year = datetime.datetime.now().year
-    template = 'Copyright (c) 2013-{0} Pablo Acosta-Serafini'
+    template = "Copyright (c) 2013-{0} Pablo Acosta-Serafini"
     header_printed = False
     for fname in sbin.functions.dir_tree(pkg_dir, dir_exclude, ext_exclude):
         lines = read_file(fname)
@@ -69,11 +64,11 @@ def update_copyright_notice():
         if save_file:
             if not header_printed:
                 header_printed = True
-                print('Updating copyright notice')
-            print('   File {0}'.format(fname))
-            with open(fname, 'w') as fobj:
-                fobj.write(''.join(ret))
+                print("Updating copyright notice")
+            print("   File {0}".format(fname))
+            with open(fname, "w") as fobj:
+                fobj.write("".join(ret))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     update_copyright_notice()

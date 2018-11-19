@@ -15,8 +15,8 @@ import uuid
 ###
 # Global variables
 ###
-LDELIM = '%' if platform.system().lower() == 'windows' else '${'
-RDELIM = '%' if platform.system().lower() == 'windows' else '}'
+LDELIM = "%" if platform.system().lower() == "windows" else "${"
+RDELIM = "%" if platform.system().lower() == "windows" else "}"
 
 
 ###
@@ -25,35 +25,34 @@ RDELIM = '%' if platform.system().lower() == 'windows' else '}'
 def _homogenize_linesep(line):
     """Enforce line separators to be the right one depending on platform."""
     token = str(uuid.uuid4())
-    line = line.replace(os.linesep, token).replace('\n', '').replace('\r', '')
+    line = line.replace(os.linesep, token).replace("\n", "").replace("\r", "")
     return line.replace(token, os.linesep)
 
 
 def _proc_token(spec, mlines):
     """Process line range tokens."""
-    spec = spec.strip().replace(' ', '')
-    regexp = re.compile(r'.*[^0123456789\-,]+.*')
-    tokens = spec.split(',')
+    spec = spec.strip().replace(" ", "")
+    regexp = re.compile(r".*[^0123456789\-,]+.*")
+    tokens = spec.split(",")
     cond = any([not item for item in tokens])
-    if (('--' in spec) or ('-,' in spec) or (',-' in spec) or
-       cond or regexp.match(spec)):
-        raise RuntimeError('Argument `lrange` is not valid')
+    if ("--" in spec) or ("-," in spec) or (",-" in spec) or cond or regexp.match(spec):
+        raise RuntimeError("Argument `lrange` is not valid")
     lines = []
     for token in tokens:
-        if token.count('-') > 1:
-            raise RuntimeError('Argument `lrange` is not valid')
-        if '-' in token:
-            subtokens = token.split('-')
+        if token.count("-") > 1:
+            raise RuntimeError("Argument `lrange` is not valid")
+        if "-" in token:
+            subtokens = token.split("-")
             lmin, lmax = (
                 int(subtokens[0]),
-                int(subtokens[1]) if subtokens[1] else mlines
+                int(subtokens[1]) if subtokens[1] else mlines,
             )
-            for num in range(lmin, lmax+1):
+            for num in range(lmin, lmax + 1):
                 lines.append(num)
         else:
             lines.append(int(token))
     if lines != sorted(lines):
-        raise RuntimeError('Argument `lrange` is not valid')
+        raise RuntimeError("Argument `lrange` is not valid")
     return lines
 
 
@@ -105,31 +104,27 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
     # Read file
     file_dir = (
         sdir
-        if sdir else
-        os.environ.get(
-            'PKG_DOC_DIR', os.path.abspath(os.path.dirname(__file__))
-        )
+        if sdir
+        else os.environ.get("PKG_DOC_DIR", os.path.abspath(os.path.dirname(__file__)))
     )
     fname = os.path.join(file_dir, fname)
-    with open(fname, 'r') as fobj:
+    with open(fname, "r") as fobj:
         lines = fobj.readlines()
     # Eliminate spurious carriage returns in Microsoft Windows
     lines = [_homogenize_linesep(line) for line in lines]
     # Parse line specification
     inc_lines = (
-        _proc_token(lrange, len(lines))
-        if lrange else
-        list(range(1, len(lines)+1))
+        _proc_token(lrange, len(lines)) if lrange else list(range(1, len(lines) + 1))
     )
     # Produce output
-    fpointer('.. code-block:: python'+os.linesep)
+    fpointer(".. code-block:: python" + os.linesep)
     fpointer(os.linesep)
     for num, line in enumerate(lines):
-        if num+1 in inc_lines:
+        if num + 1 in inc_lines:
             fpointer(
-                '    '+line.replace('\t', '    ').rstrip()+os.linesep
-                 if line.strip() else
-                 os.linesep
+                "    " + line.replace("\t", "    ").rstrip() + os.linesep
+                if line.strip()
+                else os.linesep
             )
     fpointer(os.linesep)
 
@@ -178,12 +173,13 @@ def ste(command, nindent, mdir, fpointer):
 
     """
     term_echo(
-        LDELIM+'PKG_BIN_DIR'+RDELIM+'{sep}{cmd}'.format(
-            sep=os.path.sep, cmd=command
-        ),
+        LDELIM
+        + "PKG_BIN_DIR"
+        + RDELIM
+        + "{sep}{cmd}".format(sep=os.path.sep, cmd=command),
         nindent,
-        {'PKG_BIN_DIR':mdir},
-        fpointer
+        {"PKG_BIN_DIR": mdir},
+        fpointer,
     )
 
 
@@ -219,36 +215,31 @@ def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
     # pylint: disable=R0204
     # Set argparse width so that output does not need horizontal scroll
     # bar in narrow windows or displays
-    os.environ['COLUMNS'] = str(cols)
+    os.environ["COLUMNS"] = str(cols)
     command_int = command
     if env:
         for var, repl in env.items():
-            command_int = command_int.replace(LDELIM+var+RDELIM, repl)
-    tokens = command_int.split(' ')
+            command_int = command_int.replace(LDELIM + var + RDELIM, repl)
+    tokens = command_int.split(" ")
     # Add Python interpreter executable for Python scripts on Windows since
     # the shebang does not work
-    if ((platform.system().lower() == 'windows') and
-       (tokens[0].endswith('.py'))):    # pragma: no cover
-        tokens = [sys.executable]+tokens
-    proc = subprocess.Popen(
-        tokens,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-    )
+    if (platform.system().lower() == "windows") and (
+        tokens[0].endswith(".py")
+    ):  # pragma: no cover
+        tokens = [sys.executable] + tokens
+    proc = subprocess.Popen(tokens, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout = proc.communicate()[0]
-    if sys.hexversion >= 0x03000000:    # pragma: no cover
-        stdout = stdout.decode('utf-8')
-    stdout = stdout.split('\n')
-    indent = nindent*' '
+    if sys.hexversion >= 0x03000000:  # pragma: no cover
+        stdout = stdout.decode("utf-8")
+    stdout = stdout.split("\n")
+    indent = nindent * " "
     fpointer(os.linesep)
-    fpointer('{0}.. code-block:: bash{1}'.format(indent, os.linesep))
+    fpointer("{0}.. code-block:: bash{1}".format(indent, os.linesep))
     fpointer(os.linesep)
-    fpointer('{0}    $ {1}{2}'.format(indent, command, os.linesep))
+    fpointer("{0}    $ {1}{2}".format(indent, command, os.linesep))
     for line in stdout:
         line = _homogenize_linesep(line)
         if line.strip():
-            fpointer(
-                indent+'    '+line.replace('\t', '    ')+os.linesep
-            )
+            fpointer(indent + "    " + line.replace("\t", "    ") + os.linesep)
         else:
             fpointer(os.linesep)

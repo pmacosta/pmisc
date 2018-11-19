@@ -11,11 +11,12 @@ import shutil
 import tempfile
 import time
 import types
+
 # PyPI imports
 import decorator
 
-if os.environ.get('APPVEYOR', None):    # pragma: no cover
-    tempfile.tempdir = os.environ['CITMP']
+if os.environ.get("APPVEYOR", None):  # pragma: no cover
+    tempfile.tempdir = os.environ["CITMP"]
 
 
 """
@@ -142,30 +143,30 @@ class Timer(object):
         Time per call: ... seconds
     """
 
-    def __init__(self, verbose=False): # noqa
+    def __init__(self, verbose=False):  # noqa
         if not isinstance(verbose, bool):
-            raise RuntimeError('Argument `verbose` is not valid')
+            raise RuntimeError("Argument `verbose` is not valid")
         self._tstart = None
         self._tstop = None
         self._elapsed_time = None
         self._verbose = verbose
 
-    def __enter__(self): # noqa
+    def __enter__(self):  # noqa
         self._tstart = time.time()
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_tb): # noqa
+    def __exit__(self, exc_type, exc_value, exc_tb):  # noqa
         self._tstop = time.time()
         # time.time() returns time in seconds since the epoch
-        self._elapsed_time = 1000.0*(self._tstop-self._tstart)
+        self._elapsed_time = 1000.0 * (self._tstop - self._tstart)
         if self._verbose:
-            print('Elapsed time: {time}[msec]'.format(time=self._elapsed_time))
+            print("Elapsed time: {time}[msec]".format(time=self._elapsed_time))
         return not exc_type is not None
 
     def _get_elapsed_time(self):
         return self._elapsed_time
 
-    elapsed_time = property(_get_elapsed_time, doc='Elapsed time')
+    elapsed_time = property(_get_elapsed_time, doc="Elapsed time")
     """
     Returns elapsed time (in milliseconds) between context manager entry and
     exit time points
@@ -199,21 +200,23 @@ class TmpDir(object):
        separator if needed
     """
 
-    def __init__(self, dpath=None): # noqa
-        if ((dpath is not None) and ((not isinstance(dpath, str)) or
-            (isinstance(dpath, str) and not os.path.isdir(dpath)))):
-            raise RuntimeError('Argument `dpath` is not valid')
+    def __init__(self, dpath=None):  # noqa
+        if (dpath is not None) and (
+            (not isinstance(dpath, str))
+            or (isinstance(dpath, str) and not os.path.isdir(dpath))
+        ):
+            raise RuntimeError("Argument `dpath` is not valid")
         self._dpath = os.path.abspath(dpath) if (dpath is not None) else dpath
         self._dname = None
 
-    def __enter__(self): # noqa
+    def __enter__(self):  # noqa
         dname = tempfile.mkdtemp(dir=self._dpath)
-        if platform.system().lower() == 'windows':  # pragma: no cover
-            dname = dname.replace(os.sep, '/')
+        if platform.system().lower() == "windows":  # pragma: no cover
+            dname = dname.replace(os.sep, "/")
         self._dname = dname
         return self._dname
 
-    def __exit__(self, exc_type, exc_value, exc_tb): # noqa
+    def __exit__(self, exc_type, exc_value, exc_tb):  # noqa
         with ignored(OSError):
             shutil.rmtree(self._dname)
         return not exc_type is not None
@@ -282,31 +285,33 @@ class TmpFile(object):
         Hello world!
     """
 
-    def __init__(self, fpointer=None, *args, **kwargs): # noqa
-        if (fpointer and
-           (not isinstance(fpointer, types.FunctionType)) and
-           (not isinstance(fpointer, types.LambdaType))):
-            raise RuntimeError('Argument `fpointer` is not valid')
+    def __init__(self, fpointer=None, *args, **kwargs):  # noqa
+        if (
+            fpointer
+            and (not isinstance(fpointer, types.FunctionType))
+            and (not isinstance(fpointer, types.LambdaType))
+        ):
+            raise RuntimeError("Argument `fpointer` is not valid")
         self._fname = None
         self._fpointer = fpointer
         self._args = args
         self._kwargs = kwargs
 
-    def __enter__(self): # noqa
+    def __enter__(self):  # noqa
         fdesc, fname = tempfile.mkstemp()
         # fdesc is an OS-level file descriptor, see problems if this
         # is not properly closed in this post:
         # https://www.logilab.org/blogentry/17873
         os.close(fdesc)
-        if platform.system().lower() == 'windows':  # pragma: no cover
-            fname = fname.replace(os.sep, '/')
+        if platform.system().lower() == "windows":  # pragma: no cover
+            fname = fname.replace(os.sep, "/")
         self._fname = fname
         if self._fpointer:
-            with open(self._fname, 'w') as fobj:
+            with open(self._fname, "w") as fobj:
                 self._fpointer(fobj, *self._args, **self._kwargs)
         return self._fname
 
-    def __exit__(self, exc_type, exc_value, exc_tb): # noqa
+    def __exit__(self, exc_type, exc_value, exc_tb):  # noqa
         with ignored(OSError):
             os.remove(self._fname)
         return not exc_type is not None

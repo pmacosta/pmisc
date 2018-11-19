@@ -6,22 +6,19 @@
 from __future__ import print_function
 import os, pmisc
 
+
 def ignored_example():
-    fname = 'somefile.tmp'
-    open(fname, 'w').close()
-    print('File {0} exists? {1}'.format(
-        fname, os.path.isfile(fname)
-    ))
+    fname = "somefile.tmp"
+    open(fname, "w").close()
+    print("File {0} exists? {1}".format(fname, os.path.isfile(fname)))
     with pmisc.ignored(OSError):
         os.remove(fname)
-    print('File {0} exists? {1}'.format(
-        fname, os.path.isfile(fname)
-    ))
+    print("File {0} exists? {1}".format(fname, os.path.isfile(fname)))
     with pmisc.ignored(OSError):
         os.remove(fname)
-    print('No exception trying to remove a file that does not exists')
+    print("No exception trying to remove a file that does not exists")
     try:
         with pmisc.ignored(RuntimeError):
             os.remove(fname)
     except:
-        print('Got an exception')
+        print("Got an exception")

@@ -46,9 +46,7 @@ def ishex(obj):
 
     :rtype: boolean
     """
-    return (
-        isinstance(obj, str) and (len(obj) == 1) and (obj in string.hexdigits)
-    )
+    return isinstance(obj, str) and (len(obj) == 1) and (obj in string.hexdigits)
 
 
 def isiterable(obj):
@@ -77,8 +75,9 @@ def isnumber(obj):
     :rtype: boolean
     """
     return (
-        (obj is not None) and (not isinstance(obj, bool)) and
-        isinstance(obj, (int, float, complex))
+        (obj is not None)
+        and (not isinstance(obj, bool))
+        and isinstance(obj, (int, float, complex))
     )
 
 
@@ -92,6 +91,7 @@ def isreal(obj):
     :rtype: boolean
     """
     return (
-        (obj is not None) and (not isinstance(obj, bool)) and
-        isinstance(obj, (int, float))
+        (obj is not None)
+        and (not isinstance(obj, bool))
+        and isinstance(obj, (int, float))
     )

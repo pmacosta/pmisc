@@ -17,23 +17,26 @@ import io
 import glob
 import os
 import sys
+
 # PyPI imports
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
+
 # Intra-package imports
 from sbin.functions import (
-    SUPPORTED_VERS, get_pkg_data_files, load_requirements, python_version
+    SUPPORTED_VERS,
+    get_pkg_data_files,
+    load_requirements,
+    python_version,
 )
 
 
 ###
 # Supported interpreter check
 ###
-PYTHON_VER = python_version('{0:0x}'.format(sys.hexversion & 0xFFFF0000)[:-4])
+PYTHON_VER = python_version("{0:0x}".format(sys.hexversion & 0xFFFF0000)[:-4])
 if PYTHON_VER not in SUPPORTED_VERS:
-    sys.exit(
-        'Supported interpreter versions: {0}'.format(', '.join(SUPPORTED_VERS))
-    )
+    sys.exit("Supported interpreter versions: {0}".format(", ".join(SUPPORTED_VERS)))
 
 
 ###
@@ -43,20 +46,19 @@ def get_short_desc(long_desc):
     """Get first sentence of first paragraph of long description."""
     found = False
     olines = []
-    for line in [item.rstrip() for item in long_desc.split('\n')]:
-        if (found and (((not line) and (not olines))
-           or (line and olines))):
+    for line in [item.rstrip() for item in long_desc.split("\n")]:
+        if found and (((not line) and (not olines)) or (line and olines)):
             olines.append(line)
         elif found and olines and (not line):
-            return (' '.join(olines).split('.')[0]).strip()
-        found = line == '.. [[[end]]]' if not found else found
-    return ''
+            return (" ".join(olines).split(".")[0]).strip()
+        found = line == ".. [[[end]]]" if not found else found
+    return ""
 
 
 def read(*filenames, **kwargs):
     """Read plain text file(s)."""
-    encoding = kwargs.get('encoding', 'utf-8')
-    sep = kwargs.get('sep', '\n')
+    encoding = kwargs.get("encoding", "utf-8")
+    sep = kwargs.get("sep", "\n")
     buf = []
     for filename in filenames:
         with io.open(filename, encoding=encoding) as fobj:
@@ -67,67 +69,67 @@ def read(*filenames, **kwargs):
 ###
 # Global variables
 ###
-PKG_NAME = 'pmisc'
-REPO = 'http://github.com/pmacosta/{pkg_name}/'.format(pkg_name=PKG_NAME)
-AUTHOR = 'Pablo Acosta-Serafini'
-AUTHOR_EMAIL = 'pmasdev@gmail.com'
+PKG_NAME = "pmisc"
+REPO = "http://github.com/pmacosta/{pkg_name}/".format(pkg_name=PKG_NAME)
+AUTHOR = "Pablo Acosta-Serafini"
+AUTHOR_EMAIL = "pmasdev@gmail.com"
 PKG_DIR = os.path.abspath(os.path.dirname(__file__))
 LONG_DESCRIPTION = read(
-    os.path.join(PKG_DIR, 'README.rst'),
-    os.path.join(PKG_DIR, 'CHANGELOG.rst')
+    os.path.join(PKG_DIR, "README.rst"), os.path.join(PKG_DIR, "CHANGELOG.rst")
 )
 SHORT_DESC = get_short_desc(LONG_DESCRIPTION)
 # Actual directory is os.join(sys.prefix, 'share', PKG_NAME)
-SHARE_DIR = os.path.join('share', PKG_NAME)
-INSTALL_REQUIRES = load_requirements(PKG_DIR, PYTHON_VER, 'source')
-TESTING_REQUIRES = load_requirements(PKG_DIR, PYTHON_VER, 'testing')
+SHARE_DIR = os.path.join("share", PKG_NAME)
+INSTALL_REQUIRES = load_requirements(PKG_DIR, PYTHON_VER, "source")
+TESTING_REQUIRES = load_requirements(PKG_DIR, PYTHON_VER, "testing")
 try:
     DATA_FILES = get_pkg_data_files(SHARE_DIR)
 except IOError:
-    print('PKG_DIR: {0}'.format(PKG_DIR))
-    print('Contents:')
-    print(glob.glob(os.path.join(PKG_DIR, '*')))
-    print('PKG_DIR/data')
-    print('Contents:')
-    print(glob.glob(os.path.join(PKG_DIR, 'data', '*')))
+    print("PKG_DIR: {0}".format(PKG_DIR))
+    print("Contents:")
+    print(glob.glob(os.path.join(PKG_DIR, "*")))
+    print("PKG_DIR/data")
+    print("Contents:")
+    print(glob.glob(os.path.join(PKG_DIR, "data", "*")))
     raise
 
 
 ###
 # Extract version (from coveragepy)
 ###
-VERSION_PY = os.path.join(PKG_DIR, 'pmisc/version.py')
+VERSION_PY = os.path.join(PKG_DIR, "pmisc/version.py")
 with open(VERSION_PY) as fobj:
     __version__ = VERSION_INFO = ""
     # Execute the code in version.py.
-    exec(compile(fobj.read(), VERSION_PY, 'exec'))
-if VERSION_INFO[3] == 'alpha':
+    exec(compile(fobj.read(), VERSION_PY, "exec"))
+if VERSION_INFO[3] == "alpha":
     DEVSTAT = "3 - Alpha"
-elif VERSION_INFO[3] in ['beta', 'candidate']:
+elif VERSION_INFO[3] in ["beta", "candidate"]:
     DEVSTAT = "4 - Beta"
 else:
-    assert VERSION_INFO[3] == 'final'
+    assert VERSION_INFO[3] == "final"
     DEVSTAT = "5 - Production/Stable"
 
 
 ###
 # Classes
 ###
-class Tox(TestCommand): # noqa
-    user_options = [('tox-args=', 'a', 'Arguments to pass to tox')]
+class Tox(TestCommand):  # noqa
+    user_options = [("tox-args=", "a", "Arguments to pass to tox")]
 
-    def initialize_options(self): # noqa
+    def initialize_options(self):  # noqa
         TestCommand.initialize_options(self)
         self.tox_args = None
 
-    def finalize_options(self): # noqa
+    def finalize_options(self):  # noqa
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
 
-    def run_tests(self): # noqa
+    def run_tests(self):  # noqa
         import shlex
         import tox
+
         args = self.tox_args
         if args:
             args = shlex.split(self.tox_args)
@@ -146,28 +148,28 @@ setup(
     name=PKG_NAME,
     version=__version__,
     url=REPO,
-    license='MIT',
+    license="MIT",
     author=AUTHOR,
     tests_require=TESTING_REQUIRES,
     install_requires=INSTALL_REQUIRES,
-    cmdclass={'tests':Tox},
+    cmdclass={"tests": Tox},
     author_email=AUTHOR_EMAIL,
     description=SHORT_DESC,
     long_description=LONG_DESCRIPTION,
     packages=[PKG_NAME],
     data_files=DATA_FILES,
     zip_safe=False,
-    platforms='any',
+    platforms="any",
     classifiers=[
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Development Status :: '+DEVSTAT,
-        'Natural Language :: English',
-        'Environment :: Console',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Development Status :: " + DEVSTAT,
+        "Natural Language :: English",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 )

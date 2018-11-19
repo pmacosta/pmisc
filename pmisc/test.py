@@ -12,101 +12,82 @@ import re
 import sys
 import traceback
 import uuid
-if sys.hexversion < 0x03000000: # pragma: no cover
+
+if sys.hexversion < 0x03000000:  # pragma: no cover
     from itertools import izip_longest
-else:    # pragma: no cover
+else:  # pragma: no cover
     from itertools import zip_longest as izip_longest
-try:    # pragma: no cover
+try:  # pragma: no cover
     from inspect import signature
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     from funcsigs import signature
 # PyPI imports
 import pytest
 from _pytest.main import Failed
 from _pytest._code import Traceback
+
 # Intra-package imports
-if sys.hexversion < 0x03000000: # pragma: no cover
+if sys.hexversion < 0x03000000:  # pragma: no cover
     from .compat2 import _ex_type_str, _get_ex_msg
-else:   # pragma: no cover
+else:  # pragma: no cover
     from .compat3 import _ex_type_str, _get_ex_msg
 
 
 ###
 # Constants
 ###
+def _get_trap(func, exc):  # pragma: no cover
+    """Find a line in a function with a simple sourc efile parser."""
+    debug = False
+    ntokens = 2
+    fname = "pmisc{0}test.py".format(os.sep)
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test.py")
+    with open(src) as fobj:
+        lines = [line.rstrip() for line in fobj.readlines()]
+    if debug:
+        print(lines)
+    in_func = False
+    exc_lnum = None
+    if debug:
+        print("Function: {0}, trigger: {1}".format(func, exc))
+    for lnum, line in enumerate(lines):
+        if in_func:
+            if debug:
+                print("   {0}".format(line))
+            if line.strip() == exc.strip():
+                exc_lnum = lnum
+                break
+            if line.startswith("def "):
+                break
+        else:
+            if debug:
+                print(line)
+            in_func = line.startswith("def {0}".format(func))
+    if exc_lnum is None:
+        raise RuntimeError(
+            "Exception raising line could not be found ({0}, {1})".format(func, exc)
+        )
+    return (ntokens, fname, exc_lnum + 1, func, exc)
+
+
 _ORIG_EXCEPTHOOK = sys.__excepthook__
-_EXC_TRAPS = [
+_EXC_TRAPS_INFO = [
+    ("_raise_if_not_raised", 'raise AssertionError(exmsg or "Did not raise")'),
+    ("assert_arg_invalid", "**kwargs"),
+    ("assert_exception", "_raise_if_not_raised(eobj)"),
+    ("assert_exception", "_raise_exception_mismatch(eobj, extype, exmsg)"),
+    ("assert_exception", "_raise_exception_mismatch(excinfo, extype, exmsg)"),
+    ("assert_prop", "_raise_if_not_raised(eobj)"),
+    ("assert_prop", "_raise_exception_mismatch(eobj, extype, exmsg)"),
+    ("assert_prop", "_raise_exception_mismatch(excinfo, extype, exmsg)"),
+    ("assert_ro_prop", '_raise_if_not_raised(eobj, "Property can be deleted")'),
+    ("assert_ro_prop", "_raise_exception_mismatch(excinfo, extype, exmsg)"),
     (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        306,
-        '_raise_if_not_raised',
-        "raise AssertionError(exmsg or 'Did not raise')"
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        355,
-        'assert_arg_invalid',
-        '**kwargs'
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        421,
-        'assert_exception',
-        '_raise_if_not_raised(eobj)'
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        422,
-        'assert_exception',
-        '_raise_exception_mismatch(eobj, extype, exmsg)'
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        424,
-        'assert_exception',
-        '_raise_exception_mismatch(excinfo, extype, exmsg)'
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        460,
-        'assert_prop',
-        '_raise_if_not_raised(eobj)'
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        462,
-        'assert_prop',
-        '_raise_exception_mismatch(excinfo, extype, exmsg)'
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        479,
-        'assert_ro_prop',
-        "_raise_if_not_raised(eobj, 'Property can be deleted')"
-    ),
-    (
-        2,
-        'pmisc{0}test.py'.format(os.sep),
-        482,
-        'assert_ro_prop',
-        '_raise_exception_mismatch(excinfo, extype, exmsg)'
-    ),
-    (
-       2,
-       'pmisc{0}test.py'.format(os.sep),
-        576,
-        'compare_strings',
-        "raise AssertionError('Strings do not match'+os.linesep+ret)"
+        "compare_strings",
+        'raise AssertionError("Strings do not match" + os.linesep + ret)',
     ),
 ]
+_EXC_TRAPS = [_get_trap(*exc_def) for exc_def in _EXC_TRAPS_INFO]
 
 
 ###
@@ -118,22 +99,20 @@ def _del_pmisc_test_frames(excinfo):
     if offset:
         new_tb = _process_tb(excinfo.tb, offset)
         excinfo.tb = new_tb[0] if new_tb else None
-        excinfo._excinfo = (
-            excinfo._excinfo[0], excinfo._excinfo[1], excinfo.tb
-        )
+        excinfo._excinfo = (excinfo._excinfo[0], excinfo._excinfo[1], excinfo.tb)
         excinfo.traceback = Traceback(excinfo.traceback[:offset])
         for num, _ in enumerate(new_tb):
             excinfo.traceback[num]._rawentry = new_tb[num]
     return excinfo
 
 
-def _eprint(msg): # pragma: no cover
+def _eprint(msg):  # pragma: no cover
     """Print passthrough function, for ease of testing of custom excepthook function."""
     print(msg, file=sys.stderr)
 
 
 def _excepthook(exc_type, exc_value, exc_traceback):
-    """Remove unwanted traceback elements past a given specific module call with exception handler."""
+    """Remove unwanted traceback elements past a given specific module call."""
     tbs = traceback.extract_tb(exc_traceback)
     offset = _find_test_module_frame(tbs)
     if not offset:
@@ -142,26 +121,26 @@ def _excepthook(exc_type, exc_value, exc_traceback):
     if new_tb:
         exc_traceback = new_tb[0]
     tbs = traceback.extract_tb(exc_traceback)
-    tblines = ['Traceback (most recent call last):']
+    tblines = ["Traceback (most recent call last):"]
     tblines += traceback.format_list(tbs)
     tblines = [_homogenize_breaks(item) for item in tblines if item.strip()]
     regexp = re.compile(r"<(?:\bclass\b|\btype\b)\s+'?([\w|\.]+)'?>")
     exc_type = regexp.match(str(exc_type)).groups()[0]
-    exc_type = (
-        exc_type[11:] if exc_type.startswith('exceptions.') else exc_type
-    )
-    tblines += ['{0}: {1}'.format(exc_type, exc_value)]
+    exc_type = exc_type[11:] if exc_type.startswith("exceptions.") else exc_type
+    tblines += ["{0}: {1}".format(exc_type, exc_value)]
     lines = os.linesep.join(tblines)
     _eprint(lines)
 
 
-def _find_test_module_frame(tbs):
+def _find_test_module_frame(tbs):  # noqa: D202
     """Find the first pmisc.test module frame in Pytest excinfo structure."""
+
     def make_test_tuple(tbt, ntokens=1):
         """Create exception comparison tuple."""
         fname, line, func, exc = tbt
         fname = os.sep.join(fname.split(os.sep)[-ntokens:])
         return (fname, line, func, exc)
+
     offset = 0
     for num, item in enumerate(tbs):
         found = False
@@ -178,7 +157,7 @@ def _find_test_module_frame(tbs):
     return offset
 
 
-def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
+def _get_fargs(func, no_self=False, no_varargs=False):  # pragma: no cover
     """
     Return function argument names.
 
@@ -198,45 +177,45 @@ def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
 
     :rtype: tuple
     """
-    is_parg = lambda x: (len(x) > 1) and (x[0] == '*') and (x[1] != '*')
-    is_kwarg = lambda x: (len(x) > 2) and (x[:2] == '**')
+    is_parg = lambda x: (len(x) > 1) and (x[0] == "*") and (x[1] != "*")
+    is_kwarg = lambda x: (len(x) > 2) and (x[:2] == "**")
 
     par_dict = signature(func).parameters
     # Mark positional and/or keyword arguments (if any)
     args = [
-        '{prefix}{arg}'.format(
+        "{prefix}{arg}".format(
             prefix=(
-                '*'
-                if par_dict[par].kind == par_dict[par].VAR_POSITIONAL else
-                (
-                    '**'
-                    if par_dict[par].kind == par_dict[par].VAR_KEYWORD else
-                    ''
-                )
+                "*"
+                if par_dict[par].kind == par_dict[par].VAR_POSITIONAL
+                else ("**" if par_dict[par].kind == par_dict[par].VAR_KEYWORD else "")
             ),
-            arg=par
+            arg=par,
         )
         for par in par_dict
     ]
     # Filter out 'self' from parameter list (optional)
-    self_filtered_args = args if not args else (
-        args[1 if (args[0] == 'self') and no_self else 0:]
+    self_filtered_args = (
+        args if not args else (args[1 if (args[0] == "self") and no_self else 0 :])
     )
     # Filter out positional or keyword arguments (optional)
-    varargs_filtered_args = tuple([
-        arg
-        for arg in self_filtered_args
-        if ((not no_varargs) or
-           (no_varargs and (not is_parg(arg)) and (not is_kwarg(arg))))
-    ])
+    varargs_filtered_args = tuple(
+        [
+            arg
+            for arg in self_filtered_args
+            if (
+                (not no_varargs)
+                or (no_varargs and (not is_parg(arg)) and (not is_kwarg(arg)))
+            )
+        ]
+    )
     return varargs_filtered_args
 
 
 def _homogenize_breaks(msg):
     """Replace stray newline characters with platform-crrect line separator."""
-    token = '_{0}_'.format(uuid.uuid4())
+    token = "_{0}_".format(uuid.uuid4())
     msg = msg.replace(os.linesep, token)
-    msg = msg.replace('\n', os.linesep)
+    msg = msg.replace("\n", os.linesep)
     msg = msg.replace(token, os.linesep).rstrip()
     return msg
 
@@ -244,23 +223,28 @@ def _homogenize_breaks(msg):
 def _invalid_frame(fobj):
     """Select valid stack frame to process."""
     fin = fobj.f_code.co_filename
-    invalid_module = fin.endswith('test.py')
+    invalid_module = fin.endswith("test.py")
     return invalid_module or (not os.path.isfile(fin))
 
 
-def _pcolor(text, color, indent=0): # pragma: no cover
+def _pcolor(text, color, indent=0):  # pragma: no cover
     esc_dict = {
-        'black':30, 'red':31, 'green':32, 'yellow':33, 'blue':34,
-         'magenta':35, 'cyan':36, 'white':37, 'none':-1
+        "black": 30,
+        "red": 31,
+        "green": 32,
+        "yellow": 33,
+        "blue": 34,
+        "magenta": 35,
+        "cyan": 36,
+        "white": 37,
+        "none": -1,
     }
     color = color.lower()
     if esc_dict[color] != -1:
-        return (
-            '\033[{color_code}m{indent}{text}\033[0m'.format(
-                color_code=esc_dict[color], indent=' '*indent, text=text
-            )
+        return "\033[{color_code}m{indent}{text}\033[0m".format(
+            color_code=esc_dict[color], indent=" " * indent, text=text
         )
-    return '{indent}{text}'.format(indent=' '*indent, text=text)
+    return "{indent}{text}".format(indent=" " * indent, text=text)
 
 
 def _process_tb(trbk, offset=-1):
@@ -287,14 +271,16 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
     actmsg = get_exmsg(excinfo)
     acttype = (
         exception_type_str(excinfo.type)
-        if hasattr(excinfo, 'type') else
-        repr(excinfo)[:repr(excinfo).find('(')]
+        if hasattr(excinfo, "type")
+        else repr(excinfo)[: repr(excinfo).find("(")]
     )
-    if not ((acttype == exception_type_str(extype))
-       and ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))):
+    if not (
+        (acttype == exception_type_str(extype))
+        and ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))
+    ):
         assert False, (
-            'Raised exception mismatch'
-            '{0}Expected: {1} ({2}){0}Got: {3} ({4})'.format(
+            "Raised exception mismatch"
+            "{0}Expected: {1} ({2}){0}Got: {3} ({4})".format(
                 os.linesep, exception_type_str(extype), exmsg, acttype, actmsg
             )
         )
@@ -302,15 +288,19 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
 
 def _raise_if_not_raised(eobj, exmsg=None):
     """Raise an exception if there was no exception raised (and it should have been)."""
-    if get_exmsg(eobj).upper().startswith('DID NOT RAISE'):
-        raise AssertionError(exmsg or 'Did not raise')
+    if get_exmsg(eobj).upper().startswith("DID NOT RAISE"):
+        raise AssertionError(exmsg or "Did not raise")
 
 
 ###
 # Helper classes
 ###
 class _CustomTraceback(object):
-    """Mimic a traceback object to break the traceback chain (by making tb_next None) as desired."""
+    """
+    Mimic a traceback object to break the traceback chain.
+
+    The break can be implemented by making tb_next None, as desired
+    """
 
     # pylint: disable=R0903
     def __init__(self, tb_frame, tb_lasti, tb_lineno, tb_next):
@@ -325,7 +315,7 @@ class _CustomTraceback(object):
 ###
 def assert_arg_invalid(fpointer, pname, *args, **kwargs):
     r"""
-    Assert if a function raises :code:`RuntimeError('Argument \`*pname*\` is not valid')`.
+    Test if function raises :code:`RuntimeError('Argument \`*pname*\` is not valid')`.
 
     :code:`*pname*` is the value of the **pname** argument, when called with
     given positional and/or keyword arguments
@@ -350,7 +340,7 @@ def assert_arg_invalid(fpointer, pname, *args, **kwargs):
     assert_exception(
         fpointer,
         RuntimeError,
-        'Argument `{0}` is not valid'.format(pname),
+        "Argument `{0}` is not valid".format(pname),
         *args,
         **kwargs
     )
@@ -405,7 +395,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
     if args:
         fargs = _get_fargs(fpointer, no_self=True)
         if len(args) > len(fargs):
-            raise RuntimeError('Illegal number of arguments')
+            raise RuntimeError("Illegal number of arguments")
         arg_dict = dict(zip(fargs, args))
     arg_dict.update(kwargs)
     # Execute function and catch exception
@@ -426,7 +416,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
 
 def assert_prop(cobj, prop_name, value, extype, exmsg):
     """
-    Assert whether a class property raises a given exception when assigned a given value.
+    Assert whether a class property raises an exception when assigned a value.
 
     :param cobj: Class object
     :type  cobj: class object
@@ -450,9 +440,9 @@ def assert_prop(cobj, prop_name, value, extype, exmsg):
     # Add cobj to local variables dictionary of calling function, the
     # exec statement is going to be run in its environment
     lvars = copy.copy(fobj.f_locals)
-    lvars.update({'____test_obj____':cobj})
+    lvars.update({"____test_obj____": cobj})
     # Run method assignment
-    cmd = '____test_obj____.'+prop_name+' = '+repr(value)
+    cmd = "____test_obj____." + prop_name + " = " + repr(value)
     try:
         with pytest.raises(extype) as excinfo:
             exec(cmd, fobj.f_globals, lvars)
@@ -474,10 +464,10 @@ def assert_ro_prop(cobj, prop_name):
     """
     try:
         with pytest.raises(AttributeError) as excinfo:
-            exec('del cobj.'+prop_name, None, locals())
+            exec("del cobj." + prop_name, None, locals())
     except (BaseException, Exception, Failed) as eobj:
-        _raise_if_not_raised(eobj, 'Property can be deleted')
-    extype = 'AttributeError'
+        _raise_if_not_raised(eobj, "Property can be deleted")
+    extype = "AttributeError"
     exmsg = "can't delete attribute"
     _raise_exception_mismatch(excinfo, extype, exmsg)
 
@@ -512,68 +502,72 @@ def compare_strings(actual, ref, diff_mode=False):
      * RuntimeError(Argument \`ref\` is not valid)
     """
     # pylint: disable=R0912
-    pyellow = lambda x, y: x if x == y else _pcolor(x, 'yellow')
+    pyellow = lambda x, y: x if x == y else _pcolor(x, "yellow")
+
     def colorize_lines(list1, list2, template, mode=True):
-        iobj = izip_longest(list1, list2, fillvalue='')
+        iobj = izip_longest(list1, list2, fillvalue="")
         for num, (line1, line2) in enumerate(iobj):
-            if mode and (len(list2)-1 < num):
+            if mode and (len(list2) - 1 < num):
                 break
             line = [pyellow(chr2, chr1) for chr1, chr2 in zip(line1, line2)]
             # Eliminate superfluous colorizing codes when next character has
             # the same color
-            line = ''.join(line).replace('\033[0m\033[33m', '')
+            line = "".join(line).replace("\033[0m\033[33m", "")
             if len(line2) > len(line1):
-                line += _pcolor(line2[len(line1):], 'red')
-            yield template.format(num+1, line)
+                line += _pcolor(line2[len(line1) :], "red")
+            yield template.format(num + 1, line)
+
     def print_non_diff(msg, list1, list2, template):
-        ret = ''
-        ret += _pcolor(msg, 'cyan')+os.linesep
-        ret += _pcolor('-'*len(msg), 'cyan')+os.linesep
+        ret = ""
+        ret += _pcolor(msg, "cyan") + os.linesep
+        ret += _pcolor("-" * len(msg), "cyan") + os.linesep
         for line in colorize_lines(list1, list2, template):
-            ret += line+os.linesep
+            ret += line + os.linesep
         return ret
+
     def print_diff(list1, list2, template1, template2, sep):
         iobj = zip(
             colorize_lines(list1, list2, template1, False),
-            colorize_lines(list2, list1, template2, False)
+            colorize_lines(list2, list1, template2, False),
         )
-        ret = ''
+        ret = ""
         for rline, aline in iobj:
-            ret += _pcolor(sep, 'cyan')+os.linesep
-            ret += rline+os.linesep
-            ret += aline+os.linesep
+            ret += _pcolor(sep, "cyan") + os.linesep
+            ret += rline + os.linesep
+            ret += aline + os.linesep
         return ret
+
     if not isinstance(actual, str):
-        raise RuntimeError('Argument `actual` is not valid')
+        raise RuntimeError("Argument `actual` is not valid")
     if not isinstance(ref, str):
-        raise RuntimeError('Argument `ref` is not valid')
+        raise RuntimeError("Argument `ref` is not valid")
     if not isinstance(diff_mode, bool):
-        raise RuntimeError('Argument `diff_mode` is not valid')
+        raise RuntimeError("Argument `diff_mode` is not valid")
     if actual != ref:
         actual = actual.split(os.linesep)
         ref = ref.split(os.linesep)
         length = len(str(max(len(actual), len(ref))))
-        ret = _pcolor('<<<', 'cyan')+os.linesep
-        ret += 'Matching character'+os.linesep
-        ret += _pcolor('Mismatched character', 'yellow')+os.linesep
-        ret += _pcolor('Extra character', 'red')+os.linesep
+        ret = _pcolor("<<<", "cyan") + os.linesep
+        ret += "Matching character" + os.linesep
+        ret += _pcolor("Mismatched character", "yellow") + os.linesep
+        ret += _pcolor("Extra character", "red") + os.linesep
         if not diff_mode:
-            template = _pcolor('{0:'+str(length)+'}:', 'cyan')+' {1}'
-            ret += print_non_diff('Reference text', actual, ref, template)
-            ret += print_non_diff('Actual text', ref, actual, template)
+            template = _pcolor("{0:" + str(length) + "}:", "cyan") + " {1}"
+            ret += print_non_diff("Reference text", actual, ref, template)
+            ret += print_non_diff("Actual text", ref, actual, template)
         else:
             mline = max(
                 [
                     max(len(item1), len(item2))
-                    for item1, item2 in izip_longest(actual, ref, fillvalue='')
+                    for item1, item2 in izip_longest(actual, ref, fillvalue="")
                 ]
             )
-            sep = '-'*(mline+length+9)
-            template1 = _pcolor('{0:'+str(length)+'} Ref.  :', 'cyan')+' {1}'
-            template2 = _pcolor(' '*length+' Actual:', 'cyan')+' {1}'
+            sep = "-" * (mline + length + 9)
+            template1 = _pcolor("{0:" + str(length) + "} Ref.  :", "cyan") + " {1}"
+            template2 = _pcolor(" " * length + " Actual:", "cyan") + " {1}"
             ret += print_diff(actual, ref, template1, template2, sep)
-        ret += _pcolor('>>>', 'cyan')+os.linesep
-        raise AssertionError('Strings do not match'+os.linesep+ret)
+        ret += _pcolor(">>>", "cyan") + os.linesep
+        raise AssertionError("Strings do not match" + os.linesep + ret)
 
 
 def comp_list_of_dicts(list1, list2):
@@ -590,12 +584,12 @@ def comp_list_of_dicts(list1, list2):
     """
     for item in list1:
         if item not in list2:
-            print('List1 item not in list2:')
+            print("List1 item not in list2:")
             print(item)
             return False
     for item in list2:
         if item not in list1:
-            print('List2 item not in list1:')
+            print("List2 item not in list1:")
             print(item)
             return False
     return True
@@ -619,7 +613,7 @@ def exception_type_str(exobj):
     return _ex_type_str(exobj)
 
 
-def get_exmsg(exobj): # pragma: no cover
+def get_exmsg(exobj):  # pragma: no cover
     """
     Return exception message (Python interpreter version independent).
 
