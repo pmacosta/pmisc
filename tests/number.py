@@ -5,6 +5,7 @@
 
 # Standard library imports
 from fractions import Fraction
+import sys
 # PyPI imports
 import numpy as np
 import pytest
@@ -26,7 +27,7 @@ from pmisc import AE, AI
     ]
 )
 def test_private_isreal(obj, ref):
-    """ Test _isreal function behavior """
+    """Test _isreal function behavior."""
     assert pmisc.number._isreal(obj) == ref
 
 
@@ -50,19 +51,19 @@ def test_private_isreal(obj, ref):
     ]
 )
 def test_no_exp(num, ref):
-    """ Test _no_exp function behavior """
+    """Test _no_exp function behavior."""
     assert pmisc.number._no_exp(num) == ref
 
 
 def test_no_exp_exceptions():
-    """ Test _no_exp function exceptions """
+    """Test _no_exp function exceptions."""
     AI(pmisc.number._no_exp, 'number', number=None)
     AI(pmisc.number._no_exp, 'number', number=True)
     AI(pmisc.number._no_exp, 'number', number='a')
 
 
 def test_to_scientific_tuple_exceptions():
-    """ Test _to_scientific_tuple function exceptions """
+    """Test _to_scientific_tuple function exceptions."""
     AI(pmisc.number._to_scientific_tuple, 'number', number=None)
     AI(pmisc.number._to_scientific_tuple, 'number', number=True)
     AI(pmisc.number._to_scientific_tuple, 'number', number=5+3j)
@@ -82,14 +83,14 @@ def test_to_scientific_tuple_exceptions():
     ]
 )
 def test_gcd(vector, ref, conv):
-    """ Test gcd function behavior """
+    """Test gcd function behavior."""
     assert pmisc.gcd(vector) == ref
     if conv:
         assert pmisc.gcd(np.array(vector)) == ref
 
 
 def test_normalize():
-    """ Test normalize function behavior """
+    """Test normalize function behavior."""
     obj = pmisc.normalize
     AI(obj, 'value', value='a', series=[2, 5], offset=10)
     AI(obj, 'offset', value=5, series=[2, 5], offset='a')
@@ -105,7 +106,7 @@ def test_normalize():
 
 
 def test_per():
-    """ Test per function behavior """
+    """Test per function behavior."""
     obj = pmisc.per
     AI(obj, 'prec', arga=5, argb=7, prec='Hello')
     AI(obj, 'arga', arga='Hello', argb=7, prec=1)
@@ -120,7 +121,7 @@ def test_per():
     assert obj(4, 0, 3) == 1e20
     data = (
         ([3, 1.1, 5], [2, 1.1, 2], 1, [0.5, 0, 1.5]),
-        ([3, 1.1, 5], [2, 0, 2], 1, [0.5, 1e20, 1.5]),
+        ([3, 1.1, 5], [2, 0, 2], 1, [0.5, sys.float_info.max, 1.5]),
     )
     for arga, argb, prec, ref in data:
         test = obj(arga, argb, prec)
@@ -130,7 +131,7 @@ def test_per():
 
 
 def test_pgcd():
-    """ Test pgcd function behavior """
+    """Test pgcd function behavior."""
     assert pmisc.pgcd(48, 18) == 6
     assert pmisc.pgcd(3, 4) == 1
     assert pmisc.pgcd(0.05, 0.02) == 0.01

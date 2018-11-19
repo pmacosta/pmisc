@@ -14,9 +14,7 @@ VERSION_INFO = (1, 4, 2, 'final', 0)
 # Functions
 ###
 def _make_version(major, minor, micro, level, serial):
-    """
-    Generate version string from tuple (almost entirely from coveragepy)
-    """
+    """Generate version string from tuple (almost entirely from coveragepy)."""
     level_dict = {'alpha': 'a', 'beta': 'b', 'candidate': 'rc', 'final':''}
     if level not in level_dict:
         raise RuntimeError('Invalid release level')

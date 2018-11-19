@@ -17,7 +17,7 @@ from sbin.functions import SUPPORTED_VERS, json_load
 # Functions
 ###
 def freeze_pkg_vers(fnames):
-    """ Bound version of specific pacakges to what is already installed """
+    """Bound version of specific pacakges to what is already installed."""
     pobj = subprocess.Popen(
         ['pip', 'freeze'],
         stdout=subprocess.PIPE,
@@ -47,7 +47,7 @@ def freeze_pkg_vers(fnames):
 
 
 def insert_element(items, item, pos):
-    """ Insert element at a given position even if larger than list size """
+    """Insert element at a given position even if larger than list size."""
     item = item+'\n'
     if (pos < len(items)-1) and items[pos]:
         raise RuntimeError('Repeated order element')
@@ -60,7 +60,7 @@ def insert_element(items, item, pos):
 
 def gen_req_files(freeze_ver=False):
     # pylint: disable=R0101,R0912,R0914
-    """ Generate requirements files """
+    """Generate requirements files."""
     fdict = json_load(os.path.join('data', 'requirements.json'))
     pyvers = ['py{0}'.format(item.replace('.', '')) for item in SUPPORTED_VERS]
     odict = {'rtd':[]}
@@ -135,7 +135,7 @@ def gen_req_files(freeze_ver=False):
 
 
 def read_file(fname):
-    """ Read file in Python 2 or Python 3 """
+    """Read file in Python 2 or Python 3."""
     if sys.hexversion < 0x03000000:
         with open(fname, 'r') as fobj:
             return fobj.readlines()

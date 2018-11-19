@@ -39,70 +39,70 @@ _EXC_TRAPS = [
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        317,
+        306,
         '_raise_if_not_raised',
         "raise AssertionError(exmsg or 'Did not raise')"
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        368,
+        355,
         'assert_arg_invalid',
         '**kwargs'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        433,
+        421,
         'assert_exception',
         '_raise_if_not_raised(eobj)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        434,
+        422,
         'assert_exception',
         '_raise_exception_mismatch(eobj, extype, exmsg)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        436,
+        424,
         'assert_exception',
         '_raise_exception_mismatch(excinfo, extype, exmsg)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        473,
+        460,
         'assert_prop',
         '_raise_if_not_raised(eobj)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        475,
+        462,
         'assert_prop',
         '_raise_exception_mismatch(excinfo, extype, exmsg)'
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        492,
+        479,
         'assert_ro_prop',
         "_raise_if_not_raised(eobj, 'Property can be deleted')"
     ),
     (
         2,
         'pmisc{0}test.py'.format(os.sep),
-        495,
+        482,
         'assert_ro_prop',
         '_raise_exception_mismatch(excinfo, extype, exmsg)'
     ),
     (
        2,
        'pmisc{0}test.py'.format(os.sep),
-        587,
+        576,
         'compare_strings',
         "raise AssertionError('Strings do not match'+os.linesep+ret)"
     ),
@@ -113,7 +113,7 @@ _EXC_TRAPS = [
 # Helper functions
 ###
 def _del_pmisc_test_frames(excinfo):
-    """ Remove the pmisc.test module frames from pytest excinfo structure """
+    """Remove the pmisc.test module frames from pytest excinfo structure."""
     offset = _find_test_module_frame(traceback.extract_tb(excinfo._excinfo[2]))
     if offset:
         new_tb = _process_tb(excinfo.tb, offset)
@@ -128,18 +128,12 @@ def _del_pmisc_test_frames(excinfo):
 
 
 def _eprint(msg): # pragma: no cover
-    """
-    Print passthrough function, for ease of testing of
-    custom excepthook function
-    """
+    """Print passthrough function, for ease of testing of custom excepthook function."""
     print(msg, file=sys.stderr)
 
 
 def _excepthook(exc_type, exc_value, exc_traceback):
-    """
-    Custom exception handler to remove unwanted traceback elements
-    past a given specific module call
-    """
+    """Remove unwanted traceback elements past a given specific module call with exception handler."""
     tbs = traceback.extract_tb(exc_traceback)
     offset = _find_test_module_frame(tbs)
     if not offset:
@@ -162,9 +156,9 @@ def _excepthook(exc_type, exc_value, exc_traceback):
 
 
 def _find_test_module_frame(tbs):
-    """ Find the first pmisc.test module frame in Pytest excinfo structure """
+    """Find the first pmisc.test module frame in Pytest excinfo structure."""
     def make_test_tuple(tbt, ntokens=1):
-        """ Create exception comparison tuple """
+        """Create exception comparison tuple."""
         fname, line, func, exc = tbt
         fname = os.sep.join(fname.split(os.sep)[-ntokens:])
         return (fname, line, func, exc)
@@ -186,8 +180,10 @@ def _find_test_module_frame(tbs):
 
 def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
     """
-    Returns a tuple of the function argument names in the order they are
-    specified in the function signature
+    Return function argument names.
+
+    The names are returned in a tuple in the order they are specified in the
+    function signature
 
     :param func: Function
     :type  func: function object
@@ -237,10 +233,7 @@ def _get_fargs(func, no_self=False, no_varargs=False): # pragma: no cover
 
 
 def _homogenize_breaks(msg):
-    """
-    Replace stray newline characters for the line separator corresponding to
-    the platform the script is being executed on
-    """
+    """Replace stray newline characters with platform-crrect line separator."""
     token = '_{0}_'.format(uuid.uuid4())
     msg = msg.replace(os.linesep, token)
     msg = msg.replace('\n', os.linesep)
@@ -249,7 +242,7 @@ def _homogenize_breaks(msg):
 
 
 def _invalid_frame(fobj):
-    """ Selects valid stack frame to process """
+    """Select valid stack frame to process."""
     fin = fobj.f_code.co_filename
     invalid_module = fin.endswith('test.py')
     return invalid_module or (not os.path.isfile(fin))
@@ -271,9 +264,7 @@ def _pcolor(text, color, indent=0): # pragma: no cover
 
 
 def _process_tb(trbk, offset=-1):
-    """
-    Creates a "copy" of the traceback chain and cut it at a predefined depth
-    """
+    """Create a "copy" of the traceback chain and cut it at a predefined depth."""
     obj = trbk
     iret = []
     while obj:
@@ -287,9 +278,10 @@ def _process_tb(trbk, offset=-1):
 
 def _raise_exception_mismatch(excinfo, extype, exmsg):
     """
-    Creates a verbose message when the expected exception does not match the
-    actual exception, be it due to a different exception type or a different
-    exception message or both
+    Create verbose message when expected exception does not match actual exception.
+
+    The mismatch may be it due to a different exception type or a different
+    exception message or both.
     """
     regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
     actmsg = get_exmsg(excinfo)
@@ -309,10 +301,7 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
 
 
 def _raise_if_not_raised(eobj, exmsg=None):
-    """
-    Raise an exception if there was no exception raised (and it should
-    have been)
-    """
+    """Raise an exception if there was no exception raised (and it should have been)."""
     if get_exmsg(eobj).upper().startswith('DID NOT RAISE'):
         raise AssertionError(exmsg or 'Did not raise')
 
@@ -321,10 +310,8 @@ def _raise_if_not_raised(eobj, exmsg=None):
 # Helper classes
 ###
 class _CustomTraceback(object):
-    """
-    This class mimics a traceback object so that it is possible to break the
-    traceback chain (by making tb_next None) as desired
-    """
+    """Mimic a traceback object to break the traceback chain (by making tb_next None) as desired."""
+
     # pylint: disable=R0903
     def __init__(self, tb_frame, tb_lasti, tb_lineno, tb_next):
         self.tb_frame = tb_frame
@@ -338,8 +325,8 @@ class _CustomTraceback(object):
 ###
 def assert_arg_invalid(fpointer, pname, *args, **kwargs):
     r"""
-    Asserts whether a function raises a :code:`RuntimeError` exception with the
-    message :code:`'Argument \`*pname*\` is not valid'`, where
+    Assert if a function raises :code:`RuntimeError('Argument \`*pname*\` is not valid')`.
+
     :code:`*pname*` is the value of the **pname** argument, when called with
     given positional and/or keyword arguments
 
@@ -371,10 +358,11 @@ def assert_arg_invalid(fpointer, pname, *args, **kwargs):
 
 def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
     """
-    Asserts an exception type and message within the Py.test environment. If
-    the actual exception message and the expected exception message do not
-    literally match then the expected exception message is treated as a
-    regular expression and a match is sought with the actual exception message
+    Assert an exception type and message within the Py.test environment.
+
+    If the actual exception message and the expected exception message do not
+    literally match then the expected exception message is treated as a regular
+    expression and a match is sought with the actual exception message
 
     :param fpointer: Object to evaluate
     :type  fpointer: callable
@@ -438,8 +426,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
 
 def assert_prop(cobj, prop_name, value, extype, exmsg):
     """
-    Asserts whether a class property raises a given exception when assigned
-    a given value
+    Assert whether a class property raises a given exception when assigned a given value.
 
     :param cobj: Class object
     :type  cobj: class object
@@ -477,7 +464,7 @@ def assert_prop(cobj, prop_name, value, extype, exmsg):
 
 def assert_ro_prop(cobj, prop_name):
     """
-    Asserts that a class property cannot be deleted
+    Assert that a class property cannot be deleted.
 
     :param cobj: Class object
     :type  cobj: class object
@@ -497,9 +484,11 @@ def assert_ro_prop(cobj, prop_name):
 
 def compare_strings(actual, ref, diff_mode=False):
     r"""
-    Compare two strings. Lines are numbered, differing characters are colored
-    yellow and extra characters (characters present in one string but not in
-    the other) are colored red
+    Compare two strings.
+
+    Lines are numbered, differing characters are colored yellow and extra
+    characters (characters present in one string but not in the other) are
+    colored red
 
     :param actual: Text produced by software under test
     :type  actual: string
@@ -588,7 +577,17 @@ def compare_strings(actual, ref, diff_mode=False):
 
 
 def comp_list_of_dicts(list1, list2):
-    """ Compare list of dictionaries """
+    """
+    Compare list of dictionaries.
+
+    :param list1: First list of dictionaries to compare
+    :type  list1: list of dictionaries
+
+    :param list2: Second list of dictionaries to compare
+    :type  list2: list of dictionaries
+
+    :rtype: boolean
+    """
     for item in list1:
         if item not in list2:
             print('List1 item not in list2:')
@@ -604,7 +603,7 @@ def comp_list_of_dicts(list1, list2):
 
 def exception_type_str(exobj):
     """
-    Returns an exception type string
+    Return an exception type string.
 
     :param exobj: Exception
     :type  exobj: type (Python 2) or class (Python 3)
@@ -622,7 +621,7 @@ def exception_type_str(exobj):
 
 def get_exmsg(exobj): # pragma: no cover
     """
-    Returns exception message (Python interpreter version independent)
+    Return exception message (Python interpreter version independent).
 
     :param exobj: Exception object
     :type  exobj: exception object

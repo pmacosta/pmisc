@@ -40,7 +40,7 @@ if PYTHON_VER not in SUPPORTED_VERS:
 # Functions
 ###
 def get_short_desc(long_desc):
-    """ Get first sentence of first paragraph of long description """
+    """Get first sentence of first paragraph of long description."""
     found = False
     olines = []
     for line in [item.rstrip() for item in long_desc.split('\n')]:
@@ -50,10 +50,11 @@ def get_short_desc(long_desc):
         elif found and olines and (not line):
             return (' '.join(olines).split('.')[0]).strip()
         found = line == '.. [[[end]]]' if not found else found
+    return ''
 
 
 def read(*filenames, **kwargs):
-    """ Read plain text file(s) """
+    """Read plain text file(s)."""
     encoding = kwargs.get('encoding', 'utf-8')
     sep = kwargs.get('sep', '\n')
     buf = []
@@ -112,19 +113,19 @@ else:
 ###
 # Classes
 ###
-class Tox(TestCommand):
+class Tox(TestCommand): # noqa
     user_options = [('tox-args=', 'a', 'Arguments to pass to tox')]
 
-    def initialize_options(self):
+    def initialize_options(self): # noqa
         TestCommand.initialize_options(self)
         self.tox_args = None
 
-    def finalize_options(self):
+    def finalize_options(self): # noqa
         TestCommand.finalize_options(self)
         self.test_args = []
         self.test_suite = True
 
-    def run_tests(self):
+    def run_tests(self): # noqa
         import shlex
         import tox
         args = self.tox_args

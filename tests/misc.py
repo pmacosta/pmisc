@@ -11,7 +11,7 @@ import pmisc
 # Test functions
 ###
 def test_flatten_list():
-    """ Test flatten_list function behavior """
+    """Test flatten_list function behavior."""
     obj = pmisc.flatten_list
     assert obj([1, 2, 3]) == [1, 2, 3]
     assert obj([1, [2, 3, 4], 5]) == [1, 2, 3, 4, 5]

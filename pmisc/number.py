@@ -7,6 +7,7 @@
 import copy
 from decimal import Decimal
 from fractions import Fraction
+import sys
 # Intra-package imports
 from .member import isiterable
 
@@ -16,8 +17,9 @@ from .member import isiterable
 ###
 def _isreal(obj):
     """
-    Determines if an object is a real number (both Python standard data types
-    and Numpy data types)
+    Determine if an object is a real number.
+
+    Both Python standard data types and Numpy data types are supported.
 
     :param obj: Object
     :type  obj: any
@@ -36,8 +38,7 @@ def _isreal(obj):
 
 def _no_exp(number):
     r"""
-    Converts a number to a string guaranteeing that the result is not
-    expressed in scientific notation
+    Convert a number to a string without using scientific notation.
 
     :param number: Number to convert
     :type  number: integer or float
@@ -65,9 +66,9 @@ def _no_exp(number):
 
 def _to_scientific_tuple(number):
     r"""
-    Returns mantissa and exponent of a number when expressed in
-    scientific notation. Full precision is maintained if the number is
-    represented as a string
+    Return mantissa and exponent of a number expressed in scientific notation.
+
+    Full precision is maintained if the number is represented as a string.
 
     :param number: Number
     :type  number: integer, float or string
@@ -103,14 +104,15 @@ def _to_scientific_tuple(number):
 
 def gcd(vector):
     """
-    Calculates the greatest common divisor (GCD) of a list of numbers or a
-    Numpy vector of numbers. The computations are carried out with a precision
-    of 1E-12 if the objects are not
-    `fractions <https://docs.python.org/2/library/fractions.html>`_. When
+    Calculate the greatest common divisor (GCD) of a sequence of numbers.
+
+    The sequence can be a list of numbers or a Numpy vector of numbers. The
+    computations are carried out with a precision of 1E-12 if the objects are
+    not `fractions <https://docs.python.org/2/library/fractions.html>`_. When
     possible it is best to use the `fractions
-    <https://docs.python.org/2/library/fractions.html>`_ data type with
-    the numerator and denominator arguments when computing the GCD of
-    floating point numbers.
+    <https://docs.python.org/2/library/fractions.html>`_ data type with the
+    numerator and denominator arguments when computing the GCD of floating
+    point numbers.
 
     :param vector: Vector of numbers
     :type  vector: list of numbers or Numpy vector of numbers
@@ -130,7 +132,7 @@ def gcd(vector):
 
 def normalize(value, series, offset=0):
     r"""
-    Scales a value to the range defined by a series
+    Scale a value to the range defined by a series.
 
     :param value: Value to normalize
     :type  value: number
@@ -186,10 +188,13 @@ def normalize(value, series, offset=0):
 
 def per(arga, argb, prec=10):
     r"""
-    Calculates the percentage difference between two numbers or the
-    element-wise percentage difference between two lists of numbers or Numpy
-    vectors. If any of the numbers in the arguments is zero the value returned
-    is 1E+20
+    Calculate percentage difference between numbers.
+
+    If only two numbers are given, the percentage difference between them is
+    computed. If two sequences of numbers are given (either two lists of
+    numbers or Numpy vectors), the element-wise percentage difference is
+    compued. If any of the numbers in the arguments is zero the value returned
+    is the maximum floating-point number supported by the Python interpreter.
 
     :param arga: First number, list of numbers or Numpy vector
     :type  arga: float, integer, list of floats or integers, or Numpy vector
@@ -245,7 +250,7 @@ def per(arga, argb, prec=10):
         ret[num] = (
             0
             if x == y else (
-                1E20 if (x == 0) or (y == 0) else (
+                sys.float_info.max if (x == 0) or (y == 0) else (
                     round((max(x, y)/min(x, y))-1, prec)
                 )
             )
@@ -255,7 +260,7 @@ def per(arga, argb, prec=10):
 
 def pgcd(numa, numb):
     """
-    Calculate the greatest common divisor (GCD) of two numbers
+    Calculate the greatest common divisor (GCD) of two numbers.
 
     :param numa: First number
     :type  numa: number

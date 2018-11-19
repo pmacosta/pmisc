@@ -14,7 +14,7 @@ from pmisc import GET_EXMSG
 # Functions
 ###
 def test_cidict():
-    """ Test CiDict class """
+    """Test CiDict class."""
     assert pmisc.CiDict() == {}
     obj = pmisc.CiDict(one=1, TwO=2, tHrEe=3, FOUR=4)
     assert obj == {'one':1, 'two':2, 'three':3, 'four':4}

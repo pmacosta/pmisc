@@ -94,10 +94,10 @@ def ignored(*exceptions):
 
 class Timer(object):
     r"""
-    Profiles blocks of code by calculating elapsed time between the context
-    manager entry and exit time points.
+    Time profile of code blocks.
 
-    Inspired by `Huy Nguyen's blog
+    The profiling is done by calculating elapsed time between the context
+    manager entry and exit time points.  Inspired by `Huy Nguyen's blog
     <http://www.huyng.com/posts/python-performance-analysis/>`_.
 
     :param verbose: Flag that indicates whether the elapsed time is printed
@@ -141,7 +141,8 @@ class Timer(object):
         >>> timer(100, sample_func) #doctest: +ELLIPSIS
         Time per call: ... seconds
     """
-    def __init__(self, verbose=False):
+
+    def __init__(self, verbose=False): # noqa
         if not isinstance(verbose, bool):
             raise RuntimeError('Argument `verbose` is not valid')
         self._tstart = None
@@ -149,11 +150,11 @@ class Timer(object):
         self._elapsed_time = None
         self._verbose = verbose
 
-    def __enter__(self):
+    def __enter__(self): # noqa
         self._tstart = time.time()
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_tb):
+    def __exit__(self, exc_type, exc_value, exc_tb): # noqa
         self._tstop = time.time()
         # time.time() returns time in seconds since the epoch
         self._elapsed_time = 1000.0*(self._tstop-self._tstart)
@@ -175,7 +176,7 @@ class Timer(object):
 
 class TmpDir(object):
     r"""
-    Creates a temporary (sub)directory
+    Create a temporary (sub)directory.
 
     :param dpath: Directory under which temporary (sub)directory is to
                  be created. If None the (sub)directory is created
@@ -197,21 +198,22 @@ class TmpDir(object):
        others) can change this path separator to the operating system path
        separator if needed
     """
-    def __init__(self, dpath=None):
+
+    def __init__(self, dpath=None): # noqa
         if ((dpath is not None) and ((not isinstance(dpath, str)) or
             (isinstance(dpath, str) and not os.path.isdir(dpath)))):
             raise RuntimeError('Argument `dpath` is not valid')
         self._dpath = os.path.abspath(dpath) if (dpath is not None) else dpath
         self._dname = None
 
-    def __enter__(self):
+    def __enter__(self): # noqa
         dname = tempfile.mkdtemp(dir=self._dpath)
         if platform.system().lower() == 'windows':  # pragma: no cover
             dname = dname.replace(os.sep, '/')
         self._dname = dname
         return self._dname
 
-    def __exit__(self, exc_type, exc_value, exc_tb):
+    def __exit__(self, exc_type, exc_value, exc_tb): # noqa
         with ignored(OSError):
             shutil.rmtree(self._dname)
         return not exc_type is not None
@@ -219,8 +221,10 @@ class TmpDir(object):
 
 class TmpFile(object):
     r"""
-    Creates a temporary file and optionally sets up hooks for a function to
-    write data to it
+    Creates a temporary file that is deleted at context manager exit.
+
+    The context manager can optionally set up hooks for a provided function to
+    write data to the created temporary file.
 
     :param fpointer: Pointer to a function that writes data to file.
                      If the argument is not None the function pointed to
@@ -277,7 +281,8 @@ class TmpFile(object):
         >>> show_tmpfile()
         Hello world!
     """
-    def __init__(self, fpointer=None, *args, **kwargs):
+
+    def __init__(self, fpointer=None, *args, **kwargs): # noqa
         if (fpointer and
            (not isinstance(fpointer, types.FunctionType)) and
            (not isinstance(fpointer, types.LambdaType))):
@@ -287,7 +292,7 @@ class TmpFile(object):
         self._args = args
         self._kwargs = kwargs
 
-    def __enter__(self):
+    def __enter__(self): # noqa
         fdesc, fname = tempfile.mkstemp()
         # fdesc is an OS-level file descriptor, see problems if this
         # is not properly closed in this post:
@@ -301,7 +306,7 @@ class TmpFile(object):
                 self._fpointer(fobj, *self._args, **self._kwargs)
         return self._fname
 
-    def __exit__(self, exc_type, exc_value, exc_tb):
+    def __exit__(self, exc_type, exc_value, exc_tb): # noqa
         with ignored(OSError):
             os.remove(self._fname)
         return not exc_type is not None

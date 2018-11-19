@@ -30,7 +30,7 @@ RDELIM = '%' if platform.system().lower() == 'windows' else '}'
 ###
 # Helper functions
 ###
-def incfile_data(fobj):
+def incfile_data(fobj): # noqa
     fobj.write(
         '\n'.join(
             [
@@ -43,7 +43,7 @@ def incfile_data(fobj):
     )
 
 
-def ste_data(fobj):
+def ste_data(fobj): # noqa
     shebang = (
         '@'
         if platform.system().lower() == 'windows' else
@@ -52,7 +52,7 @@ def ste_data(fobj):
     fobj.write(shebang+'echo Hello!')
 
 
-def te_data(fobj):
+def te_data(fobj): # noqa
     fobj.write(
         '\n'.join(
             [
@@ -72,7 +72,7 @@ def te_data(fobj):
 
 
 @contextlib.contextmanager
-def temp_read(fname, fpointer):
+def temp_read(fname, fpointer): # noqa
     fobj = open(fname, 'w')
     fpointer(fobj)
     fobj.close()
@@ -87,12 +87,12 @@ def temp_read(fname, fpointer):
 ###
 # Helper class
 ###
-class Capture(object):
-    def __init__(self):
+class Capture(object): # noqa
+    def __init__(self): # noqa
         self._lines = []
-    def prt(self, line):
+    def prt(self, line): # noqa
         self._lines.append(line)
-    def lines(self):
+    def lines(self): # noqa
         return ''.join(self._lines)
 
 
@@ -108,7 +108,7 @@ class Capture(object):
     ]
 )
 def test_proc_token(item, mlines, ref):
-    """ Test _proc_token function behavior """
+    """Test _proc_token function behavior."""
     assert pmisc.rst._proc_token(item, mlines) == ref
 
 
@@ -119,13 +119,13 @@ def test_proc_token(item, mlines, ref):
     ]
 )
 def test_proc_token_exceptions(item):
-    """ Test _proc_token function exceptions """
+    """Test _proc_token function exceptions."""
     obj = pmisc.rst._proc_token
     AI(obj, 'lrange', item, 30)
 
 
 def test_incfile():
-    """ Test incfile function behavior """
+    """Test incfile function behavior."""
     def make_ref(rlist):
         return LSEP.join(
             ['.. code-block:: python', '',]+rlist+['', '']
@@ -206,7 +206,7 @@ def test_incfile():
 
 
 def test_ste():
-    """ Test ste function behavior """
+    """Test ste function behavior."""
     # pylint: disable=W0702
     def make_ref(rlist, indent=0):
         return LSEP.join(
@@ -244,7 +244,7 @@ def test_ste():
 
 
 def test_term_echo():
-    """ Test term_echo function behavior """
+    """Test term_echo function behavior."""
     def make_ref(rlist, indent=0):
         return LSEP.join(
             ['', (indent*' ')+'.. code-block:: bash', '',]+rlist+['', '']

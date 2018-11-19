@@ -25,12 +25,12 @@ SUPPORTED_VERS = ['2.7', '3.5', '3.6', '3.7']
 # Repeated here so as make functions in this file self-contained
 if sys.hexversion < 0x03000000:
     def _readlines(fname):
-        """ Read all lines from file """
+        """Read all lines from file."""
         with open(fname, 'r') as fobj:
             return fobj.readlines()
 else:
     def _readlines(fname, fpointer1=open, fpointer2=open):
-        """ Read all lines from file """
+        """Read all lines from file."""
         # fpointer1, fpointer2 arguments to ease testing
         try:
             with fpointer1(fname, 'r') as fobj:
@@ -64,7 +64,7 @@ else:
 
 
 def dir_tree(root, dir_exclude=None, ext_exclude=None):
-    """ Return all files at or under root directory """
+    """Return all files at or under root directory."""
     ext_exclude = [] if ext_exclude is None else ext_exclude
     ext_exclude = ['.'+item for item in ext_exclude]
     dir_exclude = [] if dir_exclude is None else dir_exclude
@@ -79,7 +79,7 @@ def dir_tree(root, dir_exclude=None, ext_exclude=None):
 
 
 def get_pkg_data_files(share_dir):
-    """ Create data_files setup.py argument """
+    """Create data_files setup.py argument."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     fdata = json_load(os.path.join('data', 'data_files.json'))
     rdict = {}
@@ -98,7 +98,7 @@ def get_pkg_data_files(share_dir):
 
 
 def gen_manifest(make_wheel=False):
-    """ Generate MANIFEST.in file """
+    """Generate MANIFEST.in file."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     fdata = json_load(os.path.join('data', 'data_files.json'))
     ret = [
@@ -133,7 +133,7 @@ def gen_manifest(make_wheel=False):
 
 
 def json_load(fname):
-    """ Load JSON file """
+    """Load JSON file."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     conf_file = os.path.join(pkg_dir, fname)
     with open(conf_file, 'r') as fobj:
@@ -144,7 +144,7 @@ def json_load(fname):
 
 
 def load_requirements(pkg_dir, pyver, cat='source'):
-    """ Get package names from requirements files """
+    """Get package names from requirements files."""
     pyver = pyver.replace('.', '')
     reqs_dir = os.path.join(pkg_dir, 'requirements')
     if cat.lower() == 'source':
@@ -173,9 +173,7 @@ def load_requirements(pkg_dir, pyver, cat='source'):
 
 
 def pcolor(text, color, indent=0):
-    """
-    Returns a string that once printed is colorized (copied from pmisc.strings)
-    """
+    """Return a string that once printed is colorized (copied from pmisc.strings)."""
     esc_dict = {
         'black':30, 'red':31, 'green':32, 'yellow':33, 'blue':34, 'magenta':35,
         'cyan':36, 'white':37, 'none':-1
@@ -201,12 +199,12 @@ def pcolor(text, color, indent=0):
 
 
 def python_version(hver):
-    """ Return Python version """
+    """Return Python version."""
     return '{major}.{minor}'.format(major=int(hver[:-2]), minor=int(hver[-2:]))
 
 
 def shcmd(cmd_list, exmsg, async_stdout=False):
-    """ Execute command piping STDERR to STDOUT """
+    """Execute command piping STDERR to STDOUT."""
     proc = subprocess.Popen(
         cmd_list,
         stdout=subprocess.PIPE,

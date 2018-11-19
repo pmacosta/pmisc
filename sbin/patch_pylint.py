@@ -13,7 +13,7 @@ import sys
 # Functions
 ###
 def main(pkg_dir):
-    """ Processing """
+    """Processing."""
     fname = os.path.join(pkg_dir, 'astroid', 'brain', 'pysix_moves.py')
     ret = []
     with open(fname, 'r') as fobj:

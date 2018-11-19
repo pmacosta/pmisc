@@ -24,7 +24,7 @@ else:
 # Functions
 ###
 def which(name):
-    """ Search PATH for executable files with the given name """
+    """Search PATH for executable files with the given name."""
     # Inspired by https://twistedmatrix.com/trac/browser/tags/releases/
     # twisted-8.2.0/twisted/python/procutils.py
     # pylint: disable=W0141
@@ -40,7 +40,7 @@ def which(name):
 
 
 def load_aspell_whitelist():
-    """ Load words that are excluded from Aspell output """
+    """Load words that are excluded from Aspell output."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     efile = os.path.join(pkg_dir, 'data', 'aspell-whitelist')
     words = [item.strip() for item in _readlines(efile) if item.strip()]
@@ -48,7 +48,7 @@ def load_aspell_whitelist():
 
 
 def pkg_files(sdir, mdir, files, extensions):
-    """ Returns package files of a given extension """
+    """Return package files of a given extension."""
     pkgdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     files = [os.path.join(pkgdir, item) for item in files]
     # Define directories to look files in
@@ -83,7 +83,7 @@ def pkg_files(sdir, mdir, files, extensions):
 
 
 def content_lines(fname, comment='#'):
-    """ Returns non-empty lines of a package """
+    """Return non-empty lines of a package."""
     skip_lines = [
         '#!/bin/bash',
         '#!/usr/bin/env bash',
@@ -105,7 +105,7 @@ def content_lines(fname, comment='#'):
 
 
 def check_header(sdir, mdir, files, no_print=False):
-    """ Check that all files have header line and copyright notice """
+    """Check that all files have header line and copyright notice."""
     # Processing
     fdict = {
         '.py': '#',
@@ -155,7 +155,7 @@ def check_header(sdir, mdir, files, no_print=False):
 
 
 def check_pylint(sdir, mdir, files, no_print=False):
-    """ Check that there are no repeated Pylint codes per file """
+    """Check that there are no repeated Pylint codes per file."""
     rec = re.compile
     soline = rec(r'(^\s*)#\s*pylint\s*:\s*disable\s*=\s*([\w|\s|,]+)\s*')
     # Regular expression to get a Pylint disable directive but only
@@ -209,7 +209,7 @@ def check_pylint(sdir, mdir, files, no_print=False):
 
 
 def check_aspell(sdir, mdir, files, no_print=False):
-    """ Check files word spelling """
+    """Check files word spelling."""
     errors = False
     if which('aspell'):
         excluded_words = load_aspell_whitelist()

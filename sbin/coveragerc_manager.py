@@ -25,15 +25,12 @@ def _exclude_files(sdir=None):
     return sorted(isf)
 
 def _write(fobj, data):
-    """ Simple file write """
+    """Do a simple file write."""
     fobj.write(data)
 
 
 def get_source_files(sdir, inc_init=False):
-    """
-    Get Python source files that are not __init__.py and
-    interpreter-specific
-    """
+    """Get Python source files that are not __init__.py and interpreter-specific."""
     exclude_list = _exclude_files()
     fnames = [item for item in os.listdir(sdir) if item.endswith('.py')]
     fnames = [
@@ -47,7 +44,7 @@ def get_source_files(sdir, inc_init=False):
 
 
 def main(argv):
-    """ Processing """
+    """Processing."""
     # pylint: disable=R0912,R0914,R0915,W0702
     debug = True
     env = argv[0].strip('"').strip("'")

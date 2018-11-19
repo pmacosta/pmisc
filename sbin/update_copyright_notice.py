@@ -17,7 +17,7 @@ import sbin.functions
 # Functions
 ###
 def read_file(fname):
-    """ Read file in Python 2 or Python 3 """
+    """Read file in Python 2 or Python 3."""
     if sys.hexversion < 0x03000000:
         with open(fname, 'r') as fobj:
             return fobj.readlines()
@@ -31,7 +31,7 @@ def read_file(fname):
 
 
 def update_copyright_notice():
-    """ Update copyright notice in project files """
+    """Update copyright notice in project files."""
     pkg_dir = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__))
     )

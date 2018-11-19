@@ -26,7 +26,7 @@ else:
 # Test functions
 ###
 def test_make_dir(capsys):
-    """ Test make_dir function behavior """
+    """Test make_dir function behavior."""
     def mock_os_makedir(file_path):
         print(file_path)
     home_dir = os.path.expanduser('~')
@@ -45,7 +45,7 @@ def test_make_dir(capsys):
 
 
 def test_normalize():
-    """ Test normalize function behavior """
+    """Test normalize function behavior."""
     obj = pmisc.normalize
     AI(obj, 'value', value='a', series=[2, 5], offset=10)
     AI(obj, 'offset', value=5, series=[2, 5], offset='a')
@@ -59,7 +59,7 @@ def test_normalize():
 
 
 def test_normalize_windows_fname():
-    """ Test normalize_windows_fname behavior """
+    """Test normalize_windows_fname behavior."""
     obj = pmisc.normalize_windows_fname
     in_windows = platform.system().lower() == 'windows'
     ref = r'a\b\c' if in_windows else 'a/b/c//'

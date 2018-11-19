@@ -14,7 +14,7 @@ import re
 # Functions
 ###
 def update_conf():
-    """ Update Sphinx conf.py file """
+    """Update Sphinx conf.py file."""
     # pylint: disable=W0122,W0612
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     version_py = os.path.join(pkg_dir, 'pmisc/version.py')

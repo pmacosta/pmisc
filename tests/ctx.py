@@ -25,7 +25,7 @@ else:
 # Test functions
 ###
 def test_ignored():
-    """ Test ignored context manager behavior """
+    """Test ignored context manager behavior."""
     with pmisc.TmpFile() as fname:
         with open(fname, 'w') as output_obj:
             output_obj.write('This is a test file')
@@ -49,7 +49,7 @@ def test_ignored():
 
 
 def test_timer(capsys):
-    """ Test Timer context manager behavior """
+    """Test Timer context manager behavior."""
     # Test argument validation
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.Timer(5):
@@ -71,7 +71,7 @@ def test_timer(capsys):
     assert tregexp.match(out.rstrip())
 
 def test_tmp_dir():
-    """ Test TmpDir context manager behavior """
+    """Test TmpDir context manager behavior."""
     # Test argument validation
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.TmpDir(5) as dname:
@@ -103,7 +103,7 @@ def test_tmp_dir():
 
 
 def test_tmp_file():
-    """ Test TmpFile context manager behavior """
+    """Test TmpFile context manager behavior."""
     def write_data(file_handle):
         _write(file_handle, 'Hello world!')
     def write_data_with_args(file_handle, *args, **kwargs):

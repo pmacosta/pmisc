@@ -12,7 +12,7 @@ import string
 ###
 def isalpha(obj):
     """
-    Tests if the argument is a string representing a number
+    Test if the argument is a string representing a number.
 
     :param obj: Object
     :type  obj: any
@@ -39,7 +39,7 @@ def isalpha(obj):
 
 def ishex(obj):
     """
-    Tests if the argument is a string representing a valid hexadecimal digit
+    Test if the argument is a string representing a valid hexadecimal digit.
 
     :param obj: Object
     :type  obj: any
@@ -53,7 +53,7 @@ def ishex(obj):
 
 def isiterable(obj):
     """
-    Tests if the argument is an iterable
+    Test if the argument is an iterable.
 
     :param obj: Object
     :type  obj: any
@@ -69,7 +69,7 @@ def isiterable(obj):
 
 def isnumber(obj):
     """
-    Tests if the argument is a number (complex, float or integer)
+    Test if the argument is a number (complex, float or integer).
 
     :param obj: Object
     :type  obj: any
@@ -84,7 +84,7 @@ def isnumber(obj):
 
 def isreal(obj):
     """
-    Tests if the argument is a real number (float or integer)
+    Test if the argument is a real number (float or integer).
 
     :param obj: Object
     :type  obj: any

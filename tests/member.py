@@ -11,7 +11,7 @@ import pmisc
 # Test functions
 ###
 def test_isalpha():
-    """ Test isalpha function behavior """
+    """Test isalpha function behavior."""
     assert not pmisc.isalpha(3)
     assert not pmisc.isalpha(1.5)
     assert not pmisc.isalpha(1+2j)
@@ -21,7 +21,7 @@ def test_isalpha():
 
 
 def test_ishex():
-    """ Test ishex function behavior """
+    """Test ishex function behavior."""
     assert not pmisc.ishex(5)
     assert not pmisc.ishex('45')
     assert pmisc.ishex('F')
@@ -29,7 +29,7 @@ def test_ishex():
 
 
 def test_isiterable():
-    """ Test isiterable function behavior """
+    """Test isiterable function behavior."""
     assert pmisc.isiterable([1, 2, 3])
     assert pmisc.isiterable({'a':5})
     assert pmisc.isiterable(set([1, 2, 3]))
@@ -37,7 +37,7 @@ def test_isiterable():
 
 
 def test_isnumber():
-    """ Test isnumber function behavior """
+    """Test isnumber function behavior."""
     assert pmisc.isnumber(5)
     assert pmisc.isnumber(1.5)
     assert pmisc.isnumber(complex(3.2, 9.5))
@@ -46,7 +46,7 @@ def test_isnumber():
 
 
 def test_isreal():
-    """ Test isreal function behavior """
+    """Test isreal function behavior."""
     assert pmisc.isreal(5)
     assert pmisc.isreal(1.5)
     assert not pmisc.isreal(complex(3.2, 9.5))

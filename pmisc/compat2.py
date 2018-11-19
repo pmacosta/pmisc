@@ -11,7 +11,7 @@ import re
 # Functions
 ###
 def _ex_type_str(exobj):
-    """ Returns a string corresponding to the exception type """
+    """Return a string corresponding to the exception type."""
     regexp = re.compile(r"<(?:\bclass\b|\btype\b)\s+'?([\w|\.]+)'?>")
     exc_type = str(exobj)
     if regexp.match(exc_type):
@@ -25,12 +25,12 @@ def _ex_type_str(exobj):
 
 
 def _get_ex_msg(obj):
-    """ Get exception message """
+    """Get exception message."""
     return obj.value.message if hasattr(obj, 'value') else obj.message
 
 
 def _readlines(fname): # pragma: no cover
-    """ Read all lines from file """
+    """Read all lines from file."""
     with open(fname, 'r') as fobj:
         return fobj.readlines()
 
@@ -39,6 +39,7 @@ def _readlines(fname): # pragma: no cover
 # how-to-get-string-objects-instead-of-unicode-ones-from-json-in-python
 # with Python 2.6 compatibility changes
 def _unicode_to_ascii(obj): # pragma: no cover
+    """Convert to ASCII."""
     # pylint: disable=E0602,R1717
     if isinstance(obj, dict):
         return dict(
@@ -55,5 +56,5 @@ def _unicode_to_ascii(obj): # pragma: no cover
 
 
 def _write(fobj, data): # pragma: no cover
-    """ Write data to file """
+    """Write data to file."""
     fobj.write(data)

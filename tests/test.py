@@ -22,7 +22,7 @@ import pmisc
 # Test functions
 ###
 def test_assert_arg_invalid():
-    """ Test assert_arg_invalid function behavior """
+    """Test assert_arg_invalid function behavior."""
     def func1(par):
         if par == 1:
             raise RuntimeError('Argument `par` is not valid')
@@ -33,7 +33,7 @@ def test_assert_arg_invalid():
 
 
 def test_assert_exception():
-    """ Test assert_exception function behavior """
+    """Test assert_exception function behavior."""
     class MyClass0(object):
         def meth1(self, par):
             if par:
@@ -97,7 +97,7 @@ def test_assert_exception():
 
 
 def test_assert_prop():
-    """ Test assert_ro_prop function behavior """
+    """Test assert_ro_prop function behavior."""
     class MyClass1(object):
         def __init__(self):
             self._value = 1
@@ -124,7 +124,7 @@ def test_assert_prop():
 
 
 def test_assert_ro_prop():
-    """ Test assert_ro_prop function behavior """
+    """Test assert_ro_prop function behavior."""
     class MyClass1(object):
         def __init__(self):
             self._value = 1
@@ -170,7 +170,7 @@ def test_assert_ro_prop():
 
 
 def test_comp_list_of_dicts():
-    """ Test comp_list_of_dicts function behavior """
+    """Test comp_list_of_dicts function behavior."""
     list1 = []
     list2 = [{'a':5, 'b':6}]
     assert not pmisc.comp_list_of_dicts(list1, list2)
@@ -183,7 +183,7 @@ def test_comp_list_of_dicts():
 
 
 def test_compare_strings():
-    """ Test compare_string function behavior """
+    """Test compare_string function behavior."""
     obj = pmisc.compare_strings
     AI(obj, 'actual', 5, 'a')
     AI(obj, 'ref', 'a', 5)
@@ -286,7 +286,7 @@ def test_compare_strings():
 
 
 def test_exception_type_str():
-    """ Test exception_type_str function behavior """
+    """Test exception_type_str function behavior."""
     class MyException(Exception):
         pass
     assert pmisc.exception_type_str(RuntimeError) == 'RuntimeError'
@@ -295,7 +295,7 @@ def test_exception_type_str():
 
 
 def test_excepthook():
-    """ Test _excepthook function behavior """
+    """Test _excepthook function behavior."""
     test_path = os.path.dirname(os.path.abspath(__file__))
     test_fname = os.path.join(test_path, 'test.py')
     def comp_output(act, ref, lineno=0):
@@ -461,7 +461,7 @@ def test_excepthook():
 
 
 def test_del_pmisc_test_frames():
-    """ Test _remove_test_module_frame function behavior """
+    """Test _remove_test_module_frame function behavior."""
     obj = pmisc.test._del_pmisc_test_frames
     def func1():
         raise RuntimeError('Sample exception')
@@ -479,9 +479,10 @@ def test_del_pmisc_test_frames():
     eobj = RuntimeError('DID NOT RAISE')
     with pytest.raises(AssertionError) as excinfo:
         pmisc.test._raise_if_not_raised(eobj)
-    assert get_last_tb(excinfo.tb).tb_lineno == 317
-    assert get_last_tb(excinfo.traceback[-1]._rawentry).tb_lineno == 317
-    assert '317 in _raise_if_not_raised' in str(excinfo.traceback[-1])
+    print(get_last_tb(excinfo.tb).tb_lineno)
+    assert get_last_tb(excinfo.tb).tb_lineno == 306
+    assert get_last_tb(excinfo.traceback[-1]._rawentry).tb_lineno == 306
+    assert '306 in _raise_if_not_raised' in str(excinfo.traceback[-1])
     excinfo = obj(excinfo)
     print(get_last_tb(excinfo.tb).tb_lineno)
     assert get_last_tb(excinfo.tb).tb_lineno == 481

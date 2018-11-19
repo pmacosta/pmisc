@@ -23,14 +23,14 @@ RDELIM = '%' if platform.system().lower() == 'windows' else '}'
 # Functions
 ###
 def _homogenize_linesep(line):
-    """ Enforces line separators to be the right one depending on platform """
+    """Enforce line separators to be the right one depending on platform."""
     token = str(uuid.uuid4())
     line = line.replace(os.linesep, token).replace('\n', '').replace('\r', '')
     return line.replace(token, os.linesep)
 
 
 def _proc_token(spec, mlines):
-    """ Process line range tokens """
+    """Process line range tokens."""
     spec = spec.strip().replace(' ', '')
     regexp = re.compile(r'.*[^0123456789\-,]+.*')
     tokens = spec.split(',')
@@ -58,8 +58,8 @@ def _proc_token(spec, mlines):
 
 
 def incfile(fname, fpointer, lrange=None, sdir=None):
-    """
-    Returns a Python source file formatted in reStructuredText
+    r"""
+    Return a Python source file formatted in reStructuredText.
 
     :param fname: File name, relative to environment variable
                   :bash:`PKG_DOC_DIR`
@@ -136,9 +136,9 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
 
 def ste(command, nindent, mdir, fpointer):
     """
-    Prints STDOUT resulting from a given shell command formatted in
-    reStructuredText. This is a simplified version of
-    :py:func:`pmisc.term_echo`
+    Print STDOUT of a shell command formatted in reStructuredText.
+
+    This is a simplified version of :py:func:`pmisc.term_echo`.
 
     :param command: Shell command, relative to **mdir**
     :type  command: string
@@ -189,8 +189,7 @@ def ste(command, nindent, mdir, fpointer):
 
 def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
     """
-    Prints STDOUT resulting from a given shell command formatted in
-    reStructuredText
+    Print STDOUT of a shell command formatted in reStructuredText.
 
     :param command: Shell command
     :type  command: string

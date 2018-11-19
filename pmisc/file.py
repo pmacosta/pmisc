@@ -13,7 +13,7 @@ import platform
 ###
 def make_dir(fname):
     """
-    Creates the directory of a fully qualified file name if it does not exist
+    Create the directory of a fully qualified file name if it does not exist.
 
     :param fname: File name
     :type  fname: string
@@ -34,14 +34,15 @@ def make_dir(fname):
 
 
 def normalize_windows_fname(fname, _force=False):
-    """
-    Fix potential problems with a Microsoft Windows file name. Superfluous
-    backslashes are removed and unintended escape sequences are converted
-    to their equivalent (presumably correct and intended) representation,
-    for example :code:`r'\\\\x07pps'` is transformed to
-    :code:`r'\\\\\\\\apps'`. A file name is considered network shares if
-    the file does not include a drive letter and they start with a double
-    backslash (:code:`'\\\\\\\\'`)
+    r"""
+    Fix potential problems with a Microsoft Windows file name.
+
+    Superfluous backslashes are removed and unintended escape sequences are
+    converted to their equivalent (presumably correct and intended)
+    representation, for example :code:`r'\\\\x07pps'` is transformed to
+    :code:`r'\\\\\\\\apps'`. A file name is considered network shares if the
+    file does not include a drive letter and they start with a double backslash
+    (:code:`'\\\\\\\\'`)
 
     :param fname: File name
     :type  fname: string

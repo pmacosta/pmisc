@@ -18,7 +18,7 @@ import sys
 # this script may be run right after cloning and pmisc module may not be in
 # the Python search path
 def _os_cmd(cmd):
-    """ Execute shell command and display standard output """
+    """Execute shell command and display standard output."""
     pobj = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
@@ -27,7 +27,7 @@ def _os_cmd(cmd):
 
 
 def _pcolor(text, color, indent=0):
-    """ Colorized print to standard output """
+    """Colorized print to standard output."""
     esc_dict = {
         'black':30, 'red':31, 'green':32, 'yellow':33, 'blue':34, 'magenta':35,
         'cyan':36, 'white':37, 'none':-1
@@ -44,7 +44,7 @@ def _pcolor(text, color, indent=0):
 
 
 def _pip_install(pyver, pkg_name):
-    """ Install package via pip """
+    """Install package via pip."""
     _os_cmd(
         [
             'pip{0}'.format(pyver),
@@ -57,7 +57,7 @@ def _pip_install(pyver, pkg_name):
 
 
 def which(name):
-    """ Search PATH for executable files with the given name """
+    """Search PATH for executable files with the given name."""
     # Inspired by https://twistedmatrix.com/trac/browser/tags/releases/
     # twisted-8.2.0/twisted/python/procutils.py
     # pylint: disable=W0141
@@ -73,7 +73,7 @@ def which(name):
 
 
 def load_requirements(pkg_dir, pyver):
-    """ Get package names from requirements.txt file """
+    """Get package names from requirements.txt file."""
     pyver = pyver.replace('.', '')
     reqs_dir = os.path.join(pkg_dir, 'requirements')
     reqs_files = [
@@ -92,7 +92,7 @@ def load_requirements(pkg_dir, pyver):
 
 
 def build_wheel_cache(pyvers):
-    """ Build pip wheel cache """
+    """Build pip wheel cache."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     pyvers = ['2.7', '3.5', '3.6'] if not pyvers else pyvers
     old_python_path = os.environ['PYTHONPATH']

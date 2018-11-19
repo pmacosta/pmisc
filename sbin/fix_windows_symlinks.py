@@ -18,7 +18,7 @@ import sys
 # Functions
 ###
 def read_file(fname):
-    """ Read file in Python 2 or Python 3 """
+    """Read file in Python 2 or Python 3."""
     if sys.hexversion < 0x03000000:
         with open(fname, 'r') as fobj:
             return fobj.readlines()
@@ -32,7 +32,7 @@ def read_file(fname):
 
 
 def resolve_win_symlinks():
-    """ Follow Git 'symlink' under Windows """
+    """Follow Git 'symlink' under Windows."""
     # pylint: disable=R0912,R0914
     if platform.system().lower() == 'windows':
         pkg_dir = os.path.dirname(os.path.dirname(__file__))

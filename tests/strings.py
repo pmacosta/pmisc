@@ -18,7 +18,7 @@ from pmisc import AE, AI
 # Test functions
 ###
 def test_binary_string_to_octal_string():
-    """ Test binary_string_to_octal_string function behavior """
+    """Test binary_string_to_octal_string function behavior."""
     obj = pmisc.binary_string_to_octal_string
     if sys.hexversion < 0x03000000:
         ref = (
@@ -38,13 +38,13 @@ def test_binary_string_to_octal_string():
 
 
 def test_char_string_to_decimal():
-    """ Test char_string_to_decimal_string function """
+    """Test char_string_to_decimal_string function."""
     ref = '72 101 108 108 111 32 119 111 114 108 100 33'
     assert pmisc.char_to_decimal('Hello world!') == ref
 
 
 def test_elapsed_time_string():
-    """ Test elapsed_time_string function behavior """
+    """Test elapsed_time_string function behavior."""
     obj = pmisc.elapsed_time_string
     assert obj(datetime(2015, 1, 1), datetime(2015, 1, 1)) == 'None'
     AE(
@@ -86,7 +86,7 @@ def test_elapsed_time_string():
 
 
 def test_pcolor():
-    """ Test pcolor function behavior """
+    """Test pcolor function behavior."""
     obj = pmisc.pcolor
     AI(obj, 'text', text=5, color='red', indent=0)
     AI(obj, 'color', text='hello', color=5, indent=0)
@@ -101,14 +101,14 @@ def test_pcolor():
 
 
 def test_quote_str():
-    """ Test quote_str function behavior """
+    """Test quote_str function behavior."""
     assert pmisc.quote_str(5) == 5
     assert pmisc.quote_str('Hello!') == '"Hello!"'
     assert pmisc.quote_str('He said "hello!"') == "'He said \"hello!\"'"
 
 
 def test_strframe():
-    """ Test strframe function behavior """
+    """Test strframe function behavior."""
     obj = pmisc.strframe
     def check_basic_frame(lines):
         fname = pmisc.normalize_windows_fname(os.path.realpath(__file__))

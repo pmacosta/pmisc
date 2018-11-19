@@ -22,12 +22,12 @@ import sbin.functions
 try:
     from sbin.refresh_moddb import refresh_moddb
 except ImportError:
-    def refresh_moddb():
+    def refresh_moddb(): # noqa
         pass
 try:
     from sbin.build_moddb import build_moddb
 except ImportError:
-    def build_moddb():
+    def build_moddb(): # noqa
         pass
 
 
@@ -43,7 +43,7 @@ PKG_SUBMODULES = []
 # Functions
 ###
 def build_pkg_docs(args):
-    """ Build documentation """
+    """Build documentation."""
     debug = False
     retcode = 0
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -119,7 +119,7 @@ def build_pkg_docs(args):
 
 
 def copy_file(src, dest):
-    """ Copy file (potentially overwriting existing file) """
+    """Copy file (potentially overwriting existing file)."""
     try:
         os.remove(dest)
     except OSError:
@@ -128,7 +128,7 @@ def copy_file(src, dest):
 
 
 def del_file(fname):
-    """ Delete file """
+    """Delete file."""
     try:
         os.remove(fname)
     except OSError:
@@ -136,7 +136,7 @@ def del_file(fname):
 
 
 def del_pkl_files(test, tracer_dir):
-    """ Delete all old pickle files """
+    """Delete all old pickle files."""
     if test:
         pkl_files = (glob.glob(os.path.join(tracer_dir, '*.pkl')))
         for pkl_file in pkl_files:
@@ -144,7 +144,7 @@ def del_pkl_files(test, tracer_dir):
 
 
 def diff(file1, file2):
-    """ Diff two files """
+    """Diff two files."""
     with open(file1, 'r') as fobj1:
         flines1 = [item.rstrip() for item in fobj1.readlines()]
     with open(file2, 'r') as fobj2:
@@ -155,9 +155,7 @@ def diff(file1, file2):
 
 
 def elapsed_time_string(start_time, stop_time):
-    """
-    Returns a formatted string with the elapsed time between two time points
-    """
+    """Return a formatted string with the elapsed time between two time points."""
     delta_time = stop_time-start_time
     tot_seconds = int(
         (
@@ -193,7 +191,7 @@ def elapsed_time_string(start_time, stop_time):
 
 
 def insert_files_in_rsts(pkg_dir, cog_exe):
-    """ Cog-insert source files in Sphinx files """
+    """Cog-insert source files in Sphinx files."""
     fnames = [
         os.path.join(pkg_dir, 'docs', 'README.rst'),
         os.path.join(pkg_dir, 'README.rst'),
@@ -227,7 +225,7 @@ def insert_files_in_rsts(pkg_dir, cog_exe):
 
 
 def move_file(src, dest):
-    """ Copy file (potentially overwriting existing file) """
+    """Copy file (potentially overwriting existing file)."""
     try:
         os.remove(dest)
     except OSError:
@@ -237,7 +235,7 @@ def move_file(src, dest):
 
 def pcolor(text, color, indent=0):
     r"""
-    Returns a string that once printed is colorized (copied from pmisc module)
+    Return a string that once printed is colorized (copied from pmisc module).
 
     :param text: Text to colorize
     :type  text: string
@@ -287,7 +285,7 @@ def pcolor(text, color, indent=0):
 
 
 def print_diff(tlist, indent=3):
-    """ Pretty prints file differences """
+    """Pretty prints file differences."""
     ret = []
     ret.append((indent*' ')+tlist[0][1:-2])
     ret.append((indent*' ')+tlist[1][1:-2])
@@ -297,21 +295,21 @@ def print_diff(tlist, indent=3):
 
 
 def print_cyan(text):
-    """ Print text to STDOUT in cyan color """
+    """Print text to STDOUT in cyan color."""
     print(pcolor(text, 'cyan'))
 
 
 def print_green(text):
-    """ Print text to STDOUT in green color """
+    """Print text to STDOUT in green color."""
     print(pcolor(text, 'green'))
 
 
 def print_red(text):
-    """ Print text to STDOUT in red color """
+    """Print text to STDOUT in red color."""
     print(pcolor(text, 'red'))
 
 
-def rebuild_module_doc(test, src_dir, tracer_dir, cog_exe, debug):
+def rebuild_module_doc(test, src_dir, tracer_dir, cog_exe, debug): # noqa
     # pylint: disable=R0913
     retcode = 0
     pkl_dir = tracer_dir
@@ -352,8 +350,9 @@ def rebuild_module_doc(test, src_dir, tracer_dir, cog_exe, debug):
 
 def generate_top_level_readme(pkg_dir):
     """
-    Remove Sphinx-specific cross-references from top-level README.rst file,
-    they are not rendered by either Bitbucket or GitHub
+    Remove Sphinx-specific cross-references from top-level README.rst file.
+
+    The references are not rendered by either Bitbucket or GitHub
     """
     # pylint: disable=W0212
     docs_dir = os.path.abspath(os.path.join(pkg_dir, 'docs'))
@@ -492,7 +491,7 @@ def generate_top_level_readme(pkg_dir):
 
 
 def valid_dir(value):
-    """ Argparse checked for directory argument """
+    """Argparse checked for directory argument."""
     if not os.path.isdir(value):
         raise argparse.ArgumentTypeError(
             'directory {0} does not exist'.format(value)
@@ -501,7 +500,7 @@ def valid_dir(value):
 
 
 def valid_num_cpus(value):
-    """ Argparse checker for num_cpus argument """
+    """Argparse checker for num_cpus argument."""
     # pylint: disable=E1101
     try:
         value = int(value)
@@ -523,7 +522,7 @@ def valid_num_cpus(value):
 
 
 def which(name):
-    """ Search PATH for executable files with the given name """
+    """Search PATH for executable files with the given name."""
     # Inspired by https://twistedmatrix.com/trac/browser/tags/releases/
     # twisted-8.2.0/twisted/python/procutils.py
     result = []
