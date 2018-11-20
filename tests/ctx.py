@@ -106,7 +106,7 @@ def test_tmp_dir():
     assert not os.path.exists(dname)
 
 
-def test_tmp_file():
+def test_tmp_file(): # noqa: D202
     """Test TmpFile context manager behavior."""
 
     def write_data(file_handle):

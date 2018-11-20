@@ -53,6 +53,7 @@ pep8=0
 email=0
 personal_repo=0
 code_standard=0
+pep257=0
 source "$(current_dir "${BASH_SOURCE[0]}")/repo-cfg.sh"
 if [ "${print}" == 1 ]; then
     echo -e "\tGit pre-commit setup"
@@ -60,6 +61,7 @@ if [ "${print}" == 1 ]; then
     echo -e "\t\tnon_ascii_file_names=${non_ascii_file_names}"
     echo -e "\t\ttrailing_white_space=${trailing_white_space}"
     echo -e "\t\tpep8=${pep8}"
+    echo -e "\t\tpep257=${pep257}"
     echo -e "\t\temail=${email}"
     echo -e "\t\tpersonal_repo=${personal_repo}"
     echo -e "\t\tcode_standard=${code_standard}"
@@ -154,6 +156,38 @@ if [ "${pep8}" == 1 ]; then
     fi
     #if [ "${python_files}" != "" ]; then
     #   echo -e "All Python files are PEP8 compliant"
+    #fi
+fi
+# }}}
+# Check for Python gc compliance {{{
+if [ "${pep257}" == 1 ]; then
+    if [ "${print}" == 1 ]; then
+        echo -e "\tValidating Python PEP257 compliance with pydocstyle"
+    fi
+    pkg_dir=$(git rev-parse --show-toplevel)
+    python_files=$(git diff --name-only --cached -- *.py)
+    pep257_output=""
+    # shellcheck disable=SC2068
+    for file in ${python_files[@]}; do
+        if [ "${file}" != "" ]; then
+            tfile="$(mktemp)"
+            file_output=""
+            pylint --config="${pkg_dir}/.pydocstyle" "${file}" &> "${tfile}"
+            if [ "$?" != 0 ]; then
+                file_output=$(cat "${tfile}")
+                rm -rf "${tfile}"
+            fi
+            if [ "${file_output}" != "" ]; then
+                pep257_output=${pep257_output}"\n"${file_output}
+            fi
+        fi
+    done
+    if [ "${pep257_output}" != "" ]; then
+        echo -e "${pep257_output}"
+        exit 1
+    fi
+    #if [ "${python_files}" != "" ]; then
+    #   echo -e "All Python files are PEP257 compliant"
     #fi
 fi
 # }}}

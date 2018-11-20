@@ -20,7 +20,7 @@ LINE_WIDTH = 72
 # Functions
 ###
 def def_links(mobj):
-    """ Define Sphinx requirements links """
+    """Define Sphinx requirements links."""
     fdict = json_load(os.path.join("data", "requirements.json"))
     sdeps = sorted(fdict.keys())
     olines = []
@@ -38,20 +38,20 @@ def def_links(mobj):
 
 
 def make_common_entry(plist, pyver, suffix, req_ver):
-    """ Generate Python interpreter version entries for 2.x or 3.x series """
+    """Generate Python interpreter version entries for 2.x or 3.x series."""
     prefix = "Python {pyver}.x{suffix}".format(pyver=pyver, suffix=suffix)
     plist.append("{prefix}{ver}".format(prefix=prefix, ver=ops_to_words(req_ver)))
 
 
 def make_multi_entry(plist, pkg_pyvers, ver_dict):
-    """ Generate Python interpreter version entries """
+    """Generate Python interpreter version entries."""
     for pyver in pkg_pyvers:
         pver = pyver[2] + "." + pyver[3:]
         plist.append("Python {0}: {1}".format(pver, ops_to_words(ver_dict[pyver])))
 
 
 def op_to_words(item):
-    """ Translate >=, ==, <= to words """
+    """Translate >=, ==, <= to words."""
     sdicts = [
         {"==": ""},
         {">=": " or newer"},
@@ -75,7 +75,7 @@ def op_to_words(item):
 
 
 def ops_to_words(item):
-    """ Translate requirement specification to words """
+    """Translate requirement specification to words."""
     unsupp_ops = ["~=", "==="]
     # Ordered for  "pleasant" word specification
     supp_ops = [">=", ">", "==", "<=", "<", "!="]
@@ -103,7 +103,7 @@ def ops_to_words(item):
 
 
 def proc_requirements(mobj):
-    """ Get requirements in reStructuredText format """
+    """Get requirements in reStructuredText format."""
     pyvers = ["py{0}".format(item.replace(".", "")) for item in SUPPORTED_VERS]
     py2vers = sorted([item for item in pyvers if item.startswith("py2")])
     py3vers = sorted([item for item in pyvers if item.startswith("py3")])

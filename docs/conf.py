@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0103,C0111,C0325,E0611,F0401,R0913,W0212,W0611,W0613,W0622
+# pylint: disable=C0103,C0111,C0325,E0611,F0401,R0913,R1710,W0212,W0611,W0613,W0622
 #
 # src documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct 24 06:41:33 2013.
@@ -356,7 +356,7 @@ def skip_private_parameter(app, what, name, obj, options, signature, rannot):
     return
 
 
-def setup(app):
+def setup(app): # noqa: D103
     app.connect("autodoc-process-signature", skip_private_parameter)
 
 

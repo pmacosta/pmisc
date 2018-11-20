@@ -27,7 +27,7 @@ else:
 ###
 # Test functions
 ###
-def test_make_dir(capsys):
+def test_make_dir(capsys): # noqa: D202
     """Test make_dir function behavior."""
 
     def mock_os_makedir(file_path):

@@ -133,7 +133,7 @@ def test_proc_token_exceptions(item):
     AI(obj, "lrange", item, 30)
 
 
-def test_incfile():
+def test_incfile(): # noqa: D202
     """Test incfile function behavior."""
 
     def make_ref(rlist):
@@ -228,7 +228,7 @@ def test_ste():
         pmisc.compare_strings(cap.lines(), ref)
 
 
-def test_term_echo():
+def test_term_echo(): # noqa: D202
     """Test term_echo function behavior."""
 
     def make_ref(rlist, indent=0):
