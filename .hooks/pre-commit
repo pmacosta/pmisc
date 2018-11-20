@@ -127,7 +127,7 @@ if [ "${trailing_white_space}" == 1 ]; then
     fi
 fi
 # }}}
-# Check for Python PEP8 compliance {{{
+# Check for Python PEP8 (code style) compliance {{{
 if [ "${pep8}" == 1 ]; then
     if [ "${print}" == 1 ]; then
         echo -e "\tValidating Python PEP8 compliance with Pylint"
@@ -159,7 +159,7 @@ if [ "${pep8}" == 1 ]; then
     #fi
 fi
 # }}}
-# Check for Python gc compliance {{{
+# Check for Python PEP257 (docstring style) compliance {{{
 if [ "${pep257}" == 1 ]; then
     if [ "${print}" == 1 ]; then
         echo -e "\tValidating Python PEP257 compliance with pydocstyle"
