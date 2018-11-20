@@ -155,7 +155,10 @@ def main(argv):
         # Generate conftest.py files to selectively
         # skip Python 2 or Python 3 files
         skip_file = (
-            "# pylint: disable=E0012,C0103,C0111,C0411\n"
+            "# conftest.py\n"
+            "# Copyright (c) 2013-2018 Pablo Acosta-Serafini\n"
+            "# See LICENSE for details\n"
+            "# pylint: disable=C0103,C0111,C0411,E0012\n"
             "import sys\n"
             "collect_ignore = []\n"
             "if sys.hexversion < 0x03000000:\n"

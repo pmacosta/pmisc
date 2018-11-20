@@ -27,7 +27,6 @@ if "%INTERP%" == "py26" python %EXTRA_DIR%\sbin\patch_pylint.py %PYTHON_SITE_PAC
 
 cd %EXTRA_DIR%\tests
 
-python %EXTRA_DIR%\sbin\check_files_compliance.py -tps -d %SOURCE_DIR% -m %EXTRA_DIR%
 pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SOURCE_DIR%
 pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\sbin
 pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\tests

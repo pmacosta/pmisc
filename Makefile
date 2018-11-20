@@ -6,15 +6,11 @@ PKG_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 asort:
 	@echo "Sorting Aspell whitelist"
-	@sort -u $(PKG_DIR)/data/aspell-whitelist > $(PKG_DIR)/data/aspell-whitelist.tmp
-	@mv -f $(PKG_DIR)/data/aspell-whitelist.tmp $(PKG_DIR)/data/aspell-whitelist
+	@$(PKG_DIR)/sbin/sort-whitelist.sh $(PKG_DIR)/data/whitelist.en.pws
 
 bdist: meta
 	@echo "Creating binary distribution"
 	@cd $(PKG_DIR); python setup.py bdist
-
-check: FORCE
-	@$(PKG_DIR)/sbin/check_files_compliance.py -tsp
 
 clean: FORCE
 	@echo "Cleaning package"
@@ -44,6 +40,7 @@ FORCE:
 
 lint:
 	@echo "Running Pylint on package files"
+	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/*.py
 	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/pmisc
 	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/sbin
 	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/tests
@@ -68,10 +65,10 @@ sterile: clean
 test: FORCE
 	@$(PKG_DIR)/sbin/rtest.sh $(ARGS)
 
-upload: check distro
+upload: lint distro
 	@twine upload $(PKG_DIR)/dist/*
 
-wheel: check meta
+wheel: lint meta
 	@echo "Creating wheel distribution"
 	@cp $(PKG_DIR)/MANIFEST.in $(PKG_DIR)/MANIFEST.in.tmp
 	@cd $(PKG_DIR)/sbin; ./gen_pkg_manifest.py wheel

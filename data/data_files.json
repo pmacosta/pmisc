@@ -10,6 +10,8 @@
 	{"dir":"", "file":"tox.ini"},
 	{"dir":"", "file":".travis.yml"},
 	{"dir":"", "file":".pylintrc"},
+	{"dir":"pylint_plugins", "file":"*.py"},
+	{"dir":"pylint_plugins", "file":"*.sh"},
 	{"dir":"data", "file":"*"},
 	{"dir":"docs", "file":"make.bat"},
 	{"dir":"docs", "file":"Makefile"},

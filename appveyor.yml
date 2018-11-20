@@ -172,7 +172,6 @@ test_script:
 # Run tests
 ###
 # Omitted tests are not Windows-specific and are handled by Travis-CI
-- python %SBIN_DIR%\check_files_compliance.py -tps -d %SOURCE_DIR% -m %EXTRA_DIR%
 - pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SOURCE_DIR%
 - pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SBIN_DIR%
 - pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\tests

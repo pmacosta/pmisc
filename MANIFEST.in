@@ -12,6 +12,8 @@ include TODO.rst
 include tox.ini
 include .travis.yml
 include .pylintrc
+recursive-include pylint_plugins *.py
+recursive-include pylint_plugins *.sh
 recursive-include data *
 include docs/make.bat
 include docs/Makefile
