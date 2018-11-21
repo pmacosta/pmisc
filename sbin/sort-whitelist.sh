@@ -1,4 +1,8 @@
 #!/bin/bash
+# sort-whitelist.sh
+# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# See LICENSE for details
+
 fname=$1
 tmp1=$(mktemp)
 tmp2=$(mktemp)
