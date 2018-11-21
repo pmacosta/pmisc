@@ -18,7 +18,7 @@
 	"cogapp":{
 		"name":"Cog",
 		"optional":false,
-		"url":"http://nedbatchelder.com/code/cog",
+		"url":"https://nedbatchelder.com/code/cog",
 		"cat":["tests"],
 		"ver":">=2.5.1",
 		"pos":2
@@ -26,7 +26,7 @@
 	"coverage":{
 		"name":"Coverage",
 		"optional":false,
-		"url":"http://coverage.readthedocs.org/en/coverage-4.0a5",
+		"url":"https://coverage.readthedocs.io",
 		"cat":["tests"],
 		"ver":">=4.4.2",
 		"pos":3
@@ -34,7 +34,7 @@
 	"decorator":{
 		"name":"Decorator",
 		"optional":false,
-		"url":"https://pythonhosted.org/decorator",
+		"url":"https://decorator.readthedocs.io",
 		"cat":["main", "rtd"],
 		"ver":">=4.2.1",
 		"pos":4
@@ -42,7 +42,7 @@
 	"funcsigs":{
 		"name":"Funcsigs",
 		"optional":false,
-		"url":"https://pypi.python.org/pypi/funcsigs",
+		"url":"https://pypi.org/project/funcsigs",
 		"cat":["main", "rtd"],
 		"ver":">=1.0.2",
 		"pos":5
@@ -58,7 +58,7 @@
 	"pylint":{
 		"name":"Pylint",
 		"optional":false,
-		"url":"http://www.pylint.org",
+		"url":"https://www.pylint.org",
 		"cat":["tests"],
 		"ver":">=1.8.1",
 		"pos":7
@@ -74,7 +74,7 @@
 	"pytest-cov":{
 		"name":"Pytest-coverage",
 		"optional":false,
-		"url":"https://pypi.python.org/pypi/pytest-cov",
+		"url":"https://pypi.org/project/pytest-cov",
 		"cat":["tests"],
 		"ver":">=2.5.1",
 		"pos":9
@@ -82,7 +82,7 @@
 	"pytest-xdist":{
 		"name":"Pytest-xdist",
 		"optional":true,
-		"url":"https://pypi.python.org/pypi/pytest-xdist",
+		"url":"https://pypi.org/project/pytest-xdist",
 		"cat":["tests"],
 		"ver":">=1.22.0",
 		"pos":10
@@ -106,7 +106,7 @@
 	"sphinx_rtd_theme":{
 		"name":"ReadTheDocs Sphinx theme",
 		"optional":false,
-		"url":"https://github.com/snide/sphinx_rtd_theme",
+		"url":"https://github.com/rtfd/sphinx_rtd_theme",
 		"cat":["docs"],
 		"ver":">=0.1.9",
 		"pos":13
@@ -114,7 +114,7 @@
 	"tox":{
 		"name":"Tox",
 		"optional":false,
-		"url":"https://testrun.org/tox",
+		"url":"https://tox.readthedocs.io",
 		"cat":["tests"],
 		"ver":">=2.9.1",
 		"pos":14
@@ -130,7 +130,7 @@
 	"virtualenv":{
 		"name":"Virtualenv",
 		"optional":false,
-		"url":"http://docs.python-guide.org/en/latest/dev/virtualenvs",
+		"url":"https://docs.python-guide.org/dev/virtualenvs",
 		"cat":["tests"],
 		"ver":">=15.1.0",
 		"pos":16

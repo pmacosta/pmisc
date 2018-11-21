@@ -2,21 +2,20 @@
 .. Copyright (c) 2013-2018 Pablo Acosta-Serafini
 .. See LICENSE for details
 
-
 .. image:: https://badge.fury.io/py/pmisc.svg
-    :target: https://pypi.python.org/pypi/pmisc
+    :target: https://pypi.org/project/pmisc
     :alt: PyPI version
 
 .. image:: https://img.shields.io/pypi/l/pmisc.svg
-    :target: https://pypi.python.org/pypi/pmisc
+    :target: https://pypi.org/project/pmisc
     :alt: License
 
 .. image:: https://img.shields.io/pypi/pyversions/pmisc.svg
-    :target: https://pypi.python.org/pypi/pmisc
+    :target: https://pypi.org/project/pmisc
     :alt: Python versions supported
 
 .. image:: https://img.shields.io/pypi/format/pmisc.svg
-    :target: https://pypi.python.org/pypi/pmisc
+    :target: https://pypi.org/project/pmisc
     :alt: Format
 
 |
@@ -36,7 +35,7 @@
 
 .. image::
     https://readthedocs.org/projects/pip/badge/?version=stable
-    :target: http://pip.readthedocs.org/en/stable/?badge=stable
+    :target: https://pip.readthedocs.io/en/stable/?badge=stable
     :alt: Documentation status
 
 |
@@ -56,23 +55,23 @@ Description
 .. docs.support.requirements_to_rst.def_links(cog)
 .. ]]]
 .. _Astroid: https://bitbucket.org/logilab/astroid
-.. _Cog: http://nedbatchelder.com/code/cog
-.. _Coverage: http://coverage.readthedocs.org/en/coverage-4.0a5
-.. _Decorator: https://pythonhosted.org/decorator
+.. _Cog: https://nedbatchelder.com/code/cog
+.. _Coverage: https://coverage.readthedocs.io
+.. _Decorator: https://decorator.readthedocs.io
 .. _Docutils: http://docutils.sourceforge.net/docs
-.. _Funcsigs: https://pypi.python.org/pypi/funcsigs
+.. _Funcsigs: https://pypi.org/project/funcsigs
 .. _Mock: http://www.voidspace.org.uk/python/mock
 .. _Numpy: http://www.numpy.org
-.. _Pylint: http://www.pylint.org
+.. _Pylint: https://www.pylint.org
 .. _Py.test: http://pytest.org
-.. _Pytest-coverage: https://pypi.python.org/pypi/pytest-cov
-.. _Pytest-xdist: https://pypi.python.org/pypi/pytest-xdist
+.. _Pytest-coverage: https://pypi.org/project/pytest-cov
+.. _Pytest-xdist: https://pypi.org/project/pytest-xdist
 .. _Sphinx: http://sphinx-doc.org
-.. _ReadTheDocs Sphinx theme: https://github.com/snide/sphinx_rtd_theme
+.. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
-.. _Tox: https://testrun.org/tox
-.. _Virtualenv: http://docs.python-guide.org/en/latest/dev/virtualenvs
+.. _Tox: https://tox.readthedocs.io
+.. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 .. [[[end]]]
 
 This module contains miscellaneous utility functions that can be applied in a
@@ -98,13 +97,13 @@ Installing
 Documentation
 =============
 
-Available at `Read the Docs <https://pmisc.readthedocs.org>`_
+Available at `Read the Docs <https://pmisc.readthedocs.io>`_
 
 Contributing
 ============
 
 1. Abide by the adopted `code of conduct
-   <http://contributor-covenant.org/version/1/3/0>`_
+   <https://www.contributor-covenant.org/version/1/4/code-of-conduct>`_
 
 2. Fork the `repository <https://github.com/pmacosta/pmisc>`_ from
    GitHub and then clone personal copy [#f1]_:
@@ -133,7 +132,7 @@ Contributing
 
 4. Ensure that the Python interpreter can find the package modules
    (update the :bash:`$PYTHONPATH` environment variable, or use
-   `sys.paths() <https://docs.python.org/2/library/sys.html#sys.path>`_,
+   `sys.paths() <https://docs.python.org/3/library/sys.html#sys.path>`_,
    etc.)
 
 	.. code-block:: bash
@@ -271,8 +270,8 @@ Contributing
       interpreter used
 
 8. Verify that continuous integration tests pass. The package has continuous
-   integration configured for Linux (via `Travis <http://www.travis-ci.org>`_)
-   and for Microsoft Windows (via `Appveyor <http://www.appveyor.com>`_).
+   integration configured for Linux (via `Travis <https://www.travis-ci.org>`_)
+   and for Microsoft Windows (via `Appveyor <https://www.appveyor.com>`_).
    Aggregation/cloud code coverage is configured via
    `Codecov <https://codecov.io>`_. It is assumed that the Codecov repository
    upload token in the Travis build is stored in the :bash:`${CODECOV_TOKEN}`
@@ -319,10 +318,10 @@ Contributing
 
 .. [#f2] It is assumed that all the Python interpreters are in the executables
    path. Source code for the interpreters can be downloaded from Python's main
-   `site <http://www.python.org/downloads>`_
+   `site <https://www.python.org/downloads>`_
 
 .. [#f3] Tox configuration largely inspired by
-   `Ionel's codelog <http://blog.ionelmc.ro/2015/04/14/
+   `Ionel's codelog <https://blog.ionelmc.ro/2015/04/14/
    tox-tricks-and-patterns/>`_
 
 .. include:: ../CHANGELOG.rst

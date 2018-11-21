@@ -37,7 +37,7 @@ def ignored(*exceptions):
     Execute commands and selectively ignore exceptions.
 
     Inspired by `"Transforming Code into Beautiful, Idiomatic Python"
-    <http://pyvideo.org/video/1780/
+    <https://pyvideo.org/video/1780/
     transforming-code-into-beautiful-idiomatic-pytho>`_ talk at PyCon US
     2013 by Raymond Hettinger.
 
@@ -99,7 +99,7 @@ class Timer(object):
 
     The profiling is done by calculating elapsed time between the context
     manager entry and exit time points.  Inspired by `Huy Nguyen's blog
-    <http://www.huyng.com/posts/python-performance-analysis/>`_.
+    <http://pythonic.zoomquiet.top/data/20170602154836/index.html>`_.
 
     :param verbose: Flag that indicates whether the elapsed time is printed
                     upon exit (True) or not (False)
@@ -195,7 +195,7 @@ class TmpDir(object):
        escape sequences or mistaken Unicode character encodings (``\\user``
        for example). Many functions in the os module of the standard library (
        `os.path.normpath()
-       <https://docs.python.org/2/library/os.path.html#os.path.normpath>`_ and
+       <https://docs.python.org/3/library/os.path.html#os.path.normpath>`_ and
        others) can change this path separator to the operating system path
        separator if needed
     """
@@ -251,7 +251,7 @@ class TmpFile(object):
        escape sequences or mistaken Unicode character encodings (``\\user``
        for example). Many functions in the os module of the standard library (
        `os.path.normpath()
-       <https://docs.python.org/2/library/os.path.html#os.path.normpath>`_ and
+       <https://docs.python.org/3/library/os.path.html#os.path.normpath>`_ and
        others) can change this path separator to the operating system path
        separator if needed
 

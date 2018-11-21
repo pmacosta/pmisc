@@ -119,9 +119,9 @@ def gcd(vector):
 
     The sequence can be a list of numbers or a Numpy vector of numbers. The
     computations are carried out with a precision of 1E-12 if the objects are
-    not `fractions <https://docs.python.org/2/library/fractions.html>`_. When
+    not `fractions <https://docs.python.org/3/library/fractions.html>`_. When
     possible it is best to use the `fractions
-    <https://docs.python.org/2/library/fractions.html>`_ data type with the
+    <https://docs.python.org/3/library/fractions.html>`_ data type with the
     numerator and denominator arguments when computing the GCD of floating
     point numbers.
 

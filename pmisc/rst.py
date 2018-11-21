@@ -60,6 +60,9 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
     r"""
     Return a Python source file formatted in reStructuredText.
 
+    .. role:: bash(code)
+        :language: bash
+
     :param fname: File name, relative to environment variable
                   :bash:`PKG_DOC_DIR`
     :type  fname: string
@@ -69,7 +72,8 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
     :type  fpointer: function object
 
     :param lrange: Line range to include, similar to Sphinx
-                   `literalinclude <http://sphinx-doc.org/markup/code.html
+                   `literalinclude <http://www.sphinx-doc.org/en/master/usage
+                   /restructuredtext/directives.html
                    #directive-literalinclude>`_ directive
     :type  lrange: string
 
@@ -186,6 +190,9 @@ def ste(command, nindent, mdir, fpointer):
 def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
     """
     Print STDOUT of a shell command formatted in reStructuredText.
+
+    .. role:: bash(code)
+        :language: bash
 
     :param command: Shell command
     :type  command: string
