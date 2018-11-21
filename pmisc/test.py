@@ -37,7 +37,7 @@ else:  # pragma: no cover
 # Constants
 ###
 def _get_trap(func, exc):  # pragma: no cover
-    """Find a line in a function with a simple sourc efile parser."""
+    """Find a line in a function with a simple source file parser."""
     debug = False
     ntokens = 2
     fname = "pmisc{0}test.py".format(os.sep)
@@ -212,7 +212,7 @@ def _get_fargs(func, no_self=False, no_varargs=False):  # pragma: no cover
 
 
 def _homogenize_breaks(msg):
-    """Replace stray newline characters with platform-crrect line separator."""
+    """Replace stray newline characters with platform-correct line separator."""
     token = "_{0}_".format(uuid.uuid4())
     msg = msg.replace(os.linesep, token)
     msg = msg.replace("\n", os.linesep)

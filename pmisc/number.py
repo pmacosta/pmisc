@@ -204,7 +204,7 @@ def per(arga, argb, prec=10):
     If only two numbers are given, the percentage difference between them is
     computed. If two sequences of numbers are given (either two lists of
     numbers or Numpy vectors), the element-wise percentage difference is
-    compued. If any of the numbers in the arguments is zero the value returned
+    computed. If any of the numbers in the arguments is zero the value returned
     is the maximum floating-point number supported by the Python interpreter.
 
     :param arga: First number, list of numbers or Numpy vector
