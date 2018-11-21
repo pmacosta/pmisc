@@ -6,6 +6,7 @@
 # Standard library imports
 import os
 import subprocess
+import sys
 
 # PyPI imports
 from pylint.interfaces import IRawChecker
@@ -15,22 +16,27 @@ from pylint.checkers import BaseChecker
 ###
 # Functions
 ###
-def check_spelling(self, node):
+def check_spelling(node):
     """Check spelling against whitelist."""
     # pylint: disable=R0914
     fname = os.path.abspath(node.file)
     sdir = os.path.dirname(os.path.abspath(__file__))
     ddir = os.path.join(os.path.dirname(sdir), "data", "whitelist.en.pws")
     script = os.path.join(sdir, "check-spelling.sh")
+    ret = []
     if which("aspell") and which("grep"):
         obj = subprocess.Popen(
             [script, ddir, fname], stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         lines, _ = obj.communicate()
-        lines = [line.decode().strip() for line in lines.split()]
+        if sys.hexversion > 0x03000000:
+            lines = [line.decode().strip() for line in lines.split()]
+        else:
+            lines = [line.strip() for line in lines.split()]
         for line in lines:
             lnum, word = int(line.split(":")[0]), line.split(":")[1]
-            self.add_message(self.MISPELLED_WORD, line=lnum, args=(word,))
+            ret.append((lnum, (word, )))
+    return ret
 
 
 def which(name):
@@ -70,7 +76,8 @@ class AspellChecker(BaseChecker):
 
     def process_module(self, node):
         """Process a module. Content is accessible via node.stream() function."""
-        check_spelling(self, node)
+        for line, args in check_spelling(node):
+            self.add_message(self.MISPELLED_WORD, line=line, args=args)
 
 
 def register(linter):

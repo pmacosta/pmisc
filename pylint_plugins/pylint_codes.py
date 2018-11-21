@@ -5,6 +5,7 @@
 
 # Standard library imports
 import re
+import sys
 
 # PyPI imports
 from pylint.interfaces import IRawChecker
@@ -25,24 +26,29 @@ def check_pylint(self, node):
     quoted_eol = rec(r'(.*)(\'|")\s*' + template + r"\s*\2\s*")
     eol = rec(r"(.*)\s*" + template + r"\s*")
     file_tokens = []
+    ret = []
     with node.stream() as stream:
         for num, input_line in enumerate(stream):
-            input_line = input_line.decode()
+            if sys.hexversion > 0x03000000:
+                input_line = input_line.decode().rstrip()
+            else:
+                input_line = input_line.rstrip()
             line_match = soline.match(input_line)
             quoted_eol_match = quoted_eol.match(
                 input_line.replace("\\n", "\n").replace("\\r", "\r")
             )
             eol_match = eol.match(input_line)
             if eol_match and (not quoted_eol_match) and (not line_match):
-                self.add_message(self.PYLINT_CODES_AT_EOL, line=num + 1)
+                ret.append((self.PYLINT_CODES_AT_EOL, num + 1))
             if line_match:
                 unsorted_tokens = line_match.groups()[1].rstrip().split(",")
                 sorted_tokens = sorted(unsorted_tokens)
                 if any([item in file_tokens for item in sorted_tokens]):
-                    self.add_message(self.REPEATED_PYLINT_CODES, line=num + 1)
+                    ret.append((self.REPEATED_PYLINT_CODES, num + 1))
                 if unsorted_tokens != sorted_tokens:
-                    self.add_message(self.UNSORTED_PYLINT_CODES, line=num + 1)
+                    ret.append((self.UNSORTED_PYLINT_CODES, num + 1))
                 file_tokens.extend(sorted_tokens)
+    return ret
 
 
 ###
@@ -80,7 +86,8 @@ class PylintCodesChecker(BaseChecker):
     def process_module(self, node):
         # pylint: disable=R0201
         """Process a module. Content is accessible via node.stream() function."""
-        check_pylint(self, node)
+        for code, lineno in check_pylint(self, node):
+            self.add_message(code, line=lineno)
 
 
 def register(linter):
