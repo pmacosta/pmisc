@@ -154,6 +154,7 @@ class Node(object):
         """Stream file lines."""
         return Stream(self.file)
 
+
 class PylintCodes(object):
     """Mimic codes in Pylint checker."""
 

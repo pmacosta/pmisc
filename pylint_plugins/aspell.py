@@ -35,7 +35,7 @@ def check_spelling(node):
             lines = [line.strip() for line in lines.split()]
         for line in lines:
             lnum, word = int(line.split(":")[0]), line.split(":")[1]
-            ret.append((lnum, (word, )))
+            ret.append((lnum, (word,)))
     return ret
 
 
