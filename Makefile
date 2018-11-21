@@ -32,6 +32,7 @@ distro: docs clean sdist wheel
 
 docs: FORCE
 	@$(PKG_DIR)/sbin/build_docs.py $(ARGS)
+	@cd $(PKG_DIR)/docs && make linkcheck
 
 default:
 	@echo "No default action"
@@ -48,14 +49,14 @@ lint:
 
 meta: FORCE
 	@echo "Updating package meta-data"
-	@cd $(PKG_DIR)/sbin; ./update_copyright_notice.py
-	@cd $(PKG_DIR)/sbin; ./update_sphinx_conf.py
-	@cd $(PKG_DIR)/sbin; ./gen_req_files.py
-	@cd $(PKG_DIR)/sbin; ./gen_pkg_manifest.py
+	@cd $(PKG_DIR)/sbin && ./update_copyright_notice.py
+	@cd $(PKG_DIR)/sbin && ./update_sphinx_conf.py
+	@cd $(PKG_DIR)/sbin && ./gen_req_files.py
+	@cd $(PKG_DIR)/sbin && ./gen_pkg_manifest.py
 
 sdist: meta
 	@echo "Creating source distribution"
-	@cd $(PKG_DIR); python setup.py sdist --formats=gztar,zip
+	@cd $(PKG_DIR) && python setup.py sdist --formats=gztar,zip
 	@$(PKG_DIR)/sbin/list-authors.sh
 
 sterile: clean
@@ -71,7 +72,7 @@ upload: lint distro
 wheel: lint meta
 	@echo "Creating wheel distribution"
 	@cp $(PKG_DIR)/MANIFEST.in $(PKG_DIR)/MANIFEST.in.tmp
-	@cd $(PKG_DIR)/sbin; ./gen_pkg_manifest.py wheel
+	@cd $(PKG_DIR)/sbin && ./gen_pkg_manifest.py wheel
 	@cp -f $(PKG_DIR)/setup.py $(PKG_DIR)/setup.py.tmp
 	@sed -r -i 's/data_files=DATA_FILES,/data_files=None,/g' $(PKG_DIR)/setup.py
 	@$(PKG_DIR)/sbin/make_wheels.sh
