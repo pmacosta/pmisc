@@ -2,52 +2,27 @@
 # check_files_compliance.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0103,C0111,R0912,R0914
+# pylint: disable=C0103,C0111,C0413,R0903,R0912,R0914
 
 # Standard library imports
 from __future__ import print_function
 import argparse
-import datetime
 import glob
 import os
-import re
-import subprocess
 import sys
 
 # Intra-package imports
-if sys.hexversion < 0x03000000:
-    from pmisc.compat2 import _readlines
-else:
-    from pmisc.compat3 import _readlines
+PYLINT_PLUGINS_DIR = os.environ["PYLINT_PLUGINS_DIR"]
+if PYLINT_PLUGINS_DIR:
+    sys.path.append(PYLINT_PLUGINS_DIR)
+import aspell
+import header
+import pylint_codes
 
 
 ###
 # Functions
 ###
-def which(name):
-    """Search PATH for executable files with the given name."""
-    # Inspired by https://twistedmatrix.com/trac/browser/tags/releases/
-    # twisted-8.2.0/twisted/python/procutils.py
-    # pylint: disable=W0141
-    result = []
-    path = os.environ.get("PATH", None)
-    if path is None:
-        return []
-    for pdir in os.environ.get("PATH", "").split(os.pathsep):
-        fname = os.path.join(pdir, name)
-        if os.path.isfile(fname) and os.access(fname, os.X_OK):
-            result.append(fname)
-    return result[0] if result else None
-
-
-def load_aspell_whitelist():
-    """Load words that are excluded from Aspell output."""
-    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    efile = os.path.join(pkg_dir, "data", "aspell-whitelist")
-    words = [item.strip() for item in _readlines(efile) if item.strip()]
-    return sorted(list(set(words)))
-
-
 def pkg_files(sdir, mdir, files, extensions):
     """Return package files of a given extension."""
     pkgdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -69,7 +44,7 @@ def pkg_files(sdir, mdir, files, extensions):
         os.path.join(mdir, "setup.cfg"),
         os.path.join(mdir, "docs", "conf.py"),
         os.path.join(mdir, "docs", "Makefile"),
-        os.path.join(mdir, "sbin", "aspell-whitelist"),
+        os.path.join(mdir, "sbin", "whitelist.en.pws"),
         os.path.join(mdir, "sbin", "install.ps1"),
         os.path.join(mdir, "sbin", "run_with_env.cmd"),
         os.path.join(mdir, "sbin", "dropbox_uploader.sh"),
@@ -86,24 +61,6 @@ def pkg_files(sdir, mdir, files, extensions):
                     yield item
 
 
-def content_lines(fname, comment="#"):
-    """Return non-empty lines of a package."""
-    skip_lines = ["#!/bin/bash", "#!/usr/bin/env bash", "#!/usr/bin/env python"]
-    encoding_dribble = "\xef\xbb\xbf"
-    encoded = False
-    cregexp = re.compile(r".*{0} -\*- coding: utf-8 -\*-\s*".format(comment))
-    with open(fname, "r") as fobj:
-        for num, line in enumerate(fobj):
-            line = line.rstrip()
-            if (not num) and line.startswith(encoding_dribble):
-                line = line[len(encoding_dribble) :]
-            coding_line = (num == 0) and (cregexp.match(line) is not None)
-            encoded = coding_line if not encoded else encoded
-            shebang_line = (num == int(encoded)) and (line in skip_lines)
-            if line and (not coding_line) and (not shebang_line):
-                yield line
-
-
 def check_header(sdir, mdir, files, no_print=False):
     """Check that all files have header line and copyright notice."""
     # Processing
@@ -117,37 +74,22 @@ def check_header(sdir, mdir, files, no_print=False):
         ".cfg": "#",
         "": "#",
     }
-    olist = []
     errors = False
-    year = datetime.datetime.now().year
     for fname in pkg_files(sdir, mdir, files, list(fdict)):
-        basename = os.path.basename(fname)
         extension = os.path.splitext(fname)[1]
         comment = fdict[extension]
-        header_lines = [
-            "{0} {1}".format(comment, basename),
-            (
-                "{0} Copyright (c) 2013-{1} "
-                "Pablo Acosta-Serafini".format(comment, year)
-            ),
-            "{0} See LICENSE for details".format(comment),
-        ]
-        iobj = enumerate(zip(content_lines(fname, comment), header_lines))
-        wheader = False
-        for num, (line, ref) in iobj:
-            if line != ref:
-                print(line)
-                print(ref)
-                msg = (
-                    "File {0} does not have a standard header"
-                    if num == 0
-                    else "File {0} does not have a standard copyright notice"
+        node = Node(fname)
+        linenos = header.check_header(node, comment)
+        if linenos:
+            errors = True
+            if not no_print:
+                print(
+                    "File {0} does not have a standard header (line{1} {2})".format(
+                        fname,
+                        "s" if len(linenos) > 1 else "",
+                        ", ".join(str(item) for item in linenos),
+                    )
                 )
-                errors = True
-                if (not no_print) and ((num == 0) or ((num > 0) and (not wheader))):
-                    print(msg.format(fname))
-                olist.append(fname)
-                wheader = num > 0
     if (not errors) and (not no_print):
         print("All files header compliant")
     return errors
@@ -155,49 +97,23 @@ def check_header(sdir, mdir, files, no_print=False):
 
 def check_pylint(sdir, mdir, files, no_print=False):
     """Check that there are no repeated Pylint codes per file."""
-    rec = re.compile
-    soline = rec(r"(^\s*)#\s*pylint\s*:\s*disable\s*=\s*([\w|\s|,]+)\s*")
-    # Regular expression to get a Pylint disable directive but only
-    # if it is not in a string
-    template = r"#\s*pylint:\s*disable\s*=\s*([\w|\s|\s*,\s*]+)"
-    quoted_eol = rec(r'(.*)(\'|")\s*' + template + r"\s*\2\s*")
-    eol = rec(r"(.*)\s*" + template + r"\s*")
     errors = False
+    self = PylintCodes()
     for fname in pkg_files(sdir, mdir, files, ".py"):
-        with open(fname, "r") as fobj:
-            header = False
-            output_lines = []
-            file_tokens = []
-            for num, input_line in enumerate(fobj):
-                line_match = soline.match(input_line)
-                quoted_eol_match = quoted_eol.match(
-                    input_line.replace("\\n", "\n").replace("\\r", "\r")
-                )
-                eol_match = eol.match(input_line)
-                if eol_match and (not quoted_eol_match) and (not line_match):
-                    if (not header) and (not no_print):
-                        print("File {0}".format(fname))
-                    header = errors = True
-                    if not no_print:
-                        print("   Line {0} (EOL)".format(num + 1))
-                if line_match:
-                    indent = line_match.groups()[0]
-                    tokens = sorted(line_match.groups()[1].rstrip().split(","))
-                    if any([item in file_tokens for item in tokens]):
-                        if (not header) and (not no_print):
-                            print("File {0}".format(fname))
-                        if not no_print:
-                            print("   Line {0} (repeated)".format(num + 1))
-                        header = errors = True
-                    file_tokens.extend(tokens)
-                    output_lines.append(
-                        "{0}# pylint: disable={1}\n".format(indent, ",".join(tokens))
-                    )
-                else:
-                    output_lines.append(input_line)
-        with open(fname, "w") as fobj:
-            for output_line in output_lines:
-                fobj.write(output_line)
+        node = Node(fname)
+        header_printed = False
+        for code, lineno in pylint_codes.check_pylint(self, node):
+            errors = True
+            if not no_print:
+                if not header_printed:
+                    header_printed = True
+                    print("File {0}".format(fname))
+                if code == "pylint-disable-codes-at-eol":
+                    print("   Line {0} (EOL)".format(lineno + 1))
+                if code == "repeated-pylint-disable-codes":
+                    print("   Line {0} (repeated)".format(lineno + 1))
+                if code == "unsorted-pylint-disable-codes":
+                    print("   Line {0} (unsorted)".format(lineno + 1))
     if (not errors) and (not no_print):
         print("All files Pylint compliant")
     return errors
@@ -206,30 +122,17 @@ def check_pylint(sdir, mdir, files, no_print=False):
 def check_aspell(sdir, mdir, files, no_print=False):
     """Check files word spelling."""
     errors = False
-    if which("aspell"):
-        excluded_words = load_aspell_whitelist()
+    if aspell.which("aspell"):
         for fname in pkg_files(sdir, mdir, files, [".py", ".rst"]):
-            pobj = subprocess.Popen(
-                ["cat", fname], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            lines, _ = pobj.communicate()
-            pobj = subprocess.Popen(
-                ["aspell", "--lang=en", "list"],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-            )
-            raw_words, _ = pobj.communicate(lines)
-            raw_words = [item for item in raw_words.decode().split("\n")]
-            raw_words = sorted(list(set(raw_words)))
-            raw_words = [item.strip() for item in raw_words]
-            words = [
-                item for item in raw_words if item and (item not in excluded_words)
-            ]
-            if words:
+            node = Node(fname)
+            header_printed = False
+            for lineno, tword in aspell.check_spelling(node):
                 errors = True
                 if not no_print:
-                    print("File {0}".format(fname))
-                    print("\n".join(words))
+                    if not header_printed:
+                        header_printed = True
+                        print("File {0}".format(fname))
+                    print("   Line {0}: {1}".format(lineno, tword[0]))
         if (not errors) and (not no_print):
             print("All files free of typos")
     else:
@@ -237,6 +140,46 @@ def check_aspell(sdir, mdir, files, no_print=False):
     return errors
 
 
+###
+# Classes
+###
+class Node(object):
+    """Mimic Pylint node class for plugin functions reusability."""
+
+    def __init__(self, file):
+        """Initialize class."""
+        self.file = file
+
+    def stream(self):
+        """Stream file lines."""
+        return Stream(self.file)
+
+class PylintCodes(object):
+    """Mimic codes in Pylint checker."""
+
+    REPEATED_PYLINT_CODES = "repeated-pylint-disable-codes"
+    PYLINT_CODES_AT_EOL = "pylint-disable-codes-at-eol"
+    UNSORTED_PYLINT_CODES = "unsorted-pylint-disable-codes"
+
+
+class Stream(object):
+    """Create file stream context manager."""
+
+    def __init__(self, file):  # noqa
+        self.file = file
+
+    def __enter__(self):  # noqa
+        with open(self.file, "r") as obj:
+            for line in obj:
+                yield line
+
+    def __exit__(self, exc_type, exc_value, exc_tb):  # noqa
+        return not exc_type is not None
+
+
+###
+# Entry point
+###
 if __name__ == "__main__":
     PKG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PARSER = argparse.ArgumentParser(
