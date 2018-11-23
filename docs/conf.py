@@ -17,6 +17,7 @@ import os
 import sys
 import sphinx.environment
 from docutils.utils import get_source_line
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 RTD = os.environ.get("READTHEDOCS", False) == "True"
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -37,6 +38,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinxcontrib.inlinesyntaxhighlight",
     "sphinx.ext.doctest",
+    "bashcheck",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

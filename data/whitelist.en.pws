@@ -1,4 +1,5 @@
-personal_ws-1.1 en 1510 utf-8
+personal_ws-1.1 en 1518 utf-8
+colno
 aa
 aaa
 abc
@@ -92,6 +93,8 @@ BaseChecker
 BaseClass
 BaseException
 basename
+bashcheck
+BashCheckBuilder
 basicsource
 BasicSource
 bb
@@ -307,10 +310,13 @@ dname
 dnode
 dobj
 doccode
+docname
+docnames
 docstring
 docstrings
 doctest
 doctests
+doctree
 doctrees
 Docutils
 dodgerblue
@@ -353,6 +359,7 @@ eobj
 eol
 EOL
 eopts
+epilog
 eprint
 eps
 EPS
@@ -1237,6 +1244,7 @@ sfname
 sfunc
 sharex
 shcmd
+shellcheck
 shippable
 SHIPPABLE
 shlex
@@ -1313,6 +1321,7 @@ symlinks
 SyntaxError
 sys
 sysconfig
+tagname
 tanh
 tb
 tbk
