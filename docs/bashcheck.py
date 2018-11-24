@@ -30,12 +30,15 @@ LOGGER = sphinx.util.logging.getLogger(__name__)
 ###
 # Functions
 ###
-def _get_root_node(node):
-    while node.parent:
-        node = node.parent
-    return node
+def _tostr(line):
+    if sys.hexversion > 0x03000000:
+        if isinstance(line, str):
+            return line
+        return line.decode()
+    return line.encode()
 
-def which(name):
+
+def _which(name):
     """Search PATH for executable files with the given name."""
     # Inspired by https://twistedmatrix.com/trac/browser/tags/releases/
     # twisted-8.2.0/twisted/python/procutils.py
@@ -59,6 +62,34 @@ class BashCheckBuilder(Builder):
 
     name = "bashcheck"
 
+    def __init__(self, app):  # noqa
+        super(BashCheckBuilder, self).__init__(app)
+        self.srclines = None
+        self.tabwidth = None
+        self.source = None
+
+    def _get_file_name(self, doctree):
+        regexp = re.compile(r"<document source=\"(.*)\">")
+        match = regexp.match(doctree.pformat())
+        if match:
+            return match.groups()[0]
+        raise RuntimeError("Source file could not be extracted")
+
+    def _get_block_indent(self, node):
+        first_line = self.srclines[node.line]
+        return len(first_line)-len(first_line.lstrip())
+
+    def _read_source_file(self, node):
+        self.srclines = []
+        tmp = node.rawsource
+        with open(self.source, 'r') as obj:
+            for line in obj.readlines():
+                node.rawsource = line
+                self.srclines.append(
+                    _tostr(node.rawsource.expandtabs(self.tabwidth))
+                )
+        node.rawsource = tmp
+
     def get_target_uri(self, docname, typ=None):  # noqa
         # Abstract method that needs to be overridden, not germane to current builder
         return ""
@@ -73,21 +104,17 @@ class BashCheckBuilder(Builder):
 
     def write_doc(self, docname, doctree):
         """Check bash nodes."""
-        if not which("shellcheck"):
+        if not _which("shellcheck"):
             self.app.statuscode = 0
             return
         nodes = doctree.traverse()
+        self.tabwidth = doctree.settings.tab_width
+        self._get_file_name(doctree)
+        self._read_source_file(nodes[0])
         rc = 0
         for node in nodes:
             if self._is_bash_literal_block(node):
-                lines = _get_root_node(node).astext().split(os.linesep)
-                first_line = lines[node.line + 1]
-                first_line = (
-                    first_line.decode()
-                    if sys.hexversion > 0x03000000 else
-                    first_line.encode()
-                )
-                block_indent = len(first_line)-len(first_line.lstrip())
+                block_indent = self._get_block_indent(node)
                 if not self._is_valid_bash(node.astext(), node.line, block_indent):
                     rc = 1
                     self._print_error(docname, node)
@@ -106,8 +133,8 @@ class BashCheckBuilder(Builder):
         lines = []
         cont = False
         lmin = 0
+        value = _tostr(value)
         for line in value.split(os.linesep):
-            line = line.decode() if sys.hexversion > 0x03000000 else line.encode()
             if line.strip().startswith(prompt) or cont:
                 lines.append(line[1:])
                 lmin = len(line[1:])-len(line[1:].lstrip())
@@ -123,10 +150,7 @@ class BashCheckBuilder(Builder):
                 ["shellcheck", fname], stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
             lines, _ = obj.communicate()
-            lines = [
-                line.decode().rstrip() if sys.hexversion > 0x03000000 else line.rstrip()
-                for line in lines.split(os.linesep)
-            ]
+            lines = [line for line in _tostr(lines).split(os.linesep)]
         error_start = re.compile(r"In {0} line (\d+):\s*".format(fname))
         error_desc = re.compile(r"(\s*)\^--\s*(.*):\s*(.*)")
         in_error = False
