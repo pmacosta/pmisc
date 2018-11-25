@@ -1,4 +1,4 @@
-# bashcheck.py
+# shellcheck.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0103,C0111,C0411,E1129,R0201,R0903,R0914,W0611,W1113
@@ -18,6 +18,8 @@ import xml.etree.ElementTree as ET
 # PyPI imports
 import decorator
 import docutils.nodes
+import docutils.utils.error_reporting
+import sphinx.errors
 import sphinx.util.logging
 from sphinx.builders import Builder
 from sphinx.locale import __
@@ -59,30 +61,38 @@ def _which(name):
 ###
 # Classes
 ###
-class BashCheckBuilder(Builder):
-    """Validate bash code in documents using shellcheck."""
+class ShellCheckNotFound(sphinx.errors.SphinxError):  # noqa: D101
+    category = __("ShellCheck failed")
 
-    name = "bashcheck"
+
+class ShellCheckBuilder(Builder):
+    """Validate shell code in documents using shellcheck."""
+
+    name = "shellcheck"
+    dialects = ('sh', 'bash', 'dash', 'ksh')
 
     def __init__(self, app):  # noqa
-        super(BashCheckBuilder, self).__init__(app)
+        super(ShellCheckBuilder, self).__init__(app)
+        self.stderr = docutils.utils.error_reporting.ErrorOutput()
         self.srclines = None
         self.tabwidth = None
         self.source = None
+        self.shell = None
         self.nodes = []
 
     def _get_block_indent(self, node):
         first_line = self.srclines[node.line + 1]
         return len(first_line) - len(first_line.lstrip())
 
-    def _bash_nodes(self, doctree):
+    def _shell_nodes(self, doctree):
         regexp = re.compile("(.[^:]*)(?::docstring of (.*))*")
         for node in doctree.traverse(siblings=True, ascend=True):
             if (
                 (node.tagname == "literal_block")
-                and (node.attributes.get("language") == "bash")
+                and (node.attributes.get("language").lower() in self.dialects)
                 and node.source
             ):
+                self.shell = node.attributes.get("language").lower()
                 self.source, func_abs_name = regexp.match(node.source).groups()
                 self.source = os.path.abspath(self.source)
                 if func_abs_name:
@@ -114,17 +124,15 @@ class BashCheckBuilder(Builder):
         return
 
     def write_doc(self, docname, doctree):
-        """Check bash nodes."""
+        """Check shell nodes."""
         if not _which("shellcheck"):
-            LOGGER.error("shellcheck could not be found")
-            self.app.statuscode = 1
-            return
+            raise ShellCheckNotFound("shellcheck not found")
         self.tabwidth = doctree.settings.tab_width
         rc = 0
         header = None
-        for node in self._bash_nodes(doctree):
+        for node in self._shell_nodes(doctree):
             block_indent = self._get_block_indent(node)
-            errors = self._is_valid_bash(node, block_indent)
+            errors = self._is_valid_shell(node, block_indent)
             if errors:
                 if (not header) or (header and (header != self.source)):
                     header = self.source
@@ -134,7 +142,7 @@ class BashCheckBuilder(Builder):
                 rc = 1
         self.app.statuscode = rc
 
-    def _is_valid_bash(self, node, block_indent):
+    def _is_valid_shell(self, node, block_indent):
         # Create a shell script with all output lines commented out to be able
         # to report line offsets correctly
         value = node.astext()
@@ -156,7 +164,7 @@ class BashCheckBuilder(Builder):
         colno_offset = len(ilines.split(os.linesep)[0]) - len(
             olines.split(os.linesep)[0]
         )
-        lines = "#!/bin/bash" + os.linesep + olines
+        lines = "#!/bin/" + self.shell + os.linesep + olines
         with TmpFile(lambda x: x.write(lines)) as fname:
             obj = subprocess.Popen(
                 ["shellcheck", fname], stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -240,6 +248,6 @@ def ignored(*exceptions):
 
 
 def setup(app):
-    LOGGER.info("Initializing Bash shell checker")
-    app.add_builder(BashCheckBuilder)
+    LOGGER.info("Initializing Shell shell checker")
+    app.add_builder(ShellCheckBuilder)
     return

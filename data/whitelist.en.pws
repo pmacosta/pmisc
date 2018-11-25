@@ -1,25 +1,18 @@
-personal_ws-1.1 en 1518 utf-8
-srclines
-tabwidth
-rawsource
-colno
+personal_ws-1.1 en 1531 utf-8
 aa
 aaa
 abc
 abcd
 ABCDEF
 abcdefghijklmnopqrstuvwxyz
-mydir
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 ABCDEX
 ABCMeta
 abstractmethod
 abstractproperty
 AClass
-docutils
 acos
 acosh
-astext
 actmsg
 actstr
 acttype
@@ -73,6 +66,7 @@ AspellChecker
 AssertionError
 ast
 AST
+astext
 astroid
 Astroid
 AstTreeScanner
@@ -100,6 +94,7 @@ BaseClass
 BaseException
 basename
 bashcheck
+BashCheck
 BashCheckBuilder
 basicsource
 BasicSource
@@ -186,6 +181,7 @@ codecoverage
 codelog
 cogapp
 cogging
+colno
 ColorSpaceOption
 compat
 cond
@@ -324,6 +320,7 @@ doctest
 doctests
 doctree
 doctrees
+docutils
 Docutils
 dodgerblue
 dpath
@@ -660,6 +657,7 @@ KeyErrror
 keytransform
 kMGTPEZY
 kpar
+ksh
 kwarg
 kwargs
 kwonlyargs
@@ -817,6 +815,7 @@ MyClass
 MyCol
 mycontract
 mydecorator
+mydir
 MyException
 myfile
 myscript
@@ -1088,6 +1087,7 @@ radd
 radians
 radix
 raiex
+rawsource
 rb
 rbranch
 rc
@@ -1251,6 +1251,9 @@ sfunc
 sharex
 shcmd
 shellcheck
+ShellCheck
+ShellCheckBuilder
+ShellCheckNotFound
 shippable
 SHIPPABLE
 shlex
@@ -1276,11 +1279,13 @@ soline
 somefile
 spacings
 spartacus
+SphinxError
 SPHINXOPTS
 spl
 springgreen
 sqrt
 src
+srclines
 ssid
 ssign
 sTaiRcAsE
@@ -1327,6 +1332,7 @@ symlinks
 SyntaxError
 sys
 sysconfig
+tabwidth
 tagname
 tanh
 tb

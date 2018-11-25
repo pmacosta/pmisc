@@ -38,7 +38,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinxcontrib.inlinesyntaxhighlight",
     "sphinx.ext.doctest",
-    "bashcheck",
+    "shellcheck",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
