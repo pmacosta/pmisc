@@ -22,8 +22,9 @@ def make_dir(fname):
 
     .. code-block:: bash
 
-        $ dir=$(dirname ${fname})
-        $ mkdir -p ${dir}
+        $ fname="${HOME}/mydir/myfile.txt"
+        $ dir=$(dirname "${fname}")
+        $ mkdir -p "${dir}"
 
     :param fname: Fully qualified file name
     :type  fname: string

@@ -13,9 +13,11 @@ import sys
 import tempfile
 import textwrap
 import types
+import xml.etree.ElementTree as ET
 
 # PyPI imports
 import decorator
+import docutils.nodes
 import sphinx.util.logging
 from sphinx.builders import Builder
 from sphinx.locale import __
@@ -67,28 +69,37 @@ class BashCheckBuilder(Builder):
         self.srclines = None
         self.tabwidth = None
         self.source = None
-
-    def _get_file_name(self, doctree):
-        regexp = re.compile(r"<document source=\"(.*)\">")
-        match = regexp.match(doctree.pformat())
-        if match:
-            return match.groups()[0]
-        raise RuntimeError("Source file could not be extracted")
+        self.nodes = []
 
     def _get_block_indent(self, node):
-        first_line = self.srclines[node.line]
-        return len(first_line)-len(first_line.lstrip())
+        first_line = self.srclines[node.line + 1]
+        return len(first_line) - len(first_line.lstrip())
 
-    def _read_source_file(self, node):
+    def _bash_nodes(self, doctree):
+        regexp = re.compile("(.[^:]*)(?::docstring of (.*))*")
+        for node in doctree.traverse(siblings=True, ascend=True):
+            if (
+                (node.tagname == "literal_block")
+                and (node.attributes.get("language") == "bash")
+                and node.source
+            ):
+                self.source, func_abs_name = regexp.match(node.source).groups()
+                self.source = os.path.abspath(self.source)
+                if func_abs_name:
+                    tokens = func_abs_name.split(".")
+                    func_path, func_name = ".".join(tokens[:-1]), tokens[-1]
+                    func_obj = __import__(func_path).__dict__[func_name]
+                    node.line = func_obj.__code__.co_firstlineno + node.line + 1
+                self._read_source_file()
+                yield node
+
+    def _read_source_file(self):
         self.srclines = []
-        tmp = node.rawsource
-        with open(self.source, 'r') as obj:
+        node = docutils.nodes.Node()
+        with open(self.source, "r") as obj:
             for line in obj.readlines():
                 node.rawsource = line
-                self.srclines.append(
-                    _tostr(node.rawsource.expandtabs(self.tabwidth))
-                )
-        node.rawsource = tmp
+                self.srclines.append(_tostr(node.rawsource.expandtabs(self.tabwidth)))
 
     def get_target_uri(self, docname, typ=None):  # noqa
         # Abstract method that needs to be overridden, not germane to current builder
@@ -105,30 +116,29 @@ class BashCheckBuilder(Builder):
     def write_doc(self, docname, doctree):
         """Check bash nodes."""
         if not _which("shellcheck"):
-            self.app.statuscode = 0
+            LOGGER.error("shellcheck could not be found")
+            self.app.statuscode = 1
             return
-        nodes = doctree.traverse()
         self.tabwidth = doctree.settings.tab_width
-        self._get_file_name(doctree)
-        self._read_source_file(nodes[0])
         rc = 0
-        for node in nodes:
-            if self._is_bash_literal_block(node):
-                block_indent = self._get_block_indent(node)
-                if not self._is_valid_bash(node.astext(), node.line, block_indent):
-                    rc = 1
-                    self._print_error(docname, node)
+        header = None
+        for node in self._bash_nodes(doctree):
+            block_indent = self._get_block_indent(node)
+            errors = self._is_valid_bash(node, block_indent)
+            if errors:
+                if (not header) or (header and (header != self.source)):
+                    header = self.source
+                    LOGGER.info(self.source)
+                for error in errors:
+                    LOGGER.info(error)
+                rc = 1
         self.app.statuscode = rc
 
-    def _is_bash_literal_block(self, node):
-        return (
-            node.tagname == "literal_block"
-            and node.attributes.get("language") == "bash"
-        )
-
-    def _is_valid_bash(self, value, lineno_offset, block_indent):
+    def _is_valid_bash(self, node, block_indent):
         # Create a shell script with all output lines commented out to be able
         # to report line offsets correctly
+        value = node.astext()
+        lineno_offset = node.line
         prompt = "$"
         lines = []
         cont = False
@@ -137,14 +147,16 @@ class BashCheckBuilder(Builder):
         for line in value.split(os.linesep):
             if line.strip().startswith(prompt) or cont:
                 lines.append(line[1:])
-                lmin = len(line[1:])-len(line[1:].lstrip())
+                lmin = len(line[1:]) - len(line[1:].lstrip())
             else:
-                lines.append((" "*lmin)+"# Output line")
+                lines.append((" " * lmin) + "# Output line")
             cont = line.strip().endswith("\\")
         ilines = os.linesep.join(lines)
         olines = textwrap.dedent(ilines)
-        colno_offset = len(ilines.split(os.linesep)[0])-len(olines.split(os.linesep)[0])
-        lines = "#!/bin/bash"+os.linesep+olines
+        colno_offset = len(ilines.split(os.linesep)[0]) - len(
+            olines.split(os.linesep)[0]
+        )
+        lines = "#!/bin/bash" + os.linesep + olines
         with TmpFile(lambda x: x.write(lines)) as fname:
             obj = subprocess.Popen(
                 ["shellcheck", fname], stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -155,32 +167,32 @@ class BashCheckBuilder(Builder):
         error_desc = re.compile(r"(\s*)\^--\s*(.*):\s*(.*)")
         in_error = False
         lines = [line for line in lines if line.strip()]
-        if not lines:
-            return True
+        ret = []
+        error = bool(lines)
         for line in lines:
             if not in_error:
                 match = (not in_error) and error_start.match(line)
                 if match:
-                    lineno = int(match.groups()[0])+lineno_offset
+                    lineno = int(match.groups()[0]) + lineno_offset
                     in_error = True
             else:
                 match = error_desc.match(line)
                 if match:
+                    error = False
                     indent, code, desc = match.groups()
                     code, desc = code.strip(), desc.strip()
-                    colno = len(indent)+colno_offset+block_indent+2
-                    print(
-                        "Line {0}, column {1} [{2}]: {3}".format(
-                            lineno, colno, code, desc
+                    colno = len(indent) + colno_offset + block_indent + 2
+                    info = (self.source, lineno, colno, code, desc)
+                    if info not in self.nodes:
+                        self.nodes.append(info)
+                        ret.append(
+                            "Line {0}, column {1} [{2}]: {3}".format(
+                                lineno, colno, code, desc
+                            )
                         )
-                    )
-                    break
-        else:
+        if error:
             raise RuntimeError("shellcheck output could not be correctly parsed")
-        return False
-
-    def _print_error(self, docname, node):
-        LOGGER.warning("{0}, line {1}, {2}".format(docname, node.line, ""))
+        return ret
 
 
 class TmpFile(object):
@@ -225,7 +237,6 @@ def ignored(*exceptions):
         yield
     except exceptions:
         pass
-
 
 
 def setup(app):

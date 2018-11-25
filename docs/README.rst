@@ -110,11 +110,12 @@ Contributing
 
 	.. code-block:: bash
 
+                $ github_user=myname
 		$ git clone \
-		      https://github.com/[github-user-name]/pmisc.git
+		      https://github.com/"${github_user}"/pmisc.git
                 Cloning into 'pmisc'...
                 ...
-		$ cd pmisc
+		$ cd pmisc || exit 1
 		$ export PMISC_DIR=${PWD}
 
 3. Install the project's Git hooks and build the documentation. The pre-commit
@@ -125,7 +126,7 @@ Contributing
 
 	.. code-block:: bash
 
-		$ ${PMISC_DIR}/sbin/complete-cloning.sh
+		$ "${PMISC_DIR}"/sbin/complete-cloning.sh
                 Installing Git hooks
                 Building pmisc package documentation
                 ...
@@ -286,7 +287,7 @@ Contributing
 
 	.. code-block:: bash
 
-	    $ ${PKG_BIN_DIR}/build_docs.py -h
+	    $ "${PKG_BIN_DIR}"/build_docs.py -h
 	    usage: build_docs.py [-h] [-d DIRECTORY] [-r]
 	                         [-n NUM_CPUS] [-t]
 
