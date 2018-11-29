@@ -17,12 +17,22 @@ class ShellcheckBuilder(LintShellBuilder):
     """Validate shell code in documents using shellcheck."""
 
     name = "shellcheck"
-    dialects = ("sh", "bash", "dash", "ksh")
-    prompt = "$"
+
+    def __init__(self, app):  # noqa
+        super(ShellcheckBuilder, self).__init__(app)
+        self._exe = app.config.shellcheck_executable
+        self._dialects = app.config.shellcheck_dialects
+        self._prompt = app.config.shellcheck_prompt
+
+    def _get_dialects(self):
+        return self._dialects
+
+    def _get_prompt(self):
+        return self._prompt
 
     def linter_cmd(self, fname):
         """Return command that runs the linter."""
-        return [self.name, fname]
+        return [self._exe, fname]
 
     def parse_linter_output(self, fname, lines, lineno_offset, colno_offset):
         """Extract shellcheck error information from STDOUT."""
@@ -57,8 +67,14 @@ class ShellcheckBuilder(LintShellBuilder):
             raise RuntimeError(self.name + " output could not be correctly parsed")
         return ret
 
+    dialects = property(_get_dialects)
+    prompt = property(_get_prompt)
+
 
 def setup(app):
     """Register custom builder."""
     app.add_builder(ShellcheckBuilder)
+    app.add_config_value("shellcheck_executable", "shellcheck", "env")
+    app.add_config_value("shellcheck_dialects", ("sh", "bash", "dash", "ksh"), "env")
+    app.add_config_value("shellcheck_prompt", "$", "env")
     return

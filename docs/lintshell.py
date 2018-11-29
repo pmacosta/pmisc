@@ -65,16 +65,12 @@ class LintShellNotFound(sphinx.errors.SphinxError):  # noqa: D101
 class LintShellBuilder(abc.ABC, Builder):
     """Validate shell code in documents."""
 
+    name = ""
+
     @property
     @abc.abstractmethod
     def dialects(self):
         """Return shell dialects supported."""
-        pass
-
-    @property
-    @abc.abstractmethod
-    def name(self):
-        """Return shell linter command."""
         pass
 
     @property
@@ -137,8 +133,9 @@ class LintShellBuilder(abc.ABC, Builder):
 
     def write_doc(self, docname, doctree):
         """Check shell nodes."""
-        if not _which(self.name):
-            raise LintShellNotFound(self.name + " not found")
+        exe = self.linter_cmd("")[0]
+        if not _which(exe):
+            raise LintShellNotFound("Shell linter executable not found: " + exe)
         self.tabwidth = doctree.settings.tab_width
         rc = 0
         header = None
