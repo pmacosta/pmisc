@@ -15,6 +15,14 @@ from pylint.checkers import BaseChecker
 ###
 # Functions
 ###
+def _tostr(line):
+    if isinstance(line, str):
+        return line
+    if sys.hexversion > 0x03000000:
+        return line.decode()
+    return line.encode()
+
+
 def check_pylint(self, node):
     """Check that there are no repeated Pylint codes per file."""
     # pylint: disable=R0914
@@ -29,10 +37,7 @@ def check_pylint(self, node):
     ret = []
     with node.stream() as stream:
         for num, input_line in enumerate(stream):
-            if sys.hexversion > 0x03000000:
-                input_line = input_line.decode().rstrip()
-            else:
-                input_line = input_line.rstrip()
+            input_line = _tostr(input_line).rstrip()
             line_match = soline.match(input_line)
             quoted_eol_match = quoted_eol.match(
                 input_line.replace("\\n", "\n").replace("\\r", "\r")

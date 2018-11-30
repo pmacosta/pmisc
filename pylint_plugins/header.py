@@ -17,6 +17,14 @@ from pylint.checkers import BaseChecker
 ###
 # Functions
 ###
+def _tostr(line):
+    if isinstance(line, str):
+        return line
+    if sys.hexversion > 0x03000000:
+        return line.decode()
+    return line.encode()
+
+
 def check_header(node, comment="#"):
     """Check that all files have header line and copyright notice."""
     # pylint: disable=W0702
@@ -54,10 +62,7 @@ def content_lines(stream, comment="#"):
     encoded = False
     cregexp = re.compile(r".*{0} -\*- coding: utf-8 -\*-\s*".format(comment))
     for num, line in enumerate(stream):
-        if sys.hexversion > 0x03000000:
-            line = line.decode().rstrip()
-        else:
-            line = line.rstrip()
+        line = _tostr(line).rstrip()
         if (not num) and line.startswith(encoding_dribble):
             line = line[len(encoding_dribble) :]
         coding_line = (num == 0) and (cregexp.match(line) is not None)

@@ -16,6 +16,14 @@ from pylint.checkers import BaseChecker
 ###
 # Functions
 ###
+def _tostr(line):
+    if isinstance(line, str):
+        return line
+    if sys.hexversion > 0x03000000:
+        return line.decode()
+    return line.encode()
+
+
 def check_spelling(node):
     """Check spelling against whitelist."""
     # pylint: disable=R0914
@@ -29,10 +37,7 @@ def check_spelling(node):
             [script, ddir, fname], stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         lines, _ = obj.communicate()
-        if sys.hexversion > 0x03000000:
-            lines = [line.decode().strip() for line in lines.split()]
-        else:
-            lines = [line.strip() for line in lines.split()]
+        lines = [_tostr(line).strip() for line in lines.split()]
         for line in lines:
             lnum, word = int(line.split(":")[0]), line.split(":")[1]
             ret.append((lnum, (word,)))
