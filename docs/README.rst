@@ -108,15 +108,15 @@ Contributing
 2. Fork the `repository <https://github.com/pmacosta/pmisc>`_ from
    GitHub and then clone personal copy [#f1]_:
 
-	.. code-block:: bash
+    .. code-block:: bash
 
-                $ github_user=myname
-		$ git clone \
-		      https://github.com/"${github_user}"/pmisc.git
-                Cloning into 'pmisc'...
-                ...
-		$ cd pmisc || exit 1
-		$ export PMISC_DIR=${PWD}
+        $ github_user=myname
+        $ git clone \
+              https://github.com/"${github_user}"/pmisc.git
+        Cloning into 'pmisc'...
+        ...
+        $ cd pmisc
+        $ export PMISC_DIR=${PWD}
 
 3. Install the project's Git hooks and build the documentation. The pre-commit
    hook does some minor consistency checks, namely trailing whitespace and
@@ -285,30 +285,30 @@ Contributing
 
 	.. [[[cog pmisc.ste('build_docs.py -h', 0, mdir, cog.out) ]]]
 
-	.. code-block:: bash
+    .. code-block:: bash
 
-	    $ "${PKG_BIN_DIR}"/build_docs.py -h
-	    usage: build_docs.py [-h] [-d DIRECTORY] [-r]
-	                         [-n NUM_CPUS] [-t]
+        $ "${PKG_BIN_DIR}"/build_docs.py -h
+        usage: build_docs.py [-h] [-d DIRECTORY] [-r]
+                             [-n NUM_CPUS] [-t]
 
-	    Build pmisc package documentation
+        Build pmisc package documentation
 
-	    optional arguments:
-	      -h, --help            show this help message and exit
-	      -d DIRECTORY, --directory DIRECTORY
-	                            specify source file directory
-	                            (default ../pmisc)
-	      -r, --rebuild         rebuild exceptions documentation.
-	                            If no module name is given all
-	                            modules with auto-generated
-	                            exceptions documentation are
-	                            rebuilt
-	      -n NUM_CPUS, --num-cpus NUM_CPUS
-	                            number of CPUs to use (default: 1)
-	      -t, --test            diff original and rebuilt file(s)
-	                            (exit code 0 indicates file(s) are
-	                            identical, exit code 1 indicates
-	                            file(s) are different)
+        optional arguments:
+          -h, --help            show this help message and exit
+          -d DIRECTORY, --directory DIRECTORY
+                                specify source file directory
+                                (default ../pmisc)
+          -r, --rebuild         rebuild exceptions documentation.
+                                If no module name is given all
+                                modules with auto-generated
+                                exceptions documentation are
+                                rebuilt
+          -n NUM_CPUS, --num-cpus NUM_CPUS
+                                number of CPUs to use (default: 1)
+          -t, --test            diff original and rebuilt file(s)
+                                (exit code 0 indicates file(s) are
+                                identical, exit code 1 indicates
+                                file(s) are different)
 
 	.. [[[end]]]
 
