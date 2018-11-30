@@ -1,7 +1,7 @@
 # lintshell.py
 # Copyright (c) 2013-2018 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0103,C0111,C0411,E1129,R0201,R0903,R0914,W0611,W1113
+# pylint: disable=C0103,C0111,C0411,E1129,R0201,R0205,R0903,R0914,W0611,W1113
 
 # Standard library import
 from __future__ import print_function
@@ -35,6 +35,10 @@ LOGGER = sphinx.util.logging.getLogger(__name__)
 ###
 # Functions
 ###
+def _get_indent(line):
+    return len(line) - len(line.lstrip())
+
+
 def _tostr(line):
     if isinstance(line, str):
         return line
@@ -81,26 +85,62 @@ class LintShellBuilder(abc.ABC, Builder):
 
     def __init__(self, app):  # noqa
         super(LintShellBuilder, self).__init__(app)
-        self.stderr = docutils.utils.error_reporting.ErrorOutput()
-        self.srclines = None
-        self.tabwidth = None
+        self._header = None
+        self._srclines = None
+        self._tabwidth = None
+        self.dialect = ""
         self.source = None
-        self.shell = None
-        self.nodes = []
 
     def _get_block_indent(self, node):
-        first_line = self.srclines[node.line + 1]
-        return len(first_line) - len(first_line.lstrip())
+        return _get_indent(self._srclines[node.line + 1])
+
+    def _is_shell_node(self, node):
+        return (
+            node.source
+            and (node.tagname == "literal_block")
+            and (node.attributes.get("language").lower() in self.dialects)
+        )
+
+    def _get_linter_stdout(self, lines):
+        with TmpFile(lambda x: x.write(lines)) as fname:
+            obj = subprocess.Popen(
+                self.cmd(fname), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
+            stdout, _ = obj.communicate()
+        return stdout
+
+    def _lint_block(self, node, indent):
+        # Create a shell script with all output lines commented out to be able
+        # to report line offsets correctly
+        value = node.astext()
+        lines = ""
+        cont = False
+        code_lines = _tostr(value).split(os.linesep)
+        lmin = max(len(code_line) for code_line in code_lines)
+        for code_line in code_lines:
+            if code_line.strip().startswith(self.prompt) or cont:
+                lines += code_line[1:] + os.linesep
+                lmin = min(lmin, _get_indent(code_line[1:]))
+            else:
+                lines += (" " * lmin) + "# Output line" + os.linesep
+            cont = code_line.strip().endswith("\\")
+        shebang = "#!" + _which(self.dialect) + os.linesep
+        colno_offset = _get_indent(lines.split(os.linesep)[0]) + indent + 1
+        lines = shebang + textwrap.dedent(lines)
+        lineno_offset = node.line
+        stdout = self._get_linter_stdout(lines)
+        return self.parse_linter_output(stdout, lineno_offset, colno_offset)
+
+    def _print_header(self):
+        if (not self._header) or (self._header and (self._header != self.source)):
+            self._header = self.source
+            LOGGER.info(self.source)
 
     def _shell_nodes(self, doctree):
         regexp = re.compile("(.[^:]*)(?::docstring of (.*))*")
         for node in doctree.traverse(siblings=True, ascend=True):
-            if (
-                (node.tagname == "literal_block")
-                and (node.attributes.get("language").lower() in self.dialects)
-                and node.source
-            ):
-                self.shell = node.attributes.get("language").lower()
+            if self._is_shell_node(node):
+                self.dialect = node.attributes.get("language").lower()
                 self.source, func_abs_name = regexp.match(node.source).groups()
                 self.source = os.path.abspath(self.source)
                 if func_abs_name:
@@ -109,15 +149,21 @@ class LintShellBuilder(abc.ABC, Builder):
                     func_obj = __import__(func_path).__dict__[func_name]
                     node.line = func_obj.__code__.co_firstlineno + node.line + 1
                 self._read_source_file()
-                yield node
+                indent = self._get_block_indent(node)
+                yield node, indent
 
     def _read_source_file(self):
-        self.srclines = []
+        self._srclines = []
         node = docutils.nodes.Node()
         with open(self.source, "r") as obj:
             for line in obj.readlines():
                 node.rawsource = line
-                self.srclines.append(_tostr(node.rawsource.expandtabs(self.tabwidth)))
+                self._srclines.append(_tostr(node.rawsource.expandtabs(self._tabwidth)))
+
+    @abc.abstractmethod
+    def cmd(self, fname):
+        """Return shell linter command."""
+        return []
 
     def get_target_uri(self, docname, typ=None):  # noqa
         # Abstract method that needs to be overridden, not germane to current builder
@@ -133,64 +179,23 @@ class LintShellBuilder(abc.ABC, Builder):
 
     def write_doc(self, docname, doctree):
         """Check shell nodes."""
-        exe = self.linter_cmd("")[0]
+        exe = self.cmd("myfile.sh")[0]
         if not _which(exe):
             raise LintShellNotFound("Shell linter executable not found: " + exe)
-        self.tabwidth = doctree.settings.tab_width
+        self._tabwidth = doctree.settings.tab_width
         rc = 0
-        header = None
-        for node in self._shell_nodes(doctree):
-            block_indent = self._get_block_indent(node)
-            errors = self._is_valid_shell(node, block_indent)
+        self._header = None
+        for node, indent in self._shell_nodes(doctree):
+            errors = self._lint_block(node, indent)
             if errors:
-                if (not header) or (header and (header != self.source)):
-                    header = self.source
-                    LOGGER.info(self.source)
+                self._print_header()
                 for error in errors:
                     LOGGER.info(error)
                 rc = 1
         self.app.statuscode = rc
 
-    def _is_valid_shell(self, node, block_indent):
-        # Create a shell script with all output lines commented out to be able
-        # to report line offsets correctly
-        value = node.astext()
-        lineno_offset = node.line
-        lines = []
-        cont = False
-        lmin = 0
-        value = _tostr(value)
-        for line in value.split(os.linesep):
-            if line.strip().startswith(self.prompt) or cont:
-                lines.append(line[1:])
-                lmin = len(line[1:]) - len(line[1:].lstrip())
-            else:
-                lines.append((" " * lmin) + "# Output line")
-            cont = line.strip().endswith("\\")
-        ilines = os.linesep.join(lines)
-        olines = textwrap.dedent(ilines)
-        colno_offset = (
-            len(ilines.split(os.linesep)[0])
-            - len(olines.split(os.linesep)[0])
-            + block_indent
-            + 2
-        )
-        lines = "#!/bin/" + self.shell + os.linesep + olines
-        with TmpFile(lambda x: x.write(lines)) as fname:
-            obj = subprocess.Popen(
-                self.linter_cmd(fname), stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-            lines, _ = obj.communicate()
-            lines = [line for line in _tostr(lines).split(os.linesep)]
-        return self.parse_linter_output(fname, lines, lineno_offset, colno_offset)
-
     @abc.abstractmethod
-    def linter_cmd(self, fname):
-        """Return command that runs the linter."""
-        return []
-
-    @abc.abstractmethod
-    def parse_linter_output(self, fname, lines, lineno_offset, colno_offset):
+    def parse_linter_output(self, stdout, line_offset, col_offset):
         """Extract linter error information from STDOUT."""
         return []
 

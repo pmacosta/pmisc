@@ -4,10 +4,22 @@
 # pylint: disable=C0111,R0914
 
 # Standard library import
-import re
+import json
 
-# PyPI imports
+# Intra-package imports
 from lintshell import LintShellBuilder
+
+
+###
+# Functions
+###
+def _errors(stdout):
+    for error in json.loads(stdout):
+        code = error["code"]
+        desc = error["message"]
+        line = error["line"]
+        col = error["column"]
+        yield line, col, code, desc
 
 
 ###
@@ -20,61 +32,48 @@ class ShellcheckBuilder(LintShellBuilder):
 
     def __init__(self, app):  # noqa
         super(ShellcheckBuilder, self).__init__(app)
-        self._exe = app.config.shellcheck_executable
         self._dialects = app.config.shellcheck_dialects
+        self._exe = app.config.shellcheck_executable
         self._prompt = app.config.shellcheck_prompt
+        self._nodes = []
 
-    def _get_dialects(self):
+    @property
+    def dialects(self):
+        """Return shell dialects supported by linter."""
         return self._dialects
 
-    def _get_prompt(self):
+    @property
+    def prompt(self):
+        """Return character used to denote shell command prompt."""
         return self._prompt
 
-    def linter_cmd(self, fname):
+    def cmd(self, fname):
         """Return command that runs the linter."""
-        return [self._exe, fname]
+        return [
+            self._exe,
+            "--shell=" + self.dialect,
+            "--color=never",
+            "--format=json",
+            fname,
+        ]
 
-    def parse_linter_output(self, fname, lines, lineno_offset, colno_offset):
+    def parse_linter_output(self, stdout, line_offset, col_offset):
         """Extract shellcheck error information from STDOUT."""
-        error_start = re.compile(r"In {0} line (\d+):\s*".format(fname))
-        error_desc = re.compile(r"(\s*)\^--\s*(.*):\s*(.*)")
-        in_error = False
-        lines = [line for line in lines if line.strip()]
         ret = []
-        error = bool(lines)
-        for line in lines:
-            if not in_error:
-                match = (not in_error) and error_start.match(line)
-                if match:
-                    lineno = int(match.groups()[0]) + lineno_offset
-                    in_error = True
-            else:
-                match = error_desc.match(line)
-                if match:
-                    error = False
-                    indent, code, desc = match.groups()
-                    code, desc = code.strip(), desc.strip()
-                    colno = len(indent) + colno_offset
-                    info = (self.source, lineno, colno, code, desc)
-                    if info not in self.nodes:
-                        self.nodes.append(info)
-                        ret.append(
-                            "Line {0}, column {1} [{2}]: {3}".format(
-                                lineno, colno, code, desc
-                            )
-                        )
-        if error:
-            raise RuntimeError(self.name + " output could not be correctly parsed")
+        for line, col, code, desc in _errors(stdout):
+            info = [self.source, line + line_offset, col + col_offset, code, desc]
+            if info not in self._nodes:
+                self._nodes.append(info)
+                ret.append("Line {0}, column {1} [{2}]: {3}".format(*info[1:]))
         return ret
 
-    dialects = property(_get_dialects)
-    prompt = property(_get_prompt)
 
-
+###
+# Registration
+###
 def setup(app):
     """Register custom builder."""
     app.add_builder(ShellcheckBuilder)
-    app.add_config_value("shellcheck_executable", "shellcheck", "env")
     app.add_config_value("shellcheck_dialects", ("sh", "bash", "dash", "ksh"), "env")
+    app.add_config_value("shellcheck_executable", "shellcheck", "env")
     app.add_config_value("shellcheck_prompt", "$", "env")
-    return
