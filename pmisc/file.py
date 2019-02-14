@@ -1,5 +1,5 @@
 # file.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -24,7 +24,7 @@ def make_dir(fname):
 
         $ fname="${HOME}/mydir/myfile.txt"
         $ dir=$(dirname "${fname}")
-        $ mkdir -p "${dir}"
+        $ mkdir -p ${dir}
 
     :param fname: Fully qualified file name
     :type  fname: string

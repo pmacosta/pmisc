@@ -1,5 +1,5 @@
 .. README.rst
-.. Copyright (c) 2013-2018 Pablo Acosta-Serafini
+.. Copyright (c) 2013-2019 Pablo Acosta-Serafini
 .. See LICENSE for details
 
 .. image:: https://badge.fury.io/py/pmisc.svg
@@ -60,7 +60,7 @@ Description
 .. _Decorator: https://decorator.readthedocs.io
 .. _Docutils: http://docutils.sourceforge.net/docs
 .. _Funcsigs: https://pypi.org/project/funcsigs
-.. _Mock: http://www.voidspace.org.uk/python/mock
+.. _Mock: https://docs.python.org/3/library/unittest.mock.html
 .. _Numpy: http://www.numpy.org
 .. _Pylint: https://www.pylint.org
 .. _Py.test: http://pytest.org
@@ -70,6 +70,8 @@ Description
 .. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
+.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
+   /sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 .. [[[end]]]
@@ -175,6 +177,8 @@ Contributing
     * `Pytest-xdist`_ (optional, 1.22.0 or newer)
 
     * `ReadTheDocs Sphinx theme`_ (0.1.9 or newer)
+
+    * `Shellcheck Linter Sphinx Extension`_ (1.0.5 or newer)
 
     * `Sphinx`_ (1.6.6 or newer)
 
@@ -285,30 +289,30 @@ Contributing
 
 	.. [[[cog pmisc.ste('build_docs.py -h', 0, mdir, cog.out) ]]]
 
-    .. code-block:: bash
+	.. code-block:: bash
 
-        $ "${PKG_BIN_DIR}"/build_docs.py -h
-        usage: build_docs.py [-h] [-d DIRECTORY] [-r]
-                             [-n NUM_CPUS] [-t]
+	    $ ${PKG_BIN_DIR}/build_docs.py -h
+	    usage: build_docs.py [-h] [-d DIRECTORY] [-r]
+	                         [-n NUM_CPUS] [-t]
 
-        Build pmisc package documentation
+	    Build pmisc package documentation
 
-        optional arguments:
-          -h, --help            show this help message and exit
-          -d DIRECTORY, --directory DIRECTORY
-                                specify source file directory
-                                (default ../pmisc)
-          -r, --rebuild         rebuild exceptions documentation.
-                                If no module name is given all
-                                modules with auto-generated
-                                exceptions documentation are
-                                rebuilt
-          -n NUM_CPUS, --num-cpus NUM_CPUS
-                                number of CPUs to use (default: 1)
-          -t, --test            diff original and rebuilt file(s)
-                                (exit code 0 indicates file(s) are
-                                identical, exit code 1 indicates
-                                file(s) are different)
+	    optional arguments:
+	      -h, --help            show this help message and exit
+	      -d DIRECTORY, --directory DIRECTORY
+	                            specify source file directory
+	                            (default ../pmisc)
+	      -r, --rebuild         rebuild exceptions documentation.
+	                            If no module name is given all
+	                            modules with auto-generated
+	                            exceptions documentation are
+	                            rebuilt
+	      -n NUM_CPUS, --num-cpus NUM_CPUS
+	                            number of CPUs to use (default: 1)
+	      -t, --test            diff original and rebuilt file(s)
+	                            (exit code 0 indicates file(s) are
+	                            identical, exit code 1 indicates
+	                            file(s) are different)
 
 	.. [[[end]]]
 

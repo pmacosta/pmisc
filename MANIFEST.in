@@ -1,5 +1,5 @@
 # MANIFEST.in
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 include AUTHORS.rst
 include CHANGELOG.rst
@@ -10,8 +10,10 @@ include README.rst
 include setup.py
 include TODO.rst
 include tox.ini
+include .headerrc
 include .travis.yml
 include .pylintrc
+include .pydocstyle
 recursive-include pylint_plugins *.py
 recursive-include pylint_plugins *.sh
 recursive-include data *

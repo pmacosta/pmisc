@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coveragerc_manager.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -119,17 +119,18 @@ def main(argv):
         lines.append("show_missing = True")
         lines.append("[run]")
         lines.append("branch = True")
+        lines.append("disable_warnings = no-data-collected")
         lines.append("data_file = {0}".format(coverage_file_name))
         start_flag = True
         # Include modules
-        source_files = get_source_files(os.path.join(site_pkg_dir, "pmisc"), True)
-        for file_name in [item for item in source_files]:
-            start_flag, prefix = (
-                (False, "include = ") if start_flag else (False, 10 * " ")
-            )
-            lines.append(
-                "{0}{1}".format(prefix, os.path.join(site_pkg_dir, "pmisc", file_name))
-            )
+        #source_files = get_source_files(os.path.join(site_pkg_dir, "pmisc"), True)
+        #for file_name in [item for item in source_files]:
+        #    start_flag, prefix = (
+        #        (False, "include = ") if start_flag else (False, 10 * " ")
+        #    )
+        #    lines.append(
+        #        "{0}{1}".format(prefix, os.path.join(site_pkg_dir, "pmisc", file_name))
+        #    )
         start_flag = True
         for file_name in _exclude_files(os.path.join(site_pkg_dir, "pmisc")):
             start_flag, prefix = (False, "omit = ") if start_flag else (False, 7 * " ")
@@ -156,7 +157,7 @@ def main(argv):
         # skip Python 2 or Python 3 files
         skip_file = (
             "# conftest.py\n"
-            "# Copyright (c) 2013-2018 Pablo Acosta-Serafini\n"
+            "# Copyright (c) 2013-2019 Pablo Acosta-Serafini\n"
             "# See LICENSE for details\n"
             "# pylint: disable=C0103,C0111,C0411,E0012\n"
             "import sys\n"

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1542 utf-8
+personal_ws-1.1 en 1561 utf-8
 aa
 aaa
 abc
@@ -8,6 +8,7 @@ abcdefghijklmnopqrstuvwxyz
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 ABCDEX
 ABCMeta
+abspath
 abstractmethod
 abstractproperty
 AClass
@@ -35,6 +36,7 @@ API
 APIs
 appdata
 APPKEY
+apps
 APPSECRET
 appveyor
 Appveyor
@@ -112,6 +114,7 @@ Bitbucket
 bitwise
 blanchedalmond
 BLANKLINE
+blog
 blueviolet
 bmp
 bnode
@@ -295,7 +298,9 @@ df
 dfile
 dfilter
 DFLT
+dict
 dicts
+diff
 difflib
 dimgray
 dir
@@ -626,8 +631,10 @@ isclass
 isclose
 isdflt
 isdigit
+isdir
 isexception
 isf
+isfile
 isfunction
 ishex
 isinstance
@@ -790,6 +797,7 @@ MINWIDTH
 misconfiguration
 mistyrose
 mkdir
+mkdtemp
 mkstemp
 mline
 mlines
@@ -894,6 +902,7 @@ NOPTION
 noqa
 nOr
 norder
+normpath
 np
 npoints
 nports
@@ -984,6 +993,7 @@ parseString
 partuple
 ParTuple
 passthrough
+pathsep
 pb
 pcol
 pcolor
@@ -1018,6 +1028,8 @@ plist
 plottable
 plst
 plt
+plugin
+PLUGINS
 pmisc
 PMISC
 pmsg
@@ -1044,6 +1056,7 @@ PREC
 prf
 priv
 proc
+procutils
 prt
 ps
 ptxt
@@ -1059,6 +1072,7 @@ PV
 pver
 pwd
 PWD
+pws
 py
 Py
 PY
@@ -1093,6 +1107,7 @@ radd
 radians
 radix
 raiex
+rawentry
 rawsource
 rb
 rbranch
@@ -1113,6 +1128,7 @@ rdict
 rdiv
 RdPu
 RDVAR
+readline
 readlines
 readme
 README
@@ -1122,12 +1138,14 @@ READTHEDOCS
 RealNum
 RealNumber
 RealNumpyVector
+realpath
 rebase
 Rebase
 rect
 recursed
 refactoring
 refstr
+regexp
 Regiester
 regtext
 reinstall
@@ -1291,6 +1309,7 @@ spartacus
 SphinxError
 SPHINXOPTS
 spl
+splitext
 springgreen
 sqrt
 src

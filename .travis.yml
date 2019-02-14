@@ -1,6 +1,9 @@
 # .travis.yml
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
+# yamllint disable rule:document-start
+# yamllint disable rule:indentation
+# yamllint disable rule:line-length
 
 os:
   - linux
@@ -16,36 +19,18 @@ python:
   - "2.7"
   - "3.5"
   - "3.6"
-
-env:
-  # - JNAME="2.7"
-  # - JNAME="3.5"
-  # - JNAME="3.6"
+  - "3.7"
 
 before_install:
+  - git submodule init
+  - git submodule update
   - env
   - export PYTHONCMD=python
   - export PYTESTCMD=py.test
-  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-        export PIPCMD=${PYTHONCMD} -W 'ignore:a true SSLContext object' -m pip
-        export INTERP=py"${JNAME//./}";
-        export PKG_NAME=$(echo ${TRAVIS_REPO_SLUG} | sed -E "s|.*/(.*)|\1|g");
-        wget https://repo.continuum.io/archive/Anaconda2-2.4.0-MacOSX-x86_64.sh;
-        bash Anaconda2-2.4.0-MacOSX-x86_64.sh -b;
-        export PATH=/Users/travis/anaconda2/bin/:${PATH};
-        conda update -y conda;
-        conda create -y --name ${INTERP} python=${JNAME};
-        source activate ${INTERP};
-        export PATH=/Users/travis/anaconda2/envs/${INTERP}/bin:${PATH};
-        export PYTHON_SITE_PACKAGES=$(pip show pip | grep "Location*" | sed -E "s/^.*Location\W (.*)/\1/g");
-        ${PIPCMD} install --disable-pip-version-check --upgrade pip setuptools wheel;
-    fi
-  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-        export PIPCMD=pip
-        export INTERP=py"${TRAVIS_PYTHON_VERSION//./}";
-        export PKG_NAME=$(echo ${TRAVIS_REPO_SLUG} | sed -r "s|.*/(.*)|\1|g");
-        export PYTHON_SITE_PACKAGES=$(${PIPCMD} show pip | grep "Location*" | sed -r "s/^.*Location\W (.*)/\1/g");
-    fi
+  - export PIPCMD=pip
+  - export INTERP=py"${TRAVIS_PYTHON_VERSION//./}"
+  - export PKG_NAME=$(echo ${TRAVIS_REPO_SLUG} | sed -r "s|.*/(.*)|\1|g")
+  - export PYTHON_SITE_PACKAGES=$(${PIPCMD} show pip | grep "Location*" | sed -r "s/^.*Location\W (.*)/\1/g")
   ###
   # Set up environment variables
   ###
@@ -63,6 +48,10 @@ before_install:
   - export TESTS_REQUIREMENTS_FILE=${REPO_DIR}/requirements/tests_${INTERP}.pip
   - export DOCS_REQUIREMENTS_FILE=${REPO_DIR}/requirements/docs_${INTERP}.pip
   - export AFILE=${EXTRA_DIR}/artifacts_${INTERP}.tar.gz
+  - export PYLINT_PLUGINS_DIR=$(if [ -d "${EXTRA_DIR}/pylint_plugins" ]; then echo "${EXTRA_DIR}/pylint_plugins"; fi)
+  - export PYLINT_PLUGINS_LIST=$(if [ -d "${EXTRA_DIR}/pylint_plugins" ]; then cd "${EXTRA_DIR}/pylint_plugins" && ls -m *.py | sed 's|.*/||g' | sed 's|, |,|g' | sed 's|\.py||g'; fi)
+  - export PYLINT_CLI_APPEND=$(if [ -d "${EXTRA_DIR}/pylint_plugins" ]; then echo "--load-plugins=${PYLINT_PLUGINS_LIST}"; fi)
+  - export PYLINT_CMD="pylint --rcfile=$(EXTRA_DIR)/.pylintrc ${PYLINT_CLI_APPEND} --output-format=colorized --reports=no --score=no"
   - echo "PYTHONCMD=${PYTHONCMD}"
   - echo "PIPCMD=${PIPCMD}"
   - echo "PYTESTCMD=${PYTESTCMD}"
@@ -83,30 +72,21 @@ before_install:
   - echo "TESTS_REQUIREMENTS_FILE=${TESTS_REQUIREMENTS_FILE}"
   - echo "DOCS_REQUIREMENTS_FILE=${DOCS_REQUIREMENTS_FILE}"
   - echo "AFILE=${AFILE}"
+  - echo PYLINT_PLUGINS_DIR="${PYLINT_PLUGINS_DIR}"
+  - echo PYLINT_PLUGINS_LIST="${PYLINT_PLUGINS_LIST}"
+  - echo PYLINT_CLI_APPEND="${PYLINT_CLI_APPEND}"
+  - echo PYLINT_CMD="${PYLINT_CMD}"
   ###
   # Install tools and dependencies of package dependencies
   ###
-  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-        sudo apt-get update;
-        sudo apt-get install -qq -y aspell;
-    fi
+  - sudo apt-get update
+  - sudo apt-get install -qq -y hunspell shellcheck
 
 install:
   ###
-  # Report version numbers for all compiled packages installed
-  ###
-  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-        dpkg --status aspell;
-    fi
-  ###
   # Install package dependencies
   ###
-  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-        ${REPO_DIR}/sbin/gen_req_files.py;
-    fi
-  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-        ${REPO_DIR}/sbin/gen_req_files.py freeze;
-    fi
+  - ${REPO_DIR}/sbin/gen_req_files.py
   - travis_wait ${PIPCMD} install -r${MAIN_REQUIREMENTS_FILE}
   - travis_wait ${PIPCMD} install -r${TESTS_REQUIREMENTS_FILE}
   - travis_wait ${PIPCMD} install -r${DOCS_REQUIREMENTS_FILE}
@@ -151,20 +131,16 @@ script:
   - ${SBIN_DIR}/cprint.sh line cyan "Testing project code compliance"
   - ${SBIN_DIR}/check_files_compliance.py -tps -d ${SOURCE_DIR} -m ${EXTRA_DIR}
   - ${SBIN_DIR}/cprint.sh line cyan "Testing Pylint compliance";
-  - pylint --rcfile=${EXTRA_DIR}/.pylintrc -f colorized -r no ${SOURCE_DIR};
-  - pylint --rcfile=${EXTRA_DIR}/.pylintrc -f colorized -r no ${SBIN_DIR};
-  - pylint --rcfile=${EXTRA_DIR}/.pylintrc -f colorized -r no ${EXTRA_DIR}/tests;
-  - pylint --rcfile=${EXTRA_DIR}/.pylintrc -f colorized -r no ${EXTRA_DIR}/docs/support;
+  - PYTHONPATH="$(PYTHONPATH):${PYLINT_PLUGINS_DIR}" ${PYLINT_CMD} ${SOURCE_DIR}
+  - PYTHONPATH="$(PYTHONPATH):${PYLINT_PLUGINS_DIR}" ${PYLINT_CMD} ${SBIN_DIR}
+  - PYTHONPATH="$(PYTHONPATH):${PYLINT_PLUGINS_DIR}" ${PYLINT_CMD} ${EXTRA_DIR}/tests
+  - PYTHONPATH="$(PYTHONPATH):${PYLINT_PLUGINS_DIR}" ${PYLINT_CMD} ${EXTRA_DIR}/docs/support
   - ${SBIN_DIR}/cprint.sh line cyan "Testing reStructuredText files"
-  - if [ ${PYTESTCMD} --collect-only --doctest-glob="*.rst" ${EXTRA_DIR}/docs ]; then
-        ${PYTESTCMD} --doctest-glob="*.rst" ${EXTRA_DIR}/docs;
-    fi
+  - PYTHONPATH="$(PYTHONPATH):${PYLINT_PLUGINS_DIR}" ${PYLINT_CMD} --doctest-glob="*.rst" ${EXTRA_DIR}/docs;
   - ${SBIN_DIR}/cprint.sh line cyan "Testing docstrings"
-  - ${PYTESTCMD} --doctest-modules ${SOURCE_DIR}
+  - PYTHONPATH="$(PYTHONPATH):${PYLINT_PLUGINS_DIR}" ${PYLINT_CMD} --doctest-modules ${SOURCE_DIR}
   # Coverage tests runs all the unit tests, no need to run the non-coverage
   # tests since the report is not being used
-  # - ${SBIN_DIR}/cprint.sh line cyan "Testing code"
-  # - ${PYTESTCMD} -s -vv --junitxml=${RESULTS_DIR}/testresults/pytest.xml
   - ${SBIN_DIR}/cprint.sh line cyan "Testing coverage"
   - ${PYTESTCMD} --cov-config ${COV_FILE} --cov ${SOURCE_DIR} --cov-report xml
   - ${SBIN_DIR}/cprint.sh line cyan "Testing documentation"

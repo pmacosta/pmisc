@@ -1,5 +1,5 @@
 # ctx.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,E1129,R0205,R0903,W0105,W1113
 

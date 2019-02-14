@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # cprint.sh
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
+# shellcheck disable=SC1090,SC2046
 
 source $(dirname "${BASH_SOURCE[0]}")/functions.sh
 
@@ -32,7 +33,7 @@ cprint () {
 	fi
 }
 
-if [ "${BASH_SOURCE}" == "$0" ]; then
+if [ "${BASH_SOURCE[0]}" == "$0" ]; then
 	# Script is not being sourced
 	cprint "$@"
 fi

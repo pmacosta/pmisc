@@ -1,10 +1,15 @@
 # dicts.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111
+# pylint: disable=C0111,E0401,E0611,E1101,R0903
 
 # Standard library imports
-import collections
+import sys
+
+if sys.hexversion < 0x03000000:  # pragma: no cover
+    from collections import MutableMapping
+else:  # pragma: no cover
+    from collections.abc import MutableMapping
 
 
 ###
@@ -12,7 +17,7 @@ import collections
 ###
 # Inspired from https://stackoverflow.com/
 # questions/3387691/python-how-to-perfectly-override-a-dict
-class CiDict(collections.MutableMapping):
+class CiDict(MutableMapping):
     """
     Dictionary class with case-insensitive keys.
 

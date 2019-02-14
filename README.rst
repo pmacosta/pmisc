@@ -1,5 +1,5 @@
 .. README.rst
-.. Copyright (c) 2013-2018 Pablo Acosta-Serafini
+.. Copyright (c) 2013-2019 Pablo Acosta-Serafini
 .. See LICENSE for details
 
 .. image:: https://badge.fury.io/py/pmisc.svg
@@ -60,7 +60,7 @@ Description
 .. _Decorator: https://decorator.readthedocs.io
 .. _Docutils: http://docutils.sourceforge.net/docs
 .. _Funcsigs: https://pypi.org/project/funcsigs
-.. _Mock: http://www.voidspace.org.uk/python/mock
+.. _Mock: https://docs.python.org/3/library/unittest.mock.html
 .. _Numpy: http://www.numpy.org
 .. _Pylint: https://www.pylint.org
 .. _Py.test: http://pytest.org
@@ -70,6 +70,8 @@ Description
 .. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
+.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
+   /sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 .. [[[end]]]
@@ -108,14 +110,15 @@ Contributing
 2. Fork the `repository <https://github.com/pmacosta/pmisc>`_ from
    GitHub and then clone personal copy [#f1]_:
 
-	.. code-block:: bash
+    .. code-block:: bash
 
-		$ git clone \
-		      https://github.com/[github-user-name]/pmisc.git
-                Cloning into 'pmisc'...
-                ...
-		$ cd pmisc
-		$ export PMISC_DIR=${PWD}
+        $ github_user=myname
+        $ git clone \
+              https://github.com/"${github_user}"/pmisc.git
+        Cloning into 'pmisc'...
+        ...
+        $ cd pmisc
+        $ export PMISC_DIR=${PWD}
 
 3. Install the project's Git hooks and build the documentation. The pre-commit
    hook does some minor consistency checks, namely trailing whitespace and
@@ -125,7 +128,7 @@ Contributing
 
 	.. code-block:: bash
 
-		$ ${PMISC_DIR}/sbin/complete-cloning.sh
+		$ "${PMISC_DIR}"/sbin/complete-cloning.sh
                 Installing Git hooks
                 Building pmisc package documentation
                 ...
@@ -174,6 +177,8 @@ Contributing
     * `Pytest-xdist`_ (optional, 1.22.0 or newer)
 
     * `ReadTheDocs Sphinx theme`_ (0.1.9 or newer)
+
+    * `Shellcheck Linter Sphinx Extension`_ (1.0.5 or newer)
 
     * `Sphinx`_ (1.6.6 or newer)
 
@@ -330,7 +335,7 @@ License
 
 The MIT License (MIT)
 
-Copyright (c) 2013-2018 Pablo Acosta-Serafini
+Copyright (c) 2013-2019 Pablo Acosta-Serafini
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

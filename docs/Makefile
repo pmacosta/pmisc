@@ -163,10 +163,10 @@ linkcheck:
 	      "or in $(BUILDDIR)/linkcheck/output.txt."
 
 lintshell:
-	$(SPHINXBUILD) -b shellcheck $(ALLSPHINXOPTS) $(BUILDDIR)/lintshell
+	$(SPHINXBUILD) -b shellcheck $(ALLSPHINXOPTS) $(BUILDDIR)/shellcheck
 	@echo
 	@echo "Shell check complete; look for any errors in the above output " \
-	      "or in $(BUILDDIR)/lintshell/output.txt."
+	      "or in $(BUILDDIR)/shellcheck/output.txt."
 
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest

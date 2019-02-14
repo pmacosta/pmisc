@@ -1,5 +1,5 @@
 # compat2.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111
 
@@ -24,7 +24,7 @@ def _ex_type_str(exobj):
 
 def _get_ex_msg(obj):
     """Get exception message."""
-    return obj.value.message if hasattr(obj, "value") else obj.message
+    return obj.value.args[0] if hasattr(obj, "value") else obj.args[0]
 
 
 def _readlines(fname):  # pragma: no cover

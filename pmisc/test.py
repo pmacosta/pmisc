@@ -1,8 +1,8 @@
 # test.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,C0304,C0305,C0413,E0611,F0401
-# pylint: disable=R0205,R0914,W0106,W0122,W0212,W0613,W0703
+# pylint: disable=C0103,C0111,C0304,C0305,C0413,E0611,F0401
+# pylint: disable=R0205,R0903,R0914,W0106,W0122,W0201,W0212,W0613,W0703
 
 # Standard library imports
 from __future__ import print_function
@@ -25,6 +25,7 @@ except ImportError:  # pragma: no cover
 import pytest
 from _pytest.main import Failed
 from _pytest._code import Traceback
+from _pytest._code.code import ExceptionInfo
 
 # Intra-package imports
 if sys.hexversion < 0x03000000:  # pragma: no cover
@@ -95,14 +96,27 @@ _EXC_TRAPS = [_get_trap(*exc_def) for exc_def in _EXC_TRAPS_INFO]
 ###
 def _del_pmisc_test_frames(excinfo):
     """Remove the pmisc.test module frames from pytest excinfo structure."""
+    # pylint: disable=W0231,W0702
+    class PmiscExceptionInfo(ExceptionInfo):
+        def __init__(self, excinfo, offset):
+            new_tb = _process_tb(excinfo.tb, offset)
+            self.new_tb = new_tb[0] if new_tb else None
+            self.new_excinfo = (excinfo._excinfo[0], excinfo._excinfo[1], excinfo.tb)
+            self.new_traceback = Traceback(excinfo.traceback[:offset])
+            for num, _ in enumerate(new_tb):
+                self.new_traceback[num]._rawentry = new_tb[num]
+        @property
+        def _excinfo(self):  # pragma: no cover
+            return self.new_excinfo
+        @property
+        def traceback(self):  # pragma: no cover
+            return self.new_traceback
+        @property
+        def tb(self):  # pragma: no cover
+            return self.new_tb
     offset = _find_test_module_frame(traceback.extract_tb(excinfo._excinfo[2]))
     if offset:
-        new_tb = _process_tb(excinfo.tb, offset)
-        excinfo.tb = new_tb[0] if new_tb else None
-        excinfo._excinfo = (excinfo._excinfo[0], excinfo._excinfo[1], excinfo.tb)
-        excinfo.traceback = Traceback(excinfo.traceback[:offset])
-        for num, _ in enumerate(new_tb):
-            excinfo.traceback[num]._rawentry = new_tb[num]
+        return PmiscExceptionInfo(excinfo, offset)
     return excinfo
 
 
@@ -302,7 +316,6 @@ class _CustomTraceback(object):
     The break can be implemented by making tb_next None, as desired
     """
 
-    # pylint: disable=R0903
     def __init__(self, tb_frame, tb_lasti, tb_lineno, tb_next):
         self.tb_frame = tb_frame
         self.tb_lasti = tb_lasti

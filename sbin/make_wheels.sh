@@ -1,6 +1,6 @@
 #!/bin/bash
 # make_wheels.sh
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 
 source "$(dirname "${BASH_SOURCE[0]}")/functions.sh"
@@ -11,7 +11,7 @@ cwd=${PWD}
 echo "pkg_dir: ${pkg_dir}"
 echo "sbin_dir: ${sbin_dir}"
 cd "${pkg_dir}"
-vers=(2.7 3.5 3.6)
+vers=(2.7 3.5 3.6 3.7)
 for ver in "${vers[@]}"; do
     "${sbin_dir}/cprint.sh" line cyan "Building Python ${ver} wheel"
     "${HOME}/python/python${ver}/bin/python${ver}" setup.py bdist_wheel --python-tag py${ver/./}

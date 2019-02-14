@@ -1,5 +1,5 @@
 # rst.py
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0304,C0305,C0411,R0205,R0914,W0108,W0212
 

@@ -1,8 +1,23 @@
 # Makefile
-# Copyright (c) 2013-2018 Pablo Acosta-Serafini
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 
+PKG_NAME := pmisc
 PKG_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+REPO_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+SOURCE_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/$(PKG_NAME)
+EXTRA_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+### Custom pylint plugins configuration
+PYLINT_PLUGINS_DIR := $(shell if [ -d $(REPO_DIR)/pylint_plugins ]; then echo "$(REPO_DIR)/pylint_plugins"; fi)
+PYLINT_PLUGINS_LIST := $(shell if [ -d $(REPO_DIR)/pylint_plugins ]; then cd $(REPO_DIR)/pylint_plugins && ls -m *.py | sed 's|.*/||g' | sed 's|, |,|g' | sed 's|\.py||g'; fi)
+PYLINT_CLI_APPEND := $(shell if [ -d $(REPO_DIR)/pylint_plugins ]; then echo "--load-plugins=$(PYLINT_PLUGINS_LIST)"; fi)
+PYLINT_CMD := pylint \
+	--rcfile=$(EXTRA_DIR)/.pylintrc \
+	$(PYLINT_CLI_APPEND) \
+	--output-format=colorized \
+	--reports=no \
+	--score=no
+###
 
 asort:
 	@echo "Sorting Aspell whitelist"
@@ -11,6 +26,14 @@ asort:
 bdist: meta
 	@echo "Creating binary distribution"
 	@cd $(PKG_DIR); python setup.py bdist
+
+black:
+	black \
+		$(REPO_DIR) \
+		$(SOURCE_DIR)/ \
+		$(EXTRA_DIR)/tests \
+		$(EXTRA_DIR)/docs \
+		$(EXTRA_DIR)/docs/support
 
 clean: FORCE
 	@echo "Cleaning package"
@@ -22,13 +45,13 @@ clean: FORCE
 	@find $(PKG_DIR) -name '*.error' -delete
 	@rm -rf $(PKG_DIR)/build
 	@rm -rf	$(PKG_DIR)/dist
-	@rm -rf $(PKG_DIR)/pmisc.egg-info
+	@rm -rf $(PKG_DIR)/$(PKG_NAME).egg-info
 	@rm -rf $(PKG_DIR)/.eggs
 	@rm -rf $(PKG_DIR)/.cache
 	@rm -rf $(PKG_DIR)/docs/_build
 
 distro: docs clean sdist wheel
-	@rm -rf build pmisc.egg-info
+	@rm -rf build $(PKG_NAME).egg-info
 
 docs: FORCE
 	@$(PKG_DIR)/sbin/build_docs.py $(ARGS)
@@ -41,11 +64,11 @@ FORCE:
 
 lint:
 	@echo "Running Pylint on package files"
-	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/*.py
-	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/pmisc
-	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/sbin
-	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/tests
-	@pylint --rcfile=$(PKG_DIR)/.pylintrc -f colorized -r no $(PKG_DIR)/docs/support
+	@PYTHONPATH="$(PYTHONPATH):$(PYLINT_PLUGINS_DIR)" $(PYLINT_CMD) $(PKG_DIR)/*.py
+	@PYTHONPATH="$(PYTHONPATH):$(PYLINT_PLUGINS_DIR)" $(PYLINT_CMD) $(PKG_DIR)/$(PKG_NAME)
+	@PYTHONPATH="$(PYTHONPATH):$(PYLINT_PLUGINS_DIR)" $(PYLINT_CMD) $(PKG_DIR)/sbin
+	@PYTHONPATH="$(PYTHONPATH):$(PYLINT_PLUGINS_DIR)" $(PYLINT_CMD) $(PKG_DIR)/tests
+	@PYTHONPATH="$(PYTHONPATH):$(PYLINT_PLUGINS_DIR)" $(PYLINT_CMD) $(PKG_DIR)/docs/support
 
 meta: FORCE
 	@echo "Updating package meta-data"
