@@ -86,8 +86,8 @@ functions and functions to aid in the unit testing of modules
 Interpreter
 ===========
 
-The package has been developed and tested with Python 2.7, 3.5 and 3.6 under
-Linux (Debian, Ubuntu), Apple OS X and Microsoft Windows
+The package has been developed and tested with Python 2.7, 3.5, 3.6 and 3.7
+under Linux (Debian, Ubuntu), Apple OS X and Microsoft Windows
 
 Installing
 ==========
@@ -215,12 +215,12 @@ Contributing
             ...
 
    Tox (or Setuptools via Tox) runs with the following default environments:
-   ``py27-pkg``, ``py35-pkg`` and ``py36-pkg`` [#f3]_. These use the 2.7, 3.5
-   and 3.6 interpreters, respectively, to test all code in the documentation
-   (both in Sphinx ``*.rst`` source files and in docstrings), run all unit
-   tests, measure test coverage and re-build the exceptions documentation. To
-   pass arguments to Py.test (the test runner) use a double dash (``--``) after
-   all the Tox arguments, for example:
+   ``py27-pkg``, ``py35-pkg``, ``py36-pkg`` and ``py37-pkg`` [#f3]_. These use
+   the 2.7, 3.5, 3.6 and 3.7 interpreters, respectively, to test all code in the
+   documentation (both in Sphinx ``*.rst`` source files and in docstrings), run
+   all unit tests, measure test coverage and re-build the exceptions
+   documentation. To pass arguments to Py.test (the test runner) use a double
+   dash (``--``) after all the Tox arguments, for example:
 
 	.. code-block:: bash
 
@@ -240,16 +240,17 @@ Contributing
 
    There are other convenience environments defined for Tox [#f3]_:
 
-    * ``py27-repl``, ``py35-repl`` and ``py36-repl`` run the 2.7, 3.6 or 3.6
-      REPL, respectively, in the appropriate virtual environment. The ``pmisc``
-      package is pip-installed by Tox when the environments are created.
-      Arguments to the interpreter can be passed in the command line after a
-      double dash (``--``)
+    * ``py27-repl``, ``py35-repl``, ``py36-repl`` and ``py37-repl`` run the 2.7,
+      3.5, 3.6 or 3.7 REPL, respectively, in the appropriate virtual
+      environment. The ``pmisc`` package is pip-installed by Tox when the
+      environments are created.  Arguments to the interpreter can be passed in
+      the command line after a double dash (``--``)
 
-    * ``py27-test``, ``py35-test`` and ``py36-test`` run py.test using the
-      Python 2.7, 3.5 or Python 3.6 interpreter, respectively, in the
-      appropriate virtual environment. Arguments to py.test can be passed in the
-      command line after a double dash (``--``) , for example:
+    * ``py27-test``, ``py35-test``, ``py36-test`` and ``py37-test`` run py.test
+      using the Python 2.7, 3.5, Python 3.6 or Python 3.7 interpreter,
+      respectively, in the appropriate virtual environment. Arguments to py.test
+      can be passed in the command line after a double dash (``--``) , for
+      example:
 
 	.. code-block:: bash
 
@@ -266,13 +267,14 @@ Contributing
             collected 414 items
             ...
 
-    * ``py27-cov``, ``py35-cov`` and ``py36-cov`` test code and branch coverage
-      using the 2.7, 3.5 or 3.6 interpreter, respectively, in the appropriate
-      virtual environment. Arguments to py.test can be passed in the command
-      line after a double dash (``--``). The report can be found in
+    * ``py27-cov``, ``py35-cov``, ``py36-cov`` and ``py37-cov`` test code and
+      branch coverage using the 2.7, 3.5, 3.6 or 3.7 interpreter, respectively,
+      in the appropriate virtual environment. Arguments to py.test can be passed
+      in the command line after a double dash (``--``). The report can be found
+      in
       :bash:`${pmisc_DIR}/.tox/py[PV]/usr/share/pmisc/tests/htmlcov/index.html`
-      where ``[PV]`` stands for ``27``, ``35`` or ``36`` depending on the
-      interpreter used
+      where ``[PV]`` stands for ``27``, ``35``, ``36`` or ``37`` depending on
+      the interpreter used
 
 8. Verify that continuous integration tests pass. The package has continuous
    integration configured for Linux (via `Travis <https://www.travis-ci.org>`_)

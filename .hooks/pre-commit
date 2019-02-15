@@ -184,7 +184,7 @@ if [ "${code_standard}" == 1 ]; then
             file_output=""
             PYTHONPATH="${PYTHONPATH}:${PYLINT_PLUGINS_DIR}" \
                 pylint \
-                    --rcfile="${REPO_DIR}/.pylintrc" \
+                    --rcfile="${config_fname}" \
                     "${PYLINT_CLI_APPEND}" \
                     "${file}" &> "${tfile}"
             if [ "$?" != 0 ]; then
