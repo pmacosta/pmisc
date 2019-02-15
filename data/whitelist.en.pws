@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1561 utf-8
+personal_ws-1.1 en 1564 utf-8
 aa
 aaa
 abc
@@ -432,6 +432,7 @@ exobj
 ExObj
 exopt
 exoutput
+expanduser
 expr
 extb
 extype
@@ -484,6 +485,7 @@ FOBJ
 foi
 fontdict
 fontsize
+foo
 forestgreen
 fos
 fp
@@ -1032,6 +1034,7 @@ plugin
 PLUGINS
 pmisc
 PMISC
+PmiscExceptionInfo
 pmsg
 pname
 png

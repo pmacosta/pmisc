@@ -96,7 +96,7 @@ def test_tmp_dir():
             raise OSError("No data")
     assert GET_EXMSG(excinfo) == "No data"
     assert not os.path.isdir(dname)
-    # Test behaviour under "normal" circumstances
+    # Test behavior under "normal" circumstances
     with pmisc.TmpDir() as dname:
         fname = os.path.join(dname, "file_{0}".format(uuid.uuid4()))
         with open(fname, "w") as fhandle:
@@ -131,14 +131,14 @@ def test_tmp_file():  # noqa: D202
             raise OSError("No data")
     assert GET_EXMSG(excinfo) == "No data"
     assert not os.path.exists(fname)
-    # Test behaviour under "normal" circumstances
+    # Test behavior under "normal" circumstances
     with pmisc.TmpFile(write_data) as fname:
         with open(fname, "r") as fobj:
             line = fobj.readlines()
         assert line == ["Hello world!"]
         assert os.path.exists(fname)
     assert not os.path.exists(fname)
-    # Test behaviour under "normal" circumstances with arguments
+    # Test behavior under "normal" circumstances with arguments
     with pmisc.TmpFile(write_data_with_args, 3, data="foo") as fname:
         with open(fname, "r") as fobj:
             line = fobj.readlines()

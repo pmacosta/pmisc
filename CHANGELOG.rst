@@ -5,6 +5,9 @@
 Changelog
 =========
 
+* 1.5.0 [2019-02-15]: Dropped support for Python 2.6, 3.3 and 3.4. Updates
+  to support newest versions of dependencies
+
 * 1.4.2 [2018-03-01]: Fixed bugs in gcd and per functions which were not
   correctly handling Numpy data types. Minor code refactoring
 
