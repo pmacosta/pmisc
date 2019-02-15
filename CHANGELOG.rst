@@ -5,6 +5,8 @@
 Changelog
 =========
 
+* 1.5.2 [2019-02-15]: Continuous integration bug fix
+
 * 1.5.1 [2019-02-15]: Minor documentation update
 
 * 1.5.0 [2019-02-15]: Dropped support for Python 2.6, 3.3 and 3.4. Updates
