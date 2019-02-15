@@ -266,7 +266,7 @@ int-import-graph=
 overgeneral-exceptions=Exception
 
 [SPELLCHECK]
-whitelist=./data/whitelist.en.pws
+whitelist=../data/whitelist.en.pws
 
 [HEADER]
-header-ref=./.headerrc
+header-ref=../.headerrc
