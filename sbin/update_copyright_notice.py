@@ -14,6 +14,7 @@ import sys
 # Intra-package imports
 import sbin.functions
 
+
 ###
 # Functions
 ###
@@ -41,7 +42,7 @@ def update_copyright_notice():
         ".eggs",
         ".cache",
         os.path.join("docs", "_build"),
-        "pmisc.egg-info",
+        sbin.functions.get_pkg_name() + ".egg-info",
         ".git",
     ]
     year = datetime.datetime.now().year

@@ -14,8 +14,8 @@ import sys
 ###
 # Functions
 ###
-# This is a sub-set of the pmisc.misc.pcolor function, repeated here because
-# this script may be run right after cloning and pmisc module may not be in
+# This is a sub-set of the .misc.pcolor function, repeated here because
+# this script may be run right after cloning and the module may not be in
 # the Python search path
 def _os_cmd(cmd):
     """Execute shell command and display standard output."""

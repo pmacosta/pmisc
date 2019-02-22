@@ -105,15 +105,19 @@ def _del_pmisc_test_frames(excinfo):
             self.new_traceback = Traceback(excinfo.traceback[:offset])
             for num, _ in enumerate(new_tb):
                 self.new_traceback[num]._rawentry = new_tb[num]
+
         @property
         def _excinfo(self):  # pragma: no cover
             return self.new_excinfo
+
         @property
         def traceback(self):  # pragma: no cover
             return self.new_traceback
+
         @property
         def tb(self):  # pragma: no cover
             return self.new_tb
+
     offset = _find_test_module_frame(traceback.extract_tb(excinfo._excinfo[2]))
     if offset:
         return PmiscExceptionInfo(excinfo, offset)

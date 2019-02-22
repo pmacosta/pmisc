@@ -7,7 +7,7 @@
 import sys
 
 # Intra-package imports
-from .version import __version__
+from .pkgdata import __version__
 from .ctx import *
 from .dicts import *
 from .file import *

@@ -1,4 +1,6 @@
-personal_ws-1.1 en 1564 utf-8
+personal_ws-1.1 en 1636 utf-8
+0x03000000
+9b0
 aa
 aaa
 abc
@@ -130,6 +132,10 @@ BuPu
 burlywood
 bvec
 bvector
+C0103
+C0111
+C0113
+C0411
 cadetblue
 callables
 callable's
@@ -161,6 +167,7 @@ ClassWithPropertyDefinedViaDecorators
 ClassWithPropertyDefinedViaFunction
 ClassWithPropertyDefinedViaLambdaAndEnclosure
 CLDICTS
+CLI
 clist
 ClosureClass
 cls
@@ -181,6 +188,7 @@ cobj
 Codecov
 CODECOV
 codecoverage
+codecs
 codelog
 cogapp
 cogging
@@ -210,6 +218,7 @@ cov
 coveragepy
 coveragerc
 cpath
+cprint
 cpu
 cpus
 CPUs
@@ -238,6 +247,8 @@ ctx
 ctxt
 ctype
 cumsum
+curdir
+curr
 customizations
 CustomTraceback
 cvec
@@ -277,6 +288,7 @@ deepcopy
 deeppink
 deepskyblue
 defaultdict
+defpath
 del
 delattr
 deleter
@@ -342,6 +354,8 @@ dtype
 dvar
 dvec
 dvector
+E1101
+E1129
 eamsg
 eargs
 ecb
@@ -474,9 +488,11 @@ flist
 floordiv
 floralwhite
 fmant
+fn
 fname
 FNAME
 fnames
+fnmatch
 fnode
 fnum
 fnumber
@@ -512,6 +528,7 @@ ftime
 ftype
 fuc
 fui
+fullname
 func
 funca
 funcb
@@ -545,12 +562,15 @@ ghostwhite
 giga
 github
 GitHub
+gitignore
 globals
 gmap
 GnBu
 greenyellow
+grep
 hasattr
 HeaderChecker
+headerrc
 Hettinger
 hexdigits
 hexversion
@@ -561,6 +581,7 @@ hookimpl
 horizontalalignment
 hotpink
 html
+hunspell
 Huy
 hvec
 hvector
@@ -615,6 +636,7 @@ InterpolatedUnivariateSpline
 InterpolationOption
 interpolator
 Interpolator
+INTERPS
 Intra
 io
 iobj
@@ -628,6 +650,7 @@ irec
 iret
 irmm
 iro
+isabs
 isalpha
 isclass
 isclose
@@ -681,6 +704,7 @@ lawngreen
 lcount
 ldelim
 LDELIM
+ldict
 ldig
 le
 Leftarrow
@@ -786,6 +810,7 @@ mename
 MERCHANTABILITY
 meroot
 metaclass
+metavar
 meth
 mex
 MF
@@ -833,6 +858,7 @@ mydecorator
 mydir
 MyException
 myfile
+mymodule
 myname
 myscript
 MySource
@@ -904,6 +930,8 @@ NOPTION
 noqa
 nOr
 norder
+normcase
+normdir
 normpath
 np
 npoints
@@ -995,6 +1023,8 @@ parseString
 partuple
 ParTuple
 passthrough
+pathext
+PATHEXT
 pathsep
 pb
 pcol
@@ -1005,11 +1035,14 @@ pcontracts
 pcsv
 PCSV
 pdf
+pdict
 pdir
 peachpuff
 Peform
 peng
 PENG
+permalinks
+personal_ws-1.1 en 106 utf-8
 peru
 peta
 pexceptions
@@ -1023,6 +1056,7 @@ Pillow
 pindex
 pinspect
 pipcmd
+pkgdata
 pkgdir
 pkgs
 pkl
@@ -1031,6 +1065,7 @@ plottable
 plst
 plt
 plugin
+plugins
 PLUGINS
 pmisc
 PMISC
@@ -1079,11 +1114,13 @@ pws
 py
 Py
 PY
+PY3
 pyc
 pycmd
 PyCon
 pycontracts
 PyContracts
+pydocstyle
 pyellow
 pyfile
 pylint
@@ -1101,10 +1138,16 @@ pysix
 pytest
 Pytest
 pytho
+python3
 PYTHONHASHSEED
 PYTHONPATH
 pyver
 pyvers
+R0205
+R0903
+R0912
+R0914
+R1718
 r'a
 radd
 radians
@@ -1117,6 +1160,7 @@ rbranch
 rc
 r'C
 rcdb
+rcfile
 rcfilter
 rchars
 rcols
@@ -1149,6 +1193,7 @@ recursed
 refactoring
 refstr
 regexp
+regexps
 Regiester
 regtext
 reinstall
@@ -1156,11 +1201,14 @@ r'Elapsed
 renderer
 repl
 REPL
+repo
 REPO
+repos
 repr
 req
 reqdir
 reqs
+REQS
 resize
 restructuredtext
 reStructuredText
@@ -1268,6 +1316,7 @@ seriesA
 seriesB
 setattr
 setitem
+setp
 setuptools
 Setuptools
 sfile
@@ -1309,6 +1358,10 @@ soline
 somefile
 spacings
 spartacus
+spellcheck
+spellchecker
+SpellChecker
+sphinxcontrib
 SphinxError
 SPHINXOPTS
 spl
@@ -1407,10 +1460,12 @@ textwrap
 TextWrapper
 tfuncs
 th
+thefile
 tHrEe
 thresholding
 TickProps
 timeit
+TimeoutExpired
 tlist
 tmax
 tmin
@@ -1429,6 +1484,7 @@ toDocClass
 tofile
 tofloat
 tolist
+tostr
 TouchstoneData
 TouchstoneNoiseData
 TouchstoneOptions
@@ -1439,6 +1495,7 @@ tpl
 traceback
 Traceback
 tracebacks
+travis
 trbk
 tregexp
 triang
@@ -1486,11 +1543,14 @@ usr
 utf
 uuid
 uvec
+v1
+v2
 va
 ValueError
 vararg
 varargs
 vchars
+vcs
 ver
 VER
 vers
@@ -1500,6 +1560,13 @@ verticalalignment
 Virtualenv
 vnum
 vv
+W0122
+W0622
+W0631
+W0702
+W1113
+W9900
+W9904
 waveforms
 waveform's
 Waveforms
@@ -1515,6 +1582,7 @@ wheader
 whitelist
 whitesmoke
 whitespace
+win32
 wint
 wintegral
 wobj
@@ -1534,6 +1602,7 @@ xFFFF
 xflist
 xinterp
 xlim
+xm
 xml
 xobj
 xoffset
@@ -1541,6 +1610,8 @@ xrange
 xstart
 xstop
 xyz
+yaml
+yamllint
 yaxis
 ydelta
 yellowgreen
@@ -1558,6 +1629,7 @@ ystart
 ystop
 YY
 yzafpnum
+zA
 zepto
 zetta
 zorder

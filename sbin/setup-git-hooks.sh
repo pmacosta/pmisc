@@ -3,7 +3,9 @@
 # Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 
-source $(dirname "${BASH_SOURCE[0]}")/functions.sh
+# shellcheck disable=SC1090,SC1091
+source" $(dirname "${BASH_SOURCE[0]}")/functions.sh"
 
-pkg_dir=$(dirname $(current_dir "${BASH_SOURCE[0]}"))
-source ${pkg_dir}/.hooks/setup-git-hooks.sh
+pkg_dir=$(dirname "$(current_dir "${BASH_SOURCE[0]}")")
+# shellcheck disable=SC1090,SC1091
+source "${pkg_dir}/.hooks/setup-git-hooks.sh"

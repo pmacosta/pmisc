@@ -9,13 +9,16 @@ from __future__ import print_function
 import os
 import sys
 
+# Intra-package imports
+import sbin.functions
+
 
 ###
 # Functions
 ###
 def _exclude_files(sdir=None):
     ver = 3 if sys.hexversion < 0x03000000 else 2
-    isf = ["conftest.py", "version.py", "compat{0}.py".format(ver)]
+    isf = ["conftest.py", "pkgdata.py", "compat{0}.py".format(ver)]
     if sdir:
         isf = [os.path.join(sdir, item) for item in isf]
     return sorted(isf)
@@ -45,6 +48,7 @@ def main(argv):
     # pylint: disable=R0912,R0914,R0915,W0702
     debug = True
     env = argv[0].strip('"').strip("'")
+    pkg_name = sbin.functions.get_pkg_name()
     # Unpack command line arguments
     print("Coverage manager")
     print("Arguments received: {0}".format(argv))
@@ -97,12 +101,12 @@ def main(argv):
         print("   site_pkg_dir: {0}".format(site_pkg_dir))
         print("   module: {0}".format(module))
     # Generate .coveragerc file
-    source_dir = os.path.join(site_pkg_dir, "pmisc")
+    source_dir = os.path.join(site_pkg_dir, pkg_name)
     output_file_name = os.path.join(
-        site_pkg_dir, "pmisc", ".coveragerc_{0}_{1}".format(env, interp)
+        site_pkg_dir, pkg_name, ".coveragerc_{0}_{1}".format(env, interp)
     )
     coverage_file_name = os.path.join(
-        site_pkg_dir, "pmisc", ".coverage_{0}".format(interp)
+        site_pkg_dir, pkg_name, ".coverage_{0}".format(interp)
     )
     conf_file = []
     conf_file.append(os.path.join(source_dir, "conftest.py"))
@@ -123,16 +127,18 @@ def main(argv):
         lines.append("data_file = {0}".format(coverage_file_name))
         start_flag = True
         # Include modules
-        #source_files = get_source_files(os.path.join(site_pkg_dir, "pmisc"), True)
-        #for file_name in [item for item in source_files]:
+        # source_files = get_source_files(os.path.join(site_pkg_dir, pkg_name), True)
+        # for file_name in [item for item in source_files]:
         #    start_flag, prefix = (
         #        (False, "include = ") if start_flag else (False, 10 * " ")
         #    )
         #    lines.append(
-        #        "{0}{1}".format(prefix, os.path.join(site_pkg_dir, "pmisc", file_name))
+        #        "{0}{1}".format(
+        #            prefix, os.path.join(site_pkg_dir, pkg_name, file_name)
+        #        )
         #    )
         start_flag = True
-        for file_name in _exclude_files(os.path.join(site_pkg_dir, "pmisc")):
+        for file_name in _exclude_files(os.path.join(site_pkg_dir, pkg_name)):
             start_flag, prefix = (False, "omit = ") if start_flag else (False, 7 * " ")
             lines.append("{0}{1}".format(prefix, file_name))
         # Generate XML reports for continuous integration

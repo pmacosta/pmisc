@@ -2,7 +2,7 @@
 # gen_req_files.py
 # Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111
+# pylint: disable=C0111,C0413,E0602
 
 # Standard library imports
 from __future__ import print_function
@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 # Intra-package imports
-from sbin.functions import SUPPORTED_VERS, json_load
+from sbin.functions import get_supported_interps, json_load
 
 
 ###
@@ -61,7 +61,7 @@ def gen_req_files(freeze_ver=False):
     # pylint: disable=R0101,R0912,R0914
     """Generate requirements files."""
     fdict = json_load(os.path.join("data", "requirements.json"))
-    pyvers = ["py{0}".format(item.replace(".", "")) for item in SUPPORTED_VERS]
+    pyvers = ["py{0}".format(item.replace(".", "")) for item in get_supported_interps()]
     odict = {"rtd": []}
     for pyver in pyvers:
         odict["main_{0}".format(pyver)] = []

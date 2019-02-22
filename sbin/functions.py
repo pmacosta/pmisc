@@ -13,15 +13,9 @@ import sys
 
 
 ###
-# Global variables
-###
-SUPPORTED_VERS = ["2.7", "3.5", "3.6", "3.7"]
-
-
-###
 # Functions
 ###
-# This function is copied from pmisc.compat2 and pmisc.compat3
+# This function is copied from .compat2 and .compat3
 # Repeated here so as make functions in this file self-contained
 if sys.hexversion < 0x03000000:
 
@@ -44,7 +38,7 @@ else:
                 return fobj.readlines()
 
 
-# This function is copied from pmisc.compat2 and pmisc.compat3
+# This function is copied from .compat2 and .compat3
 # Repeated here so as make functions in this file self-contained
 if sys.hexversion < 0x03000000:
     # Largely from From https://stackoverflow.com/questions/956867/
@@ -86,24 +80,6 @@ def dir_tree(root, dir_exclude=None, ext_exclude=None):
                 yield os.path.join(dname, fname)
 
 
-def get_pkg_data_files(share_dir):
-    """Create data_files setup.py argument."""
-    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fdata = json_load(os.path.join("data", "data_files.json"))
-    rdict = {}
-    # For each directory a single list with all the file names in that
-    # directory has to be provided, otherwise if multiple entries with
-    # lists are provided only the last list is installed
-    rdict = dict([(fdir, []) for fdir in set([item["dir"] for item in fdata])])
-    for fdict in fdata:
-        rdict[fdict["dir"]] = rdict[fdict["dir"]] + (
-            glob.glob(os.path.join(pkg_dir, fdict["dir"], fdict["file"]))
-        )
-    return [
-        (os.path.join(share_dir, fdir), rdict[fdir]) for fdir in sorted(rdict.keys())
-    ]
-
-
 def gen_manifest(make_wheel=False):
     """Generate MANIFEST.in file."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -137,6 +113,39 @@ def gen_manifest(make_wheel=False):
             )
     with open(os.path.join(pkg_dir, "MANIFEST.in"), "w") as fobj:
         fobj.writelines("\n".join(ret))
+
+
+def get_pkg_data_files(share_dir):
+    """Create data_files setup.py argument."""
+    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    fdata = json_load(os.path.join("data", "data_files.json"))
+    rdict = {}
+    # For each directory a single list with all the file names in that
+    # directory has to be provided, otherwise if multiple entries with
+    # lists are provided only the last list is installed
+    rdict = dict([(fdir, []) for fdir in set([item["dir"] for item in fdata])])
+    for fdict in fdata:
+        rdict[fdict["dir"]] = rdict[fdict["dir"]] + (
+            glob.glob(os.path.join(pkg_dir, fdict["dir"], fdict["file"]))
+        )
+    return [
+        (os.path.join(share_dir, fdir), rdict[fdir]) for fdir in sorted(rdict.keys())
+    ]
+
+
+def get_pkg_name():
+    """Return package name."""
+    return os.path.basename(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+
+
+def get_supported_interps():
+    """Return supported Python interpreter versions."""
+    # pylint: disable=W0122
+    pkg_name = get_pkg_name()
+    exec("from " + pkg_name + ".pkgdata import SUPPORTED_INTERPS")
+    return SUPPORTED_INTERPS
 
 
 def json_load(fname):
@@ -173,7 +182,7 @@ def load_requirements(pkg_dir, pyver, cat="source"):
 
 
 def pcolor(text, color, indent=0):
-    """Return a string that once printed is colorized (copied from pmisc.strings)."""
+    """Return a string that once printed is colorized (copied from .strings)."""
     esc_dict = {
         "black": 30,
         "red": 31,

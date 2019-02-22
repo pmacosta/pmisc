@@ -7,7 +7,8 @@
 import os
 import textwrap
 
-from sbin.functions import SUPPORTED_VERS, json_load
+from pmisc.pkgdata import SUPPORTED_INTERPS
+from sbin.functions import json_load
 
 
 ###
@@ -104,7 +105,7 @@ def ops_to_words(item):
 
 def proc_requirements(mobj):
     """Get requirements in reStructuredText format."""
-    pyvers = ["py{0}".format(item.replace(".", "")) for item in SUPPORTED_VERS]
+    pyvers = ["py{0}".format(item.replace(".", "")) for item in SUPPORTED_INTERPS]
     py2vers = sorted([item for item in pyvers if item.startswith("py2")])
     py3vers = sorted([item for item in pyvers if item.startswith("py3")])
     fdict = json_load(os.path.join("data", "requirements.json"))

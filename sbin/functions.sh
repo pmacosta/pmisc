@@ -10,25 +10,25 @@
 # -h True if file exists and is a symbolic link
 # cd -P does not follow symbolic links
 current_dir() {
-	local sdir="$1"
-	local udir=""
-	# Resolve ${sdir} until the file is no longer a symlink
-	while [ -h "${sdir}" ]; do
-		udir="$(cd -P "$(dirname "${sdir}")" && pwd)"
-		sdir="$(readlink "${sdir}")"
-		# If ${sdir} was a relative symlink, we need to resolve it
-		# relative to the path where the symlink file was located
-		[[ ${sdir} != /* ]] && {sdir}="$udir/${sdir}"
-	done
-	udir="$(cd -P "$(dirname "${sdir}")" && pwd)"
-	echo ${udir}
+    local sdir="$1"
+    local udir=""
+    # Resolve ${sdir} until the file is no longer a symlink
+    while [ -h "${sdir}" ]; do
+        udir="$(cd -P "$(dirname "${sdir}")" && pwd)"
+        sdir="$(readlink "${sdir}")"
+        # If ${sdir} was a relative symlink, we need to resolve it
+        # relative to the path where the symlink file was located
+        [[ "${sdir}" != /* ]] && sdir="${udir}/${sdir}"
+    done
+    udir="$(cd -P "$(dirname "${sdir}")" && pwd)"
+    echo "${udir}"
 }
 
 print_banner () {
 	local slength=${#1}
 	local line="+-"
 	local i=1
-	while ((i<=${slength})); do
+	while ((i<=slength)); do
 		line=${line}'-'
 		let i++
 	done
@@ -140,11 +140,30 @@ validate_num_cpus () {
 		return 1
 	fi
 	max_cpus=$(grep -c ^processor /proc/cpuinfo)
-	if (( ${num_cpus} > ${max_cpus} )); then
+	if (( num_cpus > max_cpus )); then
 		echo "${script_name}: Requested CPUs (${num_cpus}) greater than"\
 		     "available CPUs (${max_cpus})" >&2
 		echo "ERROR"
 		return 1
 	fi
 	echo "-n ${num_cpus}"
+}
+
+strcat() {
+  local IFS=""
+  echo -n "$*"
+}
+
+get_pyvers () {
+    sdir=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")
+    # shellcheck disable=SC1090,SC1091
+    source "${sdir}/functions.sh"
+    pkgname="$(basename "$(dirname "${sdir}")")"
+    cmd=$(strcat \
+        "from __future__ import print_function;" \
+        "from ${pkgname}.pkgdata import SUPPORTED_INTERPS;" \
+        "print(' '.join(reversed(SUPPORTED_INTERPS)))" \
+    )
+    pyvers=$(python -c "${cmd}")
+    echo "${pyvers}"
 }

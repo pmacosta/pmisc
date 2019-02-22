@@ -41,8 +41,7 @@ except ImportError:
 ###
 # Global variables
 ###
-PKG_NAME = "pmisc"
-VALID_MODULES = [PKG_NAME]
+VALID_MODULES = [sbin.functions.get_pkg_name()]
 PKG_SUBMODULES = []
 
 
@@ -222,7 +221,7 @@ def move_file(src, dest):
 
 def pcolor(text, color, indent=0):
     r"""
-    Return a string that once printed is colorized (copied from pmisc module).
+    Return a string that once printed is colorized.
 
     :param text: Text to colorize
     :type  text: string
@@ -347,8 +346,9 @@ def generate_top_level_readme(pkg_dir):
     print("Generating top-level README.rst file")
     with open(fname, "r") as fobj:
         lines = [item.rstrip() for item in fobj.readlines()]
-    ref1_regexp = re.compile(".*:py:mod:`(.+) <" + PKG_NAME + ".(.+)>`.*")
-    ref2_regexp = re.compile(".*:py:mod:`" + PKG_NAME + ".(.+)`.*")
+    pkg_name = sbin.functions.get_pkg_name()
+    ref1_regexp = re.compile(".*:py:mod:`(.+) <" + pkg_name + ".(.+)>`.*")
+    ref2_regexp = re.compile(".*:py:mod:`" + pkg_name + ".(.+)`.*")
     ref3_regexp = re.compile(r".*:ref:`(.+?)(\s+<.+>)*`.*")
     ref4_regexp = re.compile(r".*:py:class:`(.+?)`.*")
     ref5_regexp = re.compile(r".*:py:data:`(.+?)`.*")
@@ -379,7 +379,7 @@ def generate_top_level_readme(pkg_dir):
                 lrange = line.lstrip().replace(":lines:", "").strip()
                 mdir = os.path.join("..", "docs", "support")
                 tstr = (
-                    ".. pmisc.incfile(\n"
+                    ".. " + pkg_name + ".incfile(\n"
                     '..     "{0}",\n'
                     "..     cog.out,\n"
                     '..     "{1}",\n'
@@ -387,7 +387,7 @@ def generate_top_level_readme(pkg_dir):
                     ".. )"
                 )
                 ret.append(".. [[[cog")
-                ret.append(".. import pmisc")
+                ret.append(".. import " + pkg_name)
                 ret.append(tstr.format(os.path.basename(fname), lrange))
                 ret.append(".. ]]]")
                 ret.append(".. [[[end]]]")
@@ -397,7 +397,7 @@ def generate_top_level_readme(pkg_dir):
             mname = match1.group(2)
             line = line.replace(
                 ":py:mod:`{label} <".format(label=label)
-                + PKG_NAME
+                + pkg_name
                 + ".{mname}>`".format(mname=mname),
                 label,
             )
@@ -406,7 +406,7 @@ def generate_top_level_readme(pkg_dir):
             # Remove cross-references
             mname = match2.group(1)
             line = line.replace(
-                ":py:mod:`" + PKG_NAME + ".{mname}`".format(mname=mname), mname
+                ":py:mod:`" + pkg_name + ".{mname}`".format(mname=mname), mname
             )
             ret.append(line)
         elif match3:
@@ -517,6 +517,7 @@ def which(name):
 
 if __name__ == "__main__":
     # pylint: disable=E0602
+    PKG_NAME = sbin.functions.get_pkg_name()
     PKG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PARSER = argparse.ArgumentParser(
         description="Build " + PKG_NAME + " package documentation"
