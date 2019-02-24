@@ -19,7 +19,7 @@ import sbin.functions
 def update_conf():
     """Update Sphinx conf.py file."""
     # pylint: disable=W0612
-    exec("from " + sbin.functions.get_pkg_name() + ".pkgdata import __version__")
+    pkg_version = sbin.functions.get_pkg_version()
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     year = datetime.datetime.now().year
     fname = os.path.join(pkg_dir, "docs", "conf.py")
@@ -36,13 +36,13 @@ def update_conf():
                 ret.append(line)
             elif line.startswith("version = "):
                 tokens = ["a", "b", "rc"]
-                index = max([__version__.find(item) for item in tokens])
-                short_version = __version__
+                index = max([pkg_version.find(item) for item in tokens])
+                short_version = pkg_version
                 if index > -1:
-                    short_version = __version__[:index]
+                    short_version = pkg_version[:index]
                 ret.append('version = "{0}"'.format(short_version))
             elif line.startswith("release = "):
-                ret.append('release = "{0}"'.format(__version__))
+                ret.append('release = "{0}"'.format(pkg_version))
             else:
                 ret.append(line)
         with open(fname, "w") as fobj:

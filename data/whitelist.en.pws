@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1636 utf-8
+personal_ws-1.1 en 1645 utf-8
 0x03000000
 9b0
 aa
@@ -23,6 +23,7 @@ addai
 addex
 addfinalizer
 AE
+aff
 Agg
 aguments
 ai
@@ -310,6 +311,7 @@ df
 dfile
 dfilter
 DFLT
+dic
 dict
 dicts
 diff
@@ -317,6 +319,7 @@ difflib
 dimgray
 dir
 dirname
+DIRPATH
 dirs
 distutils
 ditem
@@ -581,6 +584,7 @@ hookimpl
 horizontalalignment
 hotpink
 html
+htmlcov
 hunspell
 Huy
 hvec
@@ -636,6 +640,7 @@ InterpolatedUnivariateSpline
 InterpolationOption
 interpolator
 Interpolator
+interps
 INTERPS
 Intra
 io
@@ -671,6 +676,7 @@ issubclass
 itemgetter
 iter
 iterable
+iterps
 itertools
 itf
 itg
@@ -1140,6 +1146,7 @@ Pytest
 pytho
 python3
 PYTHONHASHSEED
+pythonpath
 PYTHONPATH
 pyver
 pyvers
@@ -1417,9 +1424,11 @@ symlinks
 SyntaxError
 sys
 sysconfig
+SystemExit
 tabwidth
 tagname
 tanh
+tarball
 tb
 tbk
 tblines

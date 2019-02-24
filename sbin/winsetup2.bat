@@ -10,7 +10,17 @@ pip install --upgrade --ignore-installed setuptools
 which python
 which pip
 pip --version
-python -c "import os, pip; print(os.path.dirname(os.path.realpath(pip.__path__[0])))" > python_site_packages_dir.txt
+ps: Invoke-WebRequest -OutFile .\hunspell.zip -Uri "https://cfhcable.dl.sourceforge.net/project/ezwinports/hunspell-1.3.2-3-w32-bin.zip" -Headers @{"Upgrade-Insecure-Requests"="1"; "DNT"="1"; "User-Agent"="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"; "Accept"="text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"; "Referer"="https://sourceforge.net/projects/ezwinports/files/hunspell-1.3.2-3-w32-bin.zip/download"; "Accept-Encoding"="gzip, deflate, br"; "Accept-Language"="en-US,en;q=0.9"; "Cookie"="_ga=GA1.2.960330120.1549548167; _gid=GA1.2.253466023.1549548167; _scp=1549548167671.1888783760; _scs=1549548167673.1210103215; __gads=ID=13f7ab9f14784468:T=1549548167:S=ALNI_MatktSjb46-gGUtEr9aCuvgPeSgLQ"}
+7z e -y .\hunspell.zip -o%REPO_DIR%\hunspell
+ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+scoop install shellcheck
+set PATH=%PATH%;%REPO_DIR%\hunspell;%REPO_DIR%\hunspell\bin;~\scoop\shims;~\scoop\apps\shellcheck\current
+dir %REPO_DIR%\hunspell
+set LANG=en_US.UTF-8
+set DICPATH=%REPO_DIR%\hunspell
+hunspell --version
+shellcheck --version
+python -c "from __future__ import print_function;import os,pip;y=pip.__file__.split(os.sep);print(os.sep.join(y[:y.index('pip')]))" > python_site_packages_dir.txt
 set /p PYTHON_SITE_PACKAGES=<python_site_packages_dir.txt
 set VIRTUALENV_DIR=C:\Miniconda-x64\envs\%INTERP%
 set BIN_DIR=%VIRTUALENV_DIR%\Scripts
@@ -20,6 +30,13 @@ set SBIN_DIR=%EXTRA_DIR%\sbin
 set PYTHONPATH=%PYTHONPATH%;%PYTHON_SITE_PACKAGES%;%EXTRA_DIR%;%EXTRA_DIR%\tests;%EXTRA_DIR%\docs;%EXTRA_DIR%\docs\support
 set TRACER_DIR=%EXTRA_DIR%\docs\support
 set COV_FILE=%SOURCE_DIR%\.coveragerc_ci_%INTERP%
+python -c "from __future__ import print_function;import os;plugin_dir = os.path.join(os.environ.get('REPO_DIR', ''), 'pylint_plugins');print(plugin_dir if os.path.isdir(plugin_dir) else '')" > pylint_plugins_dir.txt
+set /p PYLINT_PLUGINS_DIR=<pylint_plugins_dir.txt
+python -c "from __future__ import print_function;import glob; import os; sdir = os.environ.get('PYLINT_PLUGINS_DIR', ''); print(','.join([os.path.basename(fname).replace('.py', '') for fname in glob.glob(os.path.join(sdir, '*.py'))]) if sdir else '')" > pylint_plugins_list.txt
+set /p PYLINT_PLUGINS_LIST=<pylint_plugins_list.txt
+python -c "from __future__ import print_function; import os; svar=os.environ.get('PYLINT_PLUGINS_LIST', ''); print('--load-plugins='+svar if svar else '')" > pylint_cli_append.txt
+set /p PYLINT_CLI_APPEND=<pylint_cli_append.txt
+set PYTHONPATH=%PYTHONPATH%;%PYLINT_PLUGINS_DIR%;
 echo "PYTHON_SITE_PACKAGES=%PYTHON_SITE_PACKAGES%"
 echo "VIRTUALENV_DIR=%VIRTUALENV_DIR%"
 echo "BIN_DIR=%BINDIR%"
@@ -29,6 +46,9 @@ echo "SBIN_DIR=%SBIN_DIR%"
 echo "PYTHONPATH=%PYTHONPATH%"
 echo "TRACER_DIR=%TRACER_DIR%"
 echo "COV_FILE=%COV_FILE%"
+echo "PYLINT_PLUGINS_DIR=%PYLINT_PLUGINS_DIR%"
+echo "PYLINT_PLUGINS_LIST=%PYLINT_PLUGINS_LIST%"
+echo "PYLINT_CLI_APPEND=%PYLINT_CLI_APPEND%"
 REM ###
 REM # Install package dependencies
 REM ###
@@ -58,7 +78,7 @@ python setup.py sdist --formats=zip
 timeout /t 5
 REM # Change directory away from repository, otherwise pip does not install package
 set PYTHONPATH=%OLD_PTYHON_PATH%
-python -c "import os, sys; sys.path.append(os.path.realpath('./'+os.environ['PKG_NAME']));import version; print(version.__version__)" > version.txt
+python -c "import os, sys; sys.path.append(os.path.realpath('./'+os.environ['PKG_NAME']));import pkgdata; print(pkgdata.__version__)" > version.txt
 set /p PKG_VERSION=<version.txt
 echo "PKG_VERSION=%PKG_VERSION%"
 cd %PYTHON_SITE_PACKAGES%
@@ -71,7 +91,6 @@ REM # Write coverage configuration file
 REM ###
 python %SBIN_DIR%\coveragerc_manager.py 'ci' 1 %INTERP% %PYTHON_SITE_PACKAGES%
 type %COV_FILE%
-REM # - if "%INTERP%" == "py26" python %SBIN_DIR%\patch_pylint.py %PYTHON_SITE_PACKAGES%
 REM ###
 REM # Change to tests sub-directory to mimic Tox conditions
 REM ###
@@ -81,12 +100,11 @@ REM test_script:
 REM ###
 REM # Run tests
 REM ###
-REM # Omitted tests are not Windows-specific and are handled by Travis-CI
-REM # pylint 1.6.x appears to have a bug in Python 3.6 that is only going to be fixed with Pylint 2.0
-pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SOURCE_DIR%
-pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %SBIN_DIR%
-pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\tests
-pylint --rcfile=%EXTRA_DIR%\.pylintrc -f colorized -r no %EXTRA_DIR%\docs\support
+copy %EXTRA_DIR%\.headerrc %SOURCE_DIR%\.headerrc
+pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %SOURCE_DIR%
+pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %SBIN_DIR%
+pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %EXTRA_DIR%\tests
+pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %EXTRA_DIR%\docs\support
 set DODOCTEST=1
 py.test --collect-only --doctest-glob="*.rst" %EXTRA_DIR%\docs > doctest.log 2>&1 || set DODOCTEST=0
 if %DODOCTEST%==1 py.test --doctest-glob="*.rst" %EXTRA_DIR%\docs

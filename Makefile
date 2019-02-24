@@ -45,10 +45,11 @@ clean: FORCE
 	@find $(PKG_DIR) -name '*.error' -delete
 	@rm -rf $(PKG_DIR)/build
 	@rm -rf	$(PKG_DIR)/dist
-	@rm -rf $(PKG_DIR)/$(PKG_NAME).egg-info
-	@rm -rf $(PKG_DIR)/.eggs
-	@rm -rf $(PKG_DIR)/.cache
 	@rm -rf $(PKG_DIR)/docs/_build
+	@rm -rf $(PKG_DIR)/$(PKG_NAME).egg-info
+	@rm -rf $(PKG_DIR)/.cache
+	@rm -rf $(PKG_DIR)/.eggs
+	@rm -rf $(PKG_DIR)/.tox
 
 distro: docs clean sdist wheel
 	@rm -rf build $(PKG_NAME).egg-info

@@ -1,11 +1,12 @@
 # functions.py
 # Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,E0602,E1111,R0904,R1717,R1718,W0201,W0621
+# pylint: disable=C0111,E0401,E0602,E1111,R0904,R1717,R1718,W0201,W0621
 
 # Standard library imports
 from __future__ import print_function
 import glob
+import io
 import json
 import os
 import subprocess
@@ -135,24 +136,35 @@ def get_pkg_data_files(share_dir):
 
 def get_pkg_name():
     """Return package name."""
-    return os.path.basename(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    return os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def get_supported_interps():
     """Return supported Python interpreter versions."""
     # pylint: disable=W0122
     pkg_name = get_pkg_name()
-    exec("from " + pkg_name + ".pkgdata import SUPPORTED_INTERPS")
-    return SUPPORTED_INTERPS
+    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(os.path.join(pkg_dir, pkg_name))
+    import pkgdata
+
+    return pkgdata.SUPPORTED_INTERPS
+
+
+def get_pkg_version():
+    """Return supported Python interpreter versions."""
+    pkg_name = get_pkg_name()
+    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append(os.path.join(pkg_dir, pkg_name))
+    import pkgdata
+
+    return pkgdata.__version__
 
 
 def json_load(fname):
     """Load JSON file."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     conf_file = os.path.join(pkg_dir, fname)
-    with open(conf_file, "r") as fobj:
+    with io.open(conf_file, "r") as fobj:
         fdata = json.load(fobj)
     if sys.hexversion < 0x03000000:
         fdata = _unicode_to_ascii(fdata)
@@ -217,7 +229,13 @@ def python_version(hver):
 
 def shcmd(cmd_list, exmsg, async_stdout=False):
     """Execute command piping STDERR to STDOUT."""
-    proc = subprocess.Popen(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    try:
+        proc = subprocess.Popen(
+            cmd_list, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
+    except:
+        print("COMMAND: {0}".format(" ".join(cmd_list)))
+        raise
     while async_stdout:
         if sys.hexversion < 0x03000000:
             line = proc.stdout.readline()
@@ -227,11 +245,16 @@ def shcmd(cmd_list, exmsg, async_stdout=False):
             break
         sys.stdout.write(line)
         sys.stdout.flush()
-    stdout, _ = proc.communicate()
+    stdout, stderr = proc.communicate()
     retcode = proc.returncode
     if sys.hexversion >= 0x03000000:
-        stdout = stdout.decode("utf-8")
+        stdout = stdout.decode("utf-8") if stdout is not None else stdout
+        stderr = stderr.decode("utf-8") if stderr is not None else stderr
     if retcode:
+        print("COMMAND: {0}".format(" ".join(cmd_list)))
+        print("STDOUT:")
+        print(stdout)
+        print("STDERR:")
         print(stdout)
         raise RuntimeError(exmsg)
     return stdout

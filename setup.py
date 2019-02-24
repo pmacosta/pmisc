@@ -28,7 +28,7 @@ from sbin.functions import get_pkg_data_files, load_requirements, python_version
 ###
 # Supported interpreter check
 ###
-# When installing from tarbal/zip/wheel, path is temporary one and setup.py
+# When installing from tarball/zip/wheel, path is temporary one and setup.py
 # is not in a directory where its name is the package name, have to find
 # package name by finding location of pkgdata file
 STEM = "pkgdata"
@@ -37,6 +37,7 @@ for (DIRPATH, _, FNAMES) in os.walk(os.path.dirname(os.path.abspath(__file__))):
     for FNAME in FNAMES:
         if os.path.basename(FNAME) == STEM + ".py":
             exec(compile(open(os.path.join(DIRPATH, FNAME)).read(), STEM, "exec"))
+            PKG_NAME = os.path.basename(DIRPATH)
             FOUND = True
             break
 if not FOUND:
@@ -77,7 +78,6 @@ def read(*filenames, **kwargs):
 ###
 # Global variables
 ###
-PKG_NAME = "pmisc"
 REPO = "http://github.com/pmacosta/{pkg_name}/".format(pkg_name=PKG_NAME)
 AUTHOR = "Pablo Acosta-Serafini"
 AUTHOR_EMAIL = "pmasdev@gmail.com"
@@ -91,6 +91,8 @@ SHORT_DESC = get_short_desc(LONG_DESCRIPTION)
 SHARE_DIR = os.path.join("share", PKG_NAME)
 INSTALL_REQUIRES = load_requirements(PKG_DIR, PYTHON_VER, "source")
 TESTING_REQUIRES = load_requirements(PKG_DIR, PYTHON_VER, "testing")
+if os.environ.get("MERGE_REQUIREMENTS", False):
+    INSTALL_REQUIRES = INSTALL_REQUIRES + TESTING_REQUIRES
 try:
     DATA_FILES = get_pkg_data_files(SHARE_DIR)
 except IOError:

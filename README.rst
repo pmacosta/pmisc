@@ -21,17 +21,14 @@
 |
 
 .. image::
-    https://travis-ci.org/pmacosta/pmisc.svg?branch=master
+    https://dev.azure.com/pmasdev/pmisc/_apis/build/status/pmacosta.pmisc?branchName=master
+    :target: https://dev.azure.com/pmasdev/pmisc/_build?definitionId=3&_a=summary
+    :alt: Continuous integration test status
 
 .. image::
-    https://ci.appveyor.com/api/projects/status/
-    7dpk342kxs8kcg5t/branch/master?svg=true
-    :alt: Windows continuous integration
-
-.. image::
-    https://codecov.io/github/pmacosta/pmisc/coverage.svg?branch=master
-    :target: https://codecov.io/github/pmacosta/pmisc?branch=master
-    :alt: Continuous integration coverage
+    https://img.shields.io/azure-devops/coverage/pmasdev/pmisc/3.svg
+    :target: https://dev.azure.com/pmasdev/pmisc/_build?definitionId=3&_a=summary
+    :alt: Continuous integration test coverage
 
 .. image::
     https://readthedocs.org/projects/pip/badge/?version=stable
@@ -70,8 +67,8 @@ Description
 .. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
-.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
-   /sphinxcontrib-shellcheck
+.. _Shellcheck Linter Sphinx Extension:
+   https://pypi.org/project/sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 .. [[[end]]]
@@ -87,7 +84,7 @@ Interpreter
 ===========
 
 The package has been developed and tested with Python 2.7, 3.5, 3.6 and 3.7
-under Linux (Debian, Ubuntu), Apple OS X and Microsoft Windows
+under Linux (Debian, Ubuntu), Apple macOS and Microsoft Windows
 
 Installing
 ==========
@@ -277,13 +274,12 @@ Contributing
       the interpreter used
 
 8. Verify that continuous integration tests pass. The package has continuous
-   integration configured for Linux (via `Travis <https://www.travis-ci.org>`_)
-   and for Microsoft Windows (via `Appveyor <https://www.appveyor.com>`_).
-   Aggregation/cloud code coverage is configured via
-   `Codecov <https://codecov.io>`_. It is assumed that the Codecov repository
-   upload token in the Travis build is stored in the :bash:`${CODECOV_TOKEN}`
-   environment variable (securely defined in the Travis repository settings
-   page).
+   integration configured for Linux, Apple macOS and Microsoft Winodws (all via
+   `Azure DevOps <https://dev.azure.com/pmasdev>`_) Aggregation/cloud code
+   coverage is configured via `Codecov <https://codecov.io>`_. It is assumed
+   that the Codecov repository upload token in the build is stored in the
+   :bash:`$(codecovToken)` environment variable (securely defined in the
+   pipeline settings page).
 
 9. Document the new feature or bug fix (if needed). The script
    :bash:`${PMISC_DIR}/sbin/build_docs.py` re-builds the whole package

@@ -9,9 +9,6 @@ from __future__ import print_function
 import os
 import sys
 
-# Intra-package imports
-import sbin.functions
-
 
 ###
 # Functions
@@ -48,9 +45,13 @@ def main(argv):
     # pylint: disable=R0912,R0914,R0915,W0702
     debug = True
     env = argv[0].strip('"').strip("'")
-    pkg_name = sbin.functions.get_pkg_name()
+    pkg_name = os.path.basename(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+    print("File: {0}".format(os.path.abspath(__file__)))
     # Unpack command line arguments
     print("Coverage manager")
+    print("Package name: {0}".format(pkg_name))
     print("Arguments received: {0}".format(argv))
     if env == "tox":
         print("Tox mode")
@@ -105,6 +106,7 @@ def main(argv):
     output_file_name = os.path.join(
         site_pkg_dir, pkg_name, ".coveragerc_{0}_{1}".format(env, interp)
     )
+    print("Output file: {0}".format(output_file_name))
     coverage_file_name = os.path.join(
         site_pkg_dir, pkg_name, ".coverage_{0}".format(interp)
     )
@@ -149,6 +151,12 @@ def main(argv):
                     os.path.join(
                         os.environ["RESULTS_DIR"], "codecoverage", "coverage.xml"
                     )
+                )
+            )
+            lines.append("[html]")
+            lines.append(
+                "directory = {0}".format(
+                    os.path.join(os.environ["RESULTS_DIR"], "codecoverage", "htmlcov")
                 )
             )
         # Write file

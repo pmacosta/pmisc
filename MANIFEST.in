@@ -11,10 +11,10 @@ include setup.py
 include TODO.rst
 include tox.ini
 include .headerrc
-include .travis.yml
 include .pylintrc
 include .pydocstyle
 recursive-include pylint_plugins *.py
+recursive-include pylint_plugins/dicts *
 recursive-include pylint_plugins *.sh
 recursive-include data *
 include docs/make.bat

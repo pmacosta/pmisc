@@ -7,6 +7,8 @@ REM install:
 REM ###
 REM # Set up environment variables
 REM ###
+git submodule init
+git submodule update
 set
 set PYTHONCMD=python
 set PIPCMD=pip

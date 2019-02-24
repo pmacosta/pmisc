@@ -6,6 +6,40 @@
 # yamllint disable rule:line-length
 # yamllint disable rule:comments
 
+#[[[cog
+# import os
+# PKG_NAME = os.path.basename(os.path.dirname(os.path.abspath(cog.inFile)))
+# exec("from " + PKG_NAME + ".pkgdata import SUPPORTED_INTERPS")
+# cog.outl("environment:")
+# cog.outl("  matrix:")
+# for pyver in SUPPORTED_INTERPS:
+#     cog.outl('    - JOB: "{0}"'.format(pyver))
+#     cog.outl('      INTERP: "py{0}"'.format(pyver.replace(".", "")))
+#     cog.outl('      PYVER: "{0}"'.format(pyver))
+# cog.outl("")
+# cog.outl("init:")
+# cog.outl('  - echo "PYVER=%PYVER%"')
+# cog.outl("")
+# def process_file(fname):
+#     with open(fname) as fobj:
+#         ilines = [item.rstrip() for item in fobj.readlines()]
+#     ignore = False
+#     for iline in ilines:
+#         if (not ignore) and iline.strip().lower().startswith('rem [start ignore]'):
+#             ignore = True
+#         elif ignore and iline.strip().lower().startswith('rem [stop ignore]'):
+#             ignore = False
+#         elif ignore:
+#             pass
+#         elif iline.strip().lower().startswith('rem '):
+#             cog.outl(iline.strip()[4:])
+#         elif iline.strip():
+#             cog.outl('- '+iline.strip())
+#         else:
+#             cog.outl()
+# process_file(os.path.join('.', 'sbin', 'winsetup1.bat'))
+# process_file(os.path.join('.', 'sbin', 'winsetup2.bat'))
+#]]]
 environment:
   matrix:
     - JOB: "2.7"
@@ -21,29 +55,9 @@ environment:
       INTERP: "py37"
       PYVER: "3.7"
 
-
 init:
   - echo "PYVER=%PYVER%"
 
-#[[[cog
-# import os
-# with open(os.path.join('.', 'sbin', 'winsetup1.bat')) as fobj:
-#     ilines = [item.rstrip() for item in fobj.readlines()]
-# ignore = False
-# for iline in ilines:
-#     if (not ignore) and iline.strip().lower().startswith('rem [start ignore]'):
-#         ignore = True
-#     elif ignore and iline.strip().lower().startswith('rem [stop ignore]'):
-#         ignore = False
-#     elif ignore:
-#         pass
-#     elif iline.strip().lower().startswith('rem '):
-#         cog.outl(iline.strip()[4:])
-#     elif iline.strip():
-#         cog.outl('- '+iline.strip())
-#     else:
-#         cog.outl()
-#]]]
 install:
 ###
 # Set up environment variables
@@ -82,27 +96,6 @@ install:
 - conda create -y --name %INTERP% python=%PYVER% numpy
 - activate %INTERP%
 - which python
-#[[[end]]]
-
-#[[[cog
-# import os
-# with open(os.path.join('.', 'sbin', 'winsetup2.bat')) as fobj:
-#     ilines = [item.rstrip() for item in fobj.readlines()]
-# ignore = False
-# for iline in ilines:
-#     if (not ignore) and iline.strip().lower().startswith('rem [start ignore]'):
-#         ignore = True
-#     elif ignore and iline.strip().lower().startswith('rem [stop ignore]'):
-#         ignore = False
-#     elif ignore:
-#         pass
-#     elif iline.strip().lower().startswith('rem '):
-#         cog.outl(iline.strip()[4:])
-#     elif iline.strip():
-#         cog.outl('- '+iline.strip())
-#     else:
-#         cog.outl()
-#]]]
 - ps: wget https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
 - python get-pip.py
 - pip install --upgrade pip wheel
@@ -115,6 +108,9 @@ install:
 - ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 - scoop install shellcheck
 - set PATH=%PATH%;%REPO_DIR%\hunspell;%REPO_DIR%\hunspell\bin;~\scoop\shims;~\scoop\apps\shellcheck\current
+- dir %REPO_DIR%\hunspell
+- set LANG=en_US.UTF-8
+- set DICPATH=%REPO_DIR%\hunspell
 - hunspell --version
 - shellcheck --version
 - python -c "from __future__ import print_function;import os,pip;y=pip.__file__.split(os.sep);print(os.sep.join(y[:y.index('pip')]))" > python_site_packages_dir.txt
@@ -175,7 +171,7 @@ build_script:
 - timeout /t 5
 # Change directory away from repository, otherwise pip does not install package
 - set PYTHONPATH=%OLD_PTYHON_PATH%
-- python -c "import os, sys; sys.path.append(os.path.realpath('./'+os.environ['PKG_NAME']));import version; print(version.__version__)" > version.txt
+- python -c "import os, sys; sys.path.append(os.path.realpath('./'+os.environ['PKG_NAME']));import pkgdata; print(pkgdata.__version__)" > version.txt
 - set /p PKG_VERSION=<version.txt
 - echo "PKG_VERSION=%PKG_VERSION%"
 - cd %PYTHON_SITE_PACKAGES%
@@ -198,10 +194,10 @@ test_script:
 # Run tests
 ###
 - copy %EXTRA_DIR%\.headerrc %SOURCE_DIR%\.headerrc
-- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no %SOURCE_DIR%
-- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no %SBIN_DIR%
-- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no %EXTRA_DIR%\tests
-- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no %EXTRA_DIR%\docs\support
+- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %SOURCE_DIR%
+- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %SBIN_DIR%
+- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %EXTRA_DIR%\tests
+- pylint --rcfile=%EXTRA_DIR%\.pylintrc %PYLINT_CLI_APPEND% -f colorized -r no -s n %EXTRA_DIR%\docs\support
 - set DODOCTEST=1
 - py.test --collect-only --doctest-glob="*.rst" %EXTRA_DIR%\docs > doctest.log 2>&1 || set DODOCTEST=0
 - if %DODOCTEST%==1 py.test --doctest-glob="*.rst" %EXTRA_DIR%\docs

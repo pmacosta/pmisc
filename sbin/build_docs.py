@@ -2,7 +2,8 @@
 # build_docs.py
 # Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,C0411,C0413,E0611,F0401,R0912,R0914,R0915,W0141
+# pylint: disable=C0111,C0411,C0413,E0611,E1129,F0401
+# pylint: disable=R0205,R0903,R0912,R0914,R0915,W0141,W1113
 
 # Standard library imports
 from __future__ import print_function
@@ -12,12 +13,18 @@ import difflib
 import glob
 import multiprocessing
 import os
+import platform
 import re
 import shutil
 import sys
+import tempfile
+import types
 
 # PyPI imports
 from cogapp import Cog
+import decorator
+import docutils
+import docutils.core
 
 # Intra-package imports
 import sbin.functions
@@ -46,8 +53,63 @@ PKG_SUBMODULES = []
 
 
 ###
+# Helper classes
+###
+@decorator.contextmanager
+def ignored(*exceptions):
+    try:
+        yield
+    except exceptions:
+        pass
+
+
+class TmpFile(object):
+    """
+    Use a temporary file within context.
+
+    From pmisc package
+    """
+
+    def __init__(self, fpointer=None, *args, **kwargs):  # noqa
+        if (
+            fpointer
+            and (not isinstance(fpointer, types.FunctionType))
+            and (not isinstance(fpointer, types.LambdaType))
+        ):
+            raise RuntimeError("Argument `fpointer` is not valid")
+        self._fname = None
+        self._fpointer = fpointer
+        self._args = args
+        self._kwargs = kwargs
+
+    def __enter__(self):  # noqa
+        fdesc, fname = tempfile.mkstemp()
+        # fdesc is an OS-level file descriptor, see problems if this
+        # is not properly closed in this post:
+        # https://www.logilab.org/blogentry/17873
+        os.close(fdesc)
+        if platform.system().lower() == "windows":  # pragma: no cover
+            fname = fname.replace(os.sep, "/")
+        self._fname = fname
+        if self._fpointer:
+            with open(self._fname, "w") as fobj:
+                self._fpointer(fobj, *self._args, **self._kwargs)
+        return self._fname
+
+    def __exit__(self, exc_type, exc_value, exc_tb):  # noqa
+        with ignored(OSError):
+            os.remove(self._fname)
+        return not exc_type is not None
+
+
+###
 # Functions
 ###
+def _get_ex_msg(obj):
+    """Get exception message."""
+    return obj.value.args[0] if hasattr(obj, "value") else obj.args[0]
+
+
 def build_pkg_docs(args):
     """Build documentation."""
     debug = False
@@ -334,6 +396,35 @@ def rebuild_module_doc(test, src_dir, tracer_dir, cog_exe, debug):  # noqa
     return retcode
 
 
+def rst2html(ifname, desc=""):
+    """rst2html.py interface without going through command line."""
+    description = (
+        "Generates (X)HTML documents from standalone reStructuredText "
+        "sources.  " + docutils.core.default_description
+    )
+    with TmpFile() as ofname:
+        sys.argv = [
+            "rst2html.py",
+            "--exit-status=3",
+            "--verbose",
+            "--strict",
+            ifname,
+            ofname,
+        ]
+        try:
+            docutils.core.publish_cmdline(writer_name="html", description=description)
+        except (Exception, SystemExit) as exobj:
+            ex_msg = "{0}".format(_get_ex_msg(exobj))
+            raise RuntimeError(
+                (
+                    "Error validating top-level{0} README.rst"
+                    " HTML conversion:{1}{2}".format(
+                        " {0}".format(desc) if desc else "", os.linesep, ex_msg
+                    )
+                )
+            )
+
+
 def generate_top_level_readme(pkg_dir):
     """
     Remove Sphinx-specific cross-references from top-level README.rst file.
@@ -465,10 +556,7 @@ def generate_top_level_readme(pkg_dir):
     with open(fname, "w") as fobj:
         fobj.write("\n".join(ret))
     # Check that generated file produces HTML version without errors
-    sbin.functions.shcmd(
-        ["rst2html.py", "--exit-status=3", "-v", fname],
-        "Error validating top-level README.rst HTML conversion",
-    )
+    rst2html(os.path.normpath(fname))
 
 
 def valid_dir(value):

@@ -36,7 +36,19 @@ def update_copyright_notice():
     """Update copyright notice in project files."""
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     regexp = re.compile(".*Copyright \\(c\\) 2013-(\\d\\d\\d\\d) Pablo Acosta-Serafini")
-    ext_exclude = ["pyc", "png", "html", "odg", "pdf", "svg", "so", "npz", "pip"]
+    ext_exclude = [
+        "pyc",
+        "png",
+        "html",
+        "odg",
+        "pdf",
+        "svg",
+        "so",
+        "npz",
+        "pip",
+        "dic",
+        "aff",
+    ]
     dir_exclude = [
         ".tox",
         ".eggs",
