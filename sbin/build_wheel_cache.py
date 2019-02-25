@@ -107,10 +107,6 @@ def build_wheel_cache(pyvers):
                 break
         else:
             raise RuntimeError("Numpy dependency could not be found")
-        # Numpy appears to error out during importing if nose is not
-        # pre-installed, apparently, it is not part of their dependency tree
-        if pyver == "2.6":
-            _pip_install(pyver, "nose")
         for line in lines:
             print(_pcolor(template.format(line, pyver), "cyan"))
             if "scipy" in line:

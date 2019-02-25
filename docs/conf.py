@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+# conf.py
+# Copyright (c) 2013-2019 Pablo Acosta-Serafini
+# See LICENSE for details
 # pylint: disable=C0103,C0111,C0325,E0611,F0401,R0913,R1710,W0212,W0611,W0613,W0622
-#
+
 # src documentation build configuration file, created by
 # sphinx-quickstart on Thu Oct 24 06:41:33 2013.
 #
@@ -17,6 +20,11 @@ import os
 import sys
 import sphinx.environment
 from docutils.utils import get_source_line
+
+if sys.hexversion < 0x03000000:
+    from mock import Mock
+else:
+    from unittest.mock import Mock
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -348,7 +356,7 @@ epub_copyright = u"2013-2019, Pablo Acosta-Serafini"
 # Remove private parameters in class constructor
 def skip_private_parameter(app, what, name, obj, options, signature, rannot):
     if (
-        ((what == "class") or (what == "method") or (what == "function"))
+        (what in ("class", "method", "function"))
         and (signature is not None)
         and (len(signature) > 2)
     ):
@@ -372,6 +380,25 @@ if RTD:
             if (fname == "term_echo.py") and ("share" in dname):
                 print(os.path.abspath(os.path.join(dname, fname)))
                 sys.path.append(os.path.dirname(os.path.dirname(dname)))
+
+    # Mock out numpy, matplotlib and scipy modules which are not installed
+    # in ReadTheDocs environment
+    MOCK_MODULES = [
+        "numpy",
+        "matplotlib",
+        "matplotlib.pyplot",
+        "matplotlib.path",
+        "matplotlib.backends",
+        "matplotlib.backends.backend_agg",
+        "matplotlib.text",
+        "matplotlib.transforms",
+        "scipy",
+        "scipy.stats",
+        "scipy.interpolate",
+    ]
+    for MOCK_MODULE in MOCK_MODULES:
+        if MOCK_MODULE in sys.modules:
+            sys.modules.update((MOCK_MODULE, Mock()))
 
 # Eliminate warnings from non-local images (i.e. badges)
 # From https://stackoverflow.com/questions/12772927/

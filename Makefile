@@ -7,6 +7,7 @@ PKG_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 REPO_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SOURCE_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/$(PKG_NAME)
 EXTRA_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+SBIN_DIR := $(EXTRA_DIR)/sbin
 ### Custom pylint plugins configuration
 PYLINT_PLUGINS_DIR := $(shell if [ -d $(EXTRA_DIR)/pylint_plugins ]; then echo "$(EXTRA_DIR)/pylint_plugins"; fi)
 PYLINT_PLUGINS_LIST := $(shell if [ -d $(EXTRA_DIR)/pylint_plugins ]; then cd $(EXTRA_DIR)/pylint_plugins && ls -m *.py | sed 's|.*/||g' | sed 's|, |,|g' | sed 's|\.py||g'; fi)
@@ -17,23 +18,21 @@ PYLINT_CMD := pylint \
 	--output-format=colorized \
 	--reports=no \
 	--score=no
+LINT_DIRS := $(shell $(SBIN_DIR)/get-source-dirs.sh $(REPO_DIR) $(SOURCE_DIR) $(EXTRA_DIR))
 ###
 
 asort:
 	@echo "Sorting Aspell whitelist"
-	@$(PKG_DIR)/sbin/sort-whitelist.sh $(PKG_DIR)/data/whitelist.en.pws
+	@$(SBIN_DIR)/sort-whitelist.sh $(PKG_DIR)/data/whitelist.en.pws
 
 bdist: meta
 	@echo "Creating binary distribution"
-	@cd $(PKG_DIR); python setup.py bdist
+	@cd $(PKG_DIR) && python setup.py bdist
 
 black:
-	black \
-		$(REPO_DIR) \
-		$(SOURCE_DIR)/ \
-		$(EXTRA_DIR)/tests \
-		$(EXTRA_DIR)/docs \
-		$(EXTRA_DIR)/docs/support
+	@echo "Blackifying Python files"
+	@echo "Locations: $(LINT_DIRS)"
+	@black $(LINT_DIRS)
 
 clean: FORCE
 	@echo "Cleaning package"
@@ -55,7 +54,7 @@ distro: docs clean sdist wheel
 	@rm -rf build $(PKG_NAME).egg-info
 
 docs: FORCE
-	@$(PKG_DIR)/sbin/build_docs.py $(ARGS)
+	@$(SBIN_DIR)/build_docs.py $(ARGS)
 	@cd $(PKG_DIR)/docs && make linkcheck
 
 default:
@@ -65,35 +64,32 @@ FORCE:
 
 lint:
 	@echo "Running Pylint on package files"
-	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(REPO_DIR)/setup.py
-	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(SOURCE_DIR)
-	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(EXTRA_DIR)/sbin
-	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(EXTRA_DIR)/tests
-	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(EXTRA_DIR)/docs/support
+	@echo "Locations: $(LINT_DIRS)"
+	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(LINT_DIRS)
 
 meta: FORCE
 	@echo "Updating package meta-data"
-	@cd $(PKG_DIR)/sbin && ./update_copyright_notice.py
-	@cd $(PKG_DIR)/sbin && ./update_sphinx_conf.py
-	@cd $(PKG_DIR)/sbin && ./gen_req_files.py
-	@cd $(PKG_DIR)/sbin && ./gen_pkg_manifest.py
+	@cd $(SBIN_DIR) && ./update_copyright_notice.py
+	@cd $(SBIN_DIR) && ./update_sphinx_conf.py
+	@cd $(SBIN_DIR) && ./gen_req_files.py
+	@cd $(SBIN_DIR) && ./gen_pkg_manifest.py
 
 sdist: meta
 	@echo "Creating source distribution"
-	@cd $(PKG_DIR) && python setup.py sdist --formats=gztar,zip
-	@$(PKG_DIR)/sbin/list-authors.sh
+	@cd $(PKG_DIR) && python setup.py sdist --formats=zip
+	@$(SBIN_DIR)/list-authors.sh
 
 sterile: clean
 	@echo "Removing tox directory"
 	@rm -rf $(PKG_DIR)/.tox
 
 test: FORCE
-	@$(PKG_DIR)/sbin/rtest.sh $(ARGS)
+	@$(SBIN_DIR)/rtest.sh $(ARGS)
 
 upload: lint distro
 	@twine upload $(PKG_DIR)/dist/*
 
 wheel: lint meta
 	@echo "Creating wheel distribution"
-	@$(PKG_DIR)/sbin/make_wheels.sh
-	@$(PKG_DIR)/sbin/list-authors.sh
+	@$(SBIN_DIR)/make-wheels.sh
+	@$(SBIN_DIR)/list-authors.sh

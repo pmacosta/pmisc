@@ -4,3 +4,7 @@
 azure-pipelines.yml
 data/exclude-spelling
 data/whitelist.en.pws
+.cilegacy/install.ps1
+.cilegacy/winsetup1.bat
+.cilegacy/winsetup2.bat
+.cilegacy/run_with_env.cmd

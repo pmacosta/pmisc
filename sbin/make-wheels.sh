@@ -1,5 +1,5 @@
 #!/bin/bash
-# make_wheels.sh
+# make-wheels.sh
 # Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 
@@ -24,8 +24,6 @@ finish() {
 }
 trap finish EXIT ERR SIGINT
 
-# shellcheck disable=SC1090,SC1091,SC2024
-source "${sbin_dir}"/ipath.sh
 echo "pkg_dir: ${pkg_dir}"
 echo "sbin_dir: ${sbin_dir}"
 cd "${pkg_dir}" || exit 1

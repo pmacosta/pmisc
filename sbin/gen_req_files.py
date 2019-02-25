@@ -25,7 +25,7 @@ def freeze_pkg_vers(fnames):
     lines, _ = pobj.communicate()
     if sys.hexversion >= 0x03000000:
         lines = lines.decode("utf-8")
-    pkgs = {"numpy": ""}
+    pkgs = {"numpy": "", "scipy": "", "matplotlib": ""}
     for line in lines.split("\n"):
         for pkg in pkgs:
             if line.startswith(pkg):
