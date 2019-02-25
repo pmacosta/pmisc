@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1645 utf-8
+personal_ws-1.1 en 1658 utf-8
 0x03000000
 9b0
 aa
@@ -66,6 +66,7 @@ AROPROP
 ascii
 asin
 asinh
+asort
 aspell
 AspellChecker
 AssertionError
@@ -321,6 +322,7 @@ dir
 dirname
 DIRPATH
 dirs
+distro
 distutils
 ditem
 divmod
@@ -393,6 +395,7 @@ eqs
 erec
 errno
 esc
+euo
 eval
 exa
 exc
@@ -472,6 +475,7 @@ ffull
 fget
 fgrid
 fhandle
+fi
 FigureCanvasAgg
 filecmp
 filename
@@ -571,6 +575,7 @@ gmap
 GnBu
 greenyellow
 grep
+gztar
 hasattr
 HeaderChecker
 headerrc
@@ -705,6 +710,7 @@ labelsize
 LambdaType
 lang
 lasti
+lastword
 lavenderblush
 lawngreen
 lcount
@@ -744,6 +750,7 @@ linesep
 linestyle
 LineStyleOption
 linewidth
+linkcheck
 linreg
 LINREG
 linregress
@@ -761,6 +768,7 @@ ljust
 llist
 lmax
 lmin
+ln
 lname
 lnum
 lobj
@@ -1062,6 +1070,7 @@ Pillow
 pindex
 pinspect
 pipcmd
+pipefail
 pkgdata
 pkgdir
 pkgs
@@ -1122,6 +1131,7 @@ Py
 PY
 PY3
 pyc
+pycache
 pycmd
 PyCon
 pycontracts
@@ -1184,6 +1194,7 @@ RdPu
 RDVAR
 readline
 readlines
+readlink
 readme
 README
 readouterr
@@ -1313,6 +1324,7 @@ sdir
 sdist
 seagreen
 searchsorted
+sed
 SEL
 semilogx
 semilogy
@@ -1529,6 +1541,7 @@ txt
 typ
 TypeError
 ucols
+udir
 ufin
 ufunc
 Unary

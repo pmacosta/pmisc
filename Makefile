@@ -37,6 +37,7 @@ black:
 
 clean: FORCE
 	@echo "Cleaning package"
+	@rm -rf $(PKG_DIR)/.tox
 	@find $(PKG_DIR) -name '*.pyc' -delete
 	@find $(PKG_DIR) -name '__pycache__' -delete
 	@find $(PKG_DIR) -name '.coverage*' -delete
@@ -49,7 +50,6 @@ clean: FORCE
 	@rm -rf $(PKG_DIR)/$(PKG_NAME).egg-info
 	@rm -rf $(PKG_DIR)/.cache
 	@rm -rf $(PKG_DIR)/.eggs
-	@rm -rf $(PKG_DIR)/.tox
 
 distro: docs clean sdist wheel
 	@rm -rf build $(PKG_NAME).egg-info
