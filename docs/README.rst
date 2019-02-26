@@ -110,7 +110,7 @@ Contributing
     .. code-block:: bash
 
         $ github_user=myname
-        $ git clone \
+        $ git clone --recursive \
               https://github.com/"${github_user}"/pmisc.git
         Cloning into 'pmisc'...
         ...
@@ -274,7 +274,7 @@ Contributing
       the interpreter used
 
 8. Verify that continuous integration tests pass. The package has continuous
-   integration configured for Linux, Apple macOS and Microsoft Winodws (all via
+   integration configured for Linux, Apple macOS and Microsoft Windows (all via
    `Azure DevOps <https://dev.azure.com/pmasdev>`_) Aggregation/cloud code
    coverage is configured via `Codecov <https://codecov.io>`_. It is assumed
    that the Codecov repository upload token in the build is stored in the
