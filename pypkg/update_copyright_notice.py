@@ -12,7 +12,7 @@ import re
 import sys
 
 # Intra-package imports
-import sbin.functions
+import pypkg.functions
 
 
 ###
@@ -54,13 +54,13 @@ def update_copyright_notice():
         ".eggs",
         ".cache",
         os.path.join("docs", "_build"),
-        sbin.functions.get_pkg_name() + ".egg-info",
+        pypkg.functions.get_pkg_name() + ".egg-info",
         ".git",
     ]
     year = datetime.datetime.now().year
     template = "Copyright (c) 2013-{0} Pablo Acosta-Serafini"
     header_printed = False
-    for fname in sbin.functions.dir_tree(pkg_dir, dir_exclude, ext_exclude):
+    for fname in pypkg.functions.dir_tree(pkg_dir, dir_exclude, ext_exclude):
         lines = read_file(fname)
         ret = []
         save_file = False

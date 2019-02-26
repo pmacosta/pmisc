@@ -12,7 +12,7 @@ IFS=$'\n\t'
 #
 cwd=${PWD}
 pkg_dir=$(dirname "$(current_dir "${BASH_SOURCE[0]}")")
-sbin_dir=${pkg_dir}/sbin
+sbin_dir=${pkg_dir}/pypkg
 finish() {
     if [ -f "${pkg_dir}"/setup.py.tmp ]; then
         mv -f "${pkg_dir}"/setup.py.tmp "${pkg_dir}"/setup.py

@@ -1,3 +1,1 @@
-[pydocstyle]
-convention=pep257
-add_ignore=D100,D103,D104
+/home/pacosta/python/pmisc/pypkg/.pydocstyle

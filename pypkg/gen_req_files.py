@@ -11,7 +11,7 @@ import subprocess
 import sys
 
 # Intra-package imports
-from sbin.functions import get_supported_interps, json_load
+from pypkg.functions import get_supported_interps, json_load
 
 
 ###

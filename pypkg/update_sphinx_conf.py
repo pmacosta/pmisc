@@ -10,7 +10,7 @@ import os
 import re
 
 # Intra-package imports
-import sbin.functions
+import pypkg.functions
 
 
 ###
@@ -19,7 +19,7 @@ import sbin.functions
 def update_conf():
     """Update Sphinx conf.py file."""
     # pylint: disable=W0612
-    pkg_version = sbin.functions.get_pkg_version()
+    pkg_version = pypkg.functions.get_pkg_version()
     pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     year = datetime.datetime.now().year
     fname = os.path.join(pkg_dir, "docs", "conf.py")

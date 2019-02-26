@@ -23,7 +23,7 @@
 	{"dir":"docs/support", "file":"*.py"},
 	{"dir":"tests", "file":"pytest.ini"},
 	{"dir":"tests", "file":"*.py"},
-	{"dir":"sbin", "file":"*.sh"},
-	{"dir":"sbin", "file":"*.py"},
+	{"dir":"pypkg", "file":"*.sh"},
+	{"dir":"pypkg", "file":"*.py"},
 	{"dir":"requirements", "file":"*"}
 ]

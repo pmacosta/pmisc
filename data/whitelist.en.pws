@@ -1,12 +1,7 @@
-personal_ws-1.1 en 1730 utf-8
+personal_ws-1.1 en 1737 utf-8
 0x03000000
 9b0
 a4paper
-Debian
-DevOps
-Ubuntu
-codecovToken
-pluggy
 aa
 aaa
 abc
@@ -203,6 +198,7 @@ cobj
 Codecov
 CODECOV
 codecoverage
+codecovToken
 codecs
 codelog
 cogapp
@@ -298,6 +294,7 @@ DBU
 dcmp
 ddelim
 ddir
+Debian
 dec
 decfunc
 dedent
@@ -323,6 +320,7 @@ DESC
 dest
 detailmenu
 dev
+DevOps
 DEVSTAT
 df
 dfile
@@ -980,6 +978,7 @@ NOPTION
 noqa
 nOr
 norder
+norecursedirs
 normcase
 normdir
 normpath
@@ -1122,6 +1121,7 @@ plist
 plottable
 plst
 plt
+pluggy
 plugin
 plugins
 PLUGINS
@@ -1197,6 +1197,7 @@ PyPA
 pyparsing
 PyParsing
 PyPI
+pypkg
 pyplot
 pysix
 pytest
@@ -1608,6 +1609,7 @@ tword
 txt
 typ
 TypeError
+Ubuntu
 ucols
 udir
 ufin

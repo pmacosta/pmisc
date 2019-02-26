@@ -47,7 +47,7 @@ Description
 .. import os, sys, pmisc, docs.support.requirements_to_rst
 .. file_name = sys.modules['docs.support.requirements_to_rst'].__file__
 .. mdir = os.path.join(os.path.realpath(
-..    os.path.dirname(os.path.dirname(os.path.dirname(file_name)))), 'sbin'
+..    os.path.dirname(os.path.dirname(os.path.dirname(file_name)))), 'pypkg'
 .. )
 .. docs.support.requirements_to_rst.def_links(cog)
 .. ]]]
@@ -125,7 +125,7 @@ Contributing
 
 	.. code-block:: bash
 
-		$ "${PMISC_DIR}"/sbin/complete-cloning.sh
+		$ "${PMISC_DIR}"/pypkg/complete-cloning.sh
                 Installing Git hooks
                 Building pmisc package documentation
                 ...
@@ -282,7 +282,7 @@ Contributing
    pipeline settings page).
 
 9. Document the new feature or bug fix (if needed). The script
-   :bash:`${PMISC_DIR}/sbin/build_docs.py` re-builds the whole package
+   :bash:`${PMISC_DIR}/pypkg/build_docs.py` re-builds the whole package
    documentation (re-generates images, cogs source files, etc.):
 
 	.. [[[cog pmisc.ste('build_docs.py -h', 0, mdir, cog.out) ]]]

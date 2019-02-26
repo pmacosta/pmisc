@@ -25,6 +25,6 @@ recursive-include docs *.rst
 recursive-include docs/support *.py
 include tests/pytest.ini
 recursive-include tests *.py
-recursive-include sbin *.sh
-recursive-include sbin *.py
+recursive-include pypkg *.sh
+recursive-include pypkg *.py
 recursive-include requirements *

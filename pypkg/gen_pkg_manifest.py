@@ -9,7 +9,7 @@ from __future__ import print_function
 import sys
 
 # Intra-package imports
-import sbin.functions
+import pypkg.functions
 
 
 ###
@@ -17,4 +17,4 @@ import sbin.functions
 ###
 if __name__ == "__main__":
     print("Generating MANIFEST.in file")
-    sbin.functions.gen_manifest("wheel" in sys.argv)
+    pypkg.functions.gen_manifest("wheel" in sys.argv)

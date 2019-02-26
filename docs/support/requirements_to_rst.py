@@ -8,7 +8,7 @@ import os
 import textwrap
 
 from pmisc.pkgdata import SUPPORTED_INTERPS
-from sbin.functions import json_load
+from pypkg.functions import json_load
 
 
 ###

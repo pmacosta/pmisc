@@ -27,10 +27,10 @@ import docutils
 import docutils.core
 
 # Intra-package imports
-import sbin.functions
+import pypkg.functions
 
 try:
-    from sbin.refresh_moddb import refresh_moddb
+    from pypkg.refresh_moddb import refresh_moddb
 except ImportError:
 
     def refresh_moddb():  # noqa
@@ -38,7 +38,7 @@ except ImportError:
 
 
 try:
-    from sbin.build_moddb import build_moddb
+    from pypkg.build_moddb import build_moddb
 except ImportError:
 
     def build_moddb():  # noqa
@@ -48,7 +48,7 @@ except ImportError:
 ###
 # Global variables
 ###
-VALID_MODULES = [sbin.functions.get_pkg_name()]
+VALID_MODULES = [pypkg.functions.get_pkg_name()]
 PKG_SUBMODULES = []
 
 
@@ -132,9 +132,11 @@ def build_pkg_docs(args):
         print("PATH: {0}".format(os.environ["PATH"]))
         print("PYTHONPATH: {0}".format(os.environ["PYTHONPATH"]))
         print("Cog: {0}".format(cog_exe))
-        print("sbin.functions: {0}".format(sbin.functions.__file__))
+        print("pypkg.functions: {0}".format(pypkg.functions.__file__))
         print(
-            "sbin.functions.subprocess: {0}".format(sbin.functions.subprocess.__file__)
+            "pypkg.functions.subprocess: {0}".format(
+                pypkg.functions.subprocess.__file__
+            )
         )
     if rebuild or test:
         refresh_moddb()
@@ -156,7 +158,7 @@ def build_pkg_docs(args):
     shutil.rmtree(os.path.join(pkg_dir, "docs", "_build"), ignore_errors=True)
     cwd = os.getcwd()
     os.chdir(os.path.join(pkg_dir, "docs"))
-    sbin.functions.shcmd(
+    pypkg.functions.shcmd(
         [
             "sphinx-build",
             "-b",
@@ -372,7 +374,7 @@ def rebuild_module_doc(test, src_dir, tracer_dir, cog_exe, debug):  # noqa
         orig_file = smf + ".orig"
         if test:
             shutil.copy(smf, orig_file)
-        stdout = sbin.functions.shcmd(
+        stdout = pypkg.functions.shcmd(
             [sys.executable, cog_exe, "-e", "-o", smf + ".tmp", smf],
             ("Error generating exceptions documentation " "in module {0}".format(smf)),
             async_stdout=debug,
@@ -437,7 +439,7 @@ def generate_top_level_readme(pkg_dir):
     print("Generating top-level README.rst file")
     with open(fname, "r") as fobj:
         lines = [item.rstrip() for item in fobj.readlines()]
-    pkg_name = sbin.functions.get_pkg_name()
+    pkg_name = pypkg.functions.get_pkg_name()
     ref1_regexp = re.compile(".*:py:mod:`(.+) <" + pkg_name + ".(.+)>`.*")
     ref2_regexp = re.compile(".*:py:mod:`" + pkg_name + ".(.+)`.*")
     ref3_regexp = re.compile(r".*:ref:`(.+?)(\s+<.+>)*`.*")
@@ -540,7 +542,7 @@ def generate_top_level_readme(pkg_dir):
             # log in the commit message history
             if fname != "CHANGELOG.rst":
                 fname = os.path.join(docs_dir, base_fname)
-                for inc_line in sbin.functions._readlines(fname):
+                for inc_line in pypkg.functions._readlines(fname):
                     comment = inc_line.lstrip().startswith(".. ")
                     if (not comment) or (comment and rst_cmd_regexp.match(inc_line)):
                         ret.append(inc_line.rstrip())
@@ -605,7 +607,7 @@ def which(name):
 
 if __name__ == "__main__":
     # pylint: disable=E0602
-    PKG_NAME = sbin.functions.get_pkg_name()
+    PKG_NAME = pypkg.functions.get_pkg_name()
     PKG_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PARSER = argparse.ArgumentParser(
         description="Build " + PKG_NAME + " package documentation"
