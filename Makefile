@@ -70,7 +70,6 @@ lint:
 meta: FORCE
 	@echo "Updating package meta-data"
 	@cd $(SBIN_DIR) && ./update_copyright_notice.py
-	@cd $(SBIN_DIR) && ./update_sphinx_conf.py
 	@cd $(SBIN_DIR) && ./gen_req_files.py
 	@cd $(SBIN_DIR) && ./gen_pkg_manifest.py
 
