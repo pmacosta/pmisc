@@ -54,7 +54,7 @@ def test_assert_exception():  # noqa: D202
     def func1(par1):
         if par1 == 1:
             raise RuntimeError("Exception 1")
-        elif par1 == 2:
+        if par1 == 2:
             raise ValueError("The number 1234 is invalid")
 
     pmisc.assert_exception(func1, RuntimeError, "Exception 1", par1=1)
