@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1737 utf-8
+personal_ws-1.1 en 1754 utf-8
 0x03000000
 9b0
 a4paper
@@ -104,6 +104,7 @@ BaseChecker
 BaseClass
 BaseException
 basename
+basepython
 bashcheck
 BashCheck
 BashCheckBuilder
@@ -162,6 +163,7 @@ ceil
 cfg
 cfiles
 cfilter
+changedir
 Changelog
 CHANGELOG
 chdir
@@ -397,7 +399,13 @@ EngineeringNotationSuffix
 EngPower
 ENGPOWER
 env
+envbindir
+envdir
 environ
+envlist
+envname
+envpython
+envsitepackagesdir
 eobj
 eol
 EOL
@@ -661,6 +669,7 @@ INDEP
 IndexError
 indianred
 indices
+inFile
 infixNotation
 ini
 inifile
@@ -1059,6 +1068,7 @@ othercontract
 otoken
 otokens
 otype
+outl
 ovalue
 pacakges
 pagerefs
@@ -1077,6 +1087,7 @@ pargs
 parseString
 partuple
 ParTuple
+passenv
 passthrough
 pathext
 PATHEXT
@@ -1137,6 +1148,7 @@ pointsize
 Popen
 pos
 posarg
+posargs
 PosInteger
 PositiveRealNum
 PositiveRealNumber
@@ -1193,6 +1205,7 @@ PyLint
 PylintCodes
 PylintCodesChecker
 pylintrc
+pymatrix
 PyPA
 pyparsing
 PyParsing
@@ -1387,6 +1400,7 @@ Serafini
 seriesA
 seriesB
 setattr
+setenv
 setitem
 setp
 setuptools
@@ -1525,6 +1539,7 @@ TestCreateArgumentValuePairs
 TestCsvFile
 TestCsvSource
 TestDataSource
+testenv
 TestExDoc
 TestExDocCxt
 TestExHandle
@@ -1580,6 +1595,8 @@ TouchstoneNoiseData
 TouchstoneOptions
 tox
 Tox
+toxinidir
+toxworkdir
 tpars
 tpl
 traceback

@@ -5,6 +5,7 @@
 .cilegacy/winsetup1.bat
 .cilegacy/winsetup2.bat
 .cilegacy/run_with_env.cmd
+.hooks/*
 pypkg/*
 azure-pipelines.yml
 data/exclude-spelling
