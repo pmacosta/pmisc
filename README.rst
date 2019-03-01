@@ -321,7 +321,7 @@ Contributing
 
 .. [#f2] It is assumed that all the Python interpreters are in the executables
    path. Source code for the interpreters can be downloaded from Python's main
-   `site <https://www.python.org/downloads>`_
+   `site <https://www.python.org/downloads/>`_
 
 .. [#f3] Tox configuration largely inspired by
    `Ionel's codelog <https://blog.ionelmc.ro/2015/04/14/

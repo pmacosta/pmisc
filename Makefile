@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2019 Pablo Acosta-Serafini
 # See LICENSE for details
 
-PKG_NAME := $(shell basename $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+PKG_NAME := $(shell basename $(dir $(abspath $(lastword $(MAKEFILE_LIST)))) | sed -r -e "s/-/_/g")
 PKG_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 REPO_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SOURCE_DIR ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))/$(PKG_NAME)
