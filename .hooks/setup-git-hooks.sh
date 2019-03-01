@@ -94,20 +94,25 @@ if [ "${email}" == 1 ]; then
 fi
 repo_dir=$(dirname "${sdir}")
 # Use pre-commit framework if possible
+hooks=('pre-commit')
 if [ -f "${repo_dir}/.pre-commit-config.yaml" ]; then
     if which pre-commit &> /dev/null; then
         cd "${repo_dir}" || exit 1
         echo "Setting up pre-commit framework"
         pre-commit install
-        finish 0
     fi
+    hooks=()
 fi
-# Default to legacy shell-based framework
-echo "Setting up shell pre-commit hook"
-git_hooks_dir=${repo_dir}/.git/hooks
-hooks=(pre-commit)
-cd "${git_hooks_dir}" || exit 1
-for hook in ${hooks[*]}; do
-	ln -s -f "${sdir}/${hook}" "${hook}"
-done
-finish 0
+gname="$(basename "$(git rev-parse --show-toplevel)")"
+if [ "${gname}" == "pypkg" ]; then
+    hooks+=('post-merge')
+fi
+if [ "${#hooks[@]}" != 0 ]; then
+    echo "Setting up shell hooks"
+    git_hooks_dir="$(git rev-parse --git-dir)"/hooks
+    cd "${git_hooks_dir}" || exit 1
+    for hook in ${hooks[*]}; do
+        echo "Setting ${hook} hook"
+        ln -s -f "${sdir}/${hook}" "${hook}"
+    done
+fi
