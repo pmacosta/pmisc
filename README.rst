@@ -269,7 +269,7 @@ Contributing
       in the appropriate virtual environment. Arguments to py.test can be passed
       in the command line after a double dash (``--``). The report can be found
       in
-      :bash:`${pmisc_DIR}/.tox/py[PV]/usr/share/pmisc/tests/htmlcov/index.html`
+      :bash:`${PMISC_DIR}/.tox/py[PV]/usr/share/pmisc/tests/htmlcov/index.html`
       where ``[PV]`` stands for ``27``, ``35``, ``36`` or ``37`` depending on
       the interpreter used
 
