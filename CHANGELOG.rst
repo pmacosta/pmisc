@@ -5,6 +5,8 @@
 Changelog
 =========
 
+* 1.5.5 [2019-03-02]: Fixed bug affecting pytest-pmisc plugin
+
 * 1.5.4 [2019-03-01]: Abstracted package management to a lightweight framework
 
 * 1.5.3 [2019-02-25]: Package management updates

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1754 utf-8
+personal_ws-1.1 en 1755 utf-8
 0x03000000
 9b0
 a4paper
@@ -1483,6 +1483,7 @@ str
 strerror
 strframe
 strftime
+striptext
 struct
 stxt
 stype

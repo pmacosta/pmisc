@@ -23,7 +23,12 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 # Intra-package imports
-from pypkg.functions import get_pkg_data_files, load_requirements, python_version
+from pypkg.functions import (
+    get_entry_points,
+    get_pkg_data_files,
+    load_requirements,
+    python_version,
+)
 
 ###
 # Supported interpreter check
@@ -173,6 +178,7 @@ setup(
     description=SHORT_DESC,
     long_description=LONG_DESCRIPTION,
     packages=[PKG_NAME],
+    entry_points=get_entry_points(),
     data_files=DATA_FILES,
     zip_safe=False,
     platforms="any",

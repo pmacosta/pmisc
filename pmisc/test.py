@@ -103,12 +103,19 @@ def _del_pmisc_test_frames(excinfo):
             self.new_tb = new_tb[0] if new_tb else None
             self.new_excinfo = (excinfo._excinfo[0], excinfo._excinfo[1], excinfo.tb)
             self.new_traceback = Traceback(excinfo.traceback[:offset])
+            self._striptext = ""
             for num, _ in enumerate(new_tb):
                 self.new_traceback[num]._rawentry = new_tb[num]
 
         @property
         def _excinfo(self):  # pragma: no cover
             return self.new_excinfo
+
+        def _get_traceback(self):  # pragma: no cover
+            return self.new_traceback
+
+        def _set_traceback(self, value):  # pragma: no cover
+            self.new_traceback = value
 
         @property
         def traceback(self):  # pragma: no cover
@@ -117,6 +124,8 @@ def _del_pmisc_test_frames(excinfo):
         @property
         def tb(self):  # pragma: no cover
             return self.new_tb
+
+        traceback = property(_get_traceback, _set_traceback)
 
     offset = _find_test_module_frame(traceback.extract_tb(excinfo._excinfo[2]))
     if offset:
