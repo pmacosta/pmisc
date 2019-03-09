@@ -1,4 +1,5 @@
-personal_ws-1.1 en 1755 utf-8
+personal_ws-1.1 en 1759 utf-8
+virtualenv
 0x03000000
 9b0
 a4paper
@@ -510,6 +511,7 @@ FileName
 FileNameExists
 filenames
 fillvalue
+filterwarnings
 FinalClass
 finterp
 FIve
@@ -897,6 +899,7 @@ modname
 moduleauthor
 ModuleType
 mopen
+mpl
 msec
 msg
 msgs
@@ -1112,6 +1115,7 @@ personal_ws-1.1 en 106 utf-8
 peru
 peta
 pexceptions
+pexdoc
 pexlist
 pflag
 pformat
@@ -1215,6 +1219,7 @@ pyplot
 pysix
 pytest
 Pytest
+PytestWarning
 pytho
 python3
 PYTHONHASHSEED

@@ -59,6 +59,7 @@ Description
 .. _Funcsigs: https://pypi.org/project/funcsigs
 .. _Mock: https://docs.python.org/3/library/unittest.mock.html
 .. _Numpy: http://www.numpy.org
+.. _Pydocstyle: http://www.pydocstyle.org
 .. _Pylint: https://www.pylint.org
 .. _Py.test: http://pytest.org
 .. _Pytest-coverage: https://pypi.org/project/pytest-cov
@@ -166,6 +167,8 @@ Contributing
     * `Numpy`_ (1.8.2 or newer)
 
     * `Py.test`_ (3.4.0 or newer)
+
+    * `Pydocstyle`_ (3.0.0 or newer)
 
     * `Pylint`_ (1.8.1 or newer)
 

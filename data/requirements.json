@@ -142,5 +142,13 @@
 		"cat":["docs", "rtd"],
 		"ver":">=1.0.5",
 		"pos":17
+	},
+	"pydocstyle":{
+		"name":"Pydocstyle",
+		"optional":false,
+		"url":"http://www.pydocstyle.org",
+		"cat":["tests"],
+		"ver":">=3.0.0",
+		"pos":18
 	}
 }

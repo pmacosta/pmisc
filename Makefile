@@ -18,7 +18,7 @@ PYLINT_CMD := pylint \
 	--output-format=colorized \
 	--reports=no \
 	--score=no
-LINT_DIRS := $(shell $(SBIN_DIR)/get-source-dirs.sh $(REPO_DIR) $(SOURCE_DIR) $(EXTRA_DIR))
+LINT_FILES := $(shell $(SBIN_DIR)/get-pylint-files.sh $(PKG_NAME) $(REPO_DIR) $(SOURCE_DIR) $(EXTRA_DIR))
 ###
 
 asort:
@@ -30,9 +30,8 @@ bdist: meta
 	@cd $(PKG_DIR) && python setup.py bdist
 
 black:
-	@echo "Blackifying Python files"
-	@echo "Locations: $(LINT_DIRS)"
-	@black $(LINT_DIRS)
+	@echo "Running Black on package files"
+	@black $(LINT_FILES)
 
 clean: FORCE
 	@echo "Cleaning package"
@@ -62,16 +61,21 @@ default:
 
 FORCE:
 
-lint:
-	@echo "Running Pylint on package files"
-	@echo "Locations: $(LINT_DIRS)"
-	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(LINT_DIRS)
+lint: pylint pydocstyle
 
 meta: FORCE
 	@echo "Updating package meta-data"
 	@cd $(SBIN_DIR) && ./update_copyright_notice.py
 	@cd $(SBIN_DIR) && ./gen_req_files.py
 	@cd $(SBIN_DIR) && ./gen_pkg_manifest.py
+
+pylint:
+	@echo "Running Pylint on package files"
+	@PYTHONPATH="$(PYLINT_PLUGINS_DIR):$(PYTHONPATH)" $(PYLINT_CMD) $(LINT_FILES)
+
+pydocstyle:
+	@echo "Running Pydocstyle on package files"
+	@pydocstyle --config=$(EXTRA_DIR)/.pydocstyle $(LINT_FILES)
 
 sdist: meta
 	@echo "Creating source distribution"

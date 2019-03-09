@@ -38,7 +38,12 @@ from pypkg.functions import (
 # package name by finding location of pkgdata file
 STEM = "pkgdata"
 FOUND = False
-for (DIRPATH, _, FNAMES) in os.walk(os.path.dirname(os.path.abspath(__file__))):
+START_DIR = os.path.dirname(os.path.abspath(__file__))
+for (DIRPATH, _, FNAMES) in os.walk(START_DIR):
+    # Ignore .tox, .git and other directories
+    if DIRPATH[len(START_DIR) + 1 :].startswith("."):
+        continue
+    #
     for FNAME in FNAMES:
         if os.path.splitext(os.path.basename(FNAME))[0] == STEM:
             FNAME = os.path.join(DIRPATH, FNAME)
