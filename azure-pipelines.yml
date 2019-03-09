@@ -236,6 +236,7 @@ jobs:
     displayName: Check code standards compliance
   - bash: |
       cd "${EXTRA_DIR}"/tests || exit 1
+      export PYTHONPATH="$("${SBIN_DIR}"/winnorm_path.py "${PYTHONPATH}")"
       if pytest --collect-only --doctest-glob="*.rst" "${EXTRA_DIR}"/docs &> /dev/null; then
         echo "Testing reStructuredText files"
         pytest --doctest-glob="*.rst" "${EXTRA_DIR}"/docs || exit 1
