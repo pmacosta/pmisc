@@ -17,36 +17,58 @@ jobs:
       linux_python27:
         imageName: 'ubuntu-16.04'
         python.version: '2.7'
+        aname: 'linux'
+        pyname: 'py27'
       linux_python35:
         imageName: 'ubuntu-16.04'
         python.version: '3.5'
+        aname: 'linux'
+        pyname: 'py25'
       linux_python36:
         imageName: 'ubuntu-16.04'
         python.version: '3.6'
+        aname: 'linux'
+        pyname: 'py36'
       linux_python37:
         imageName: 'ubuntu-16.04'
         python.version: '3.7'
+        aname: 'linux'
+        pyname: 'py37'
       mac_python27:
         imageName: 'macos-10.13'
         python.version: '2.7'
+        aname: 'macos'
+        pyname: 'py27'
       mac_python35:
         imageName: 'macos-10.13'
         python.version: '3.5'
+        aname: 'macos'
+        pyname: 'py35'
       mac_python36:
         imageName: 'macos-10.13'
         python.version: '3.6'
+        aname: 'macos'
+        pyname: 'py36'
       mac_python37:
         imageName: 'macos-10.13'
         python.version: '3.7'
+        aname: 'macos'
+        pyname: 'py37'
       windows_python35:
         imageName: 'vs2017-win2016'
         python.version: '3.5'
+        aname: 'windows'
+        pyname: 'py35'
       windows_python36:
         imageName: 'vs2017-win2016'
         python.version: '3.6'
+        aname: 'windows'
+        pyname: 'py36'
       windows_python37:
         imageName: 'vs2017-win2016'
         python.version: '3.7'
+        aname: 'windows'
+        pyname: 'py37'
 
   pool:
     vmImage: $(imageName)
@@ -75,6 +97,7 @@ jobs:
       export RESULTS_DIR=${REPO_DIR}/results
       export SOURCE_DIR=${PYTHON_SITE_PACKAGES}/${PKG_NAME_DIR}
       export TRACER_DIR=${EXTRA_DIR}/docs/support
+      export ARTIFACTS_DIR=${EXTRA_DIR}/artifacts
       export PYTHONPATH=${PYTHONPATH}:${SBIN_DIR}:${EXTRA_DIR}:${EXTRA_DIR}/tests:${EXTRA_DIR}/docs:${EXTRA_DIR}/docs/support
       export COV_FILE=${SOURCE_DIR}/.coveragerc_ci_${INTERP}
       export LANG="en_US.UTF-8"
@@ -90,6 +113,7 @@ jobs:
       echo "##vso[task.setvariable variable=RESULTS_DIR]$RESULTS_DIR"
       echo "##vso[task.setvariable variable=SOURCE_DIR]$SOURCE_DIR"
       echo "##vso[task.setvariable variable=TRACER_DIR]$TRACER_DIR"
+      echo "##vso[task.setvariable variable=ARTIFACTS_DIR]$ARTIFACTS_DIR"
       echo "##vso[task.setvariable variable=PYTHONPATH]$PYTHONPATH"
       echo "##vso[task.setvariable variable=COV_FILE]$COV_FILE"
       echo "##vso[task.setvariable variable=LANG]$LANG"
@@ -107,6 +131,7 @@ jobs:
       echo "RESULTS_DIR=${RESULTS_DIR}"
       echo "SOURCE_DIR=${SOURCE_DIR}"
       echo "TRACER_DIR=${TRACER_DIR}"
+      echo "ARTIFACTS_DIR=${ARTIFACTS_DIR}"
       echo "PYTHONPATH=${PYTHONPATH}"
       echo "COV_FILE=${COV_FILE}"
       echo "LANG=${LANG}"
@@ -144,6 +169,7 @@ jobs:
   - bash: |
       mkdir -p ${RESULTS_DIR}/testresults
       mkdir -p ${RESULTS_DIR}/codecoverage
+      mkdir -p ${ARTIFACTS_DIR}
     displayName: Create directories
   - bash: |
       "${REPO_DIR}"/pypkg/fix_windows_symlinks.py
@@ -237,6 +263,7 @@ jobs:
   - bash: |
       cd "${EXTRA_DIR}"/tests || exit 1
       export PYTHONPATH="$("${SBIN_DIR}"/winnorm_path.py "${PYTHONPATH}")"
+      export ARTIFACTS_DIR="$("${SBIN_DIR}"/winnorm_path.py "${ARTIFACTS_DIR}")"
       if pytest --collect-only --doctest-glob="*.rst" "${EXTRA_DIR}"/docs &> /dev/null; then
         echo "Testing reStructuredText files"
         pytest --doctest-glob="*.rst" "${EXTRA_DIR}"/docs || exit 1
@@ -253,12 +280,26 @@ jobs:
           "${SBIN_DIR}"/build_docs.py -r -t -d "$("${SBIN_DIR}"//winnorm_path.py "${SOURCE_DIR}")" || exit 1
       fi
     displayName: Documentation rebuild test
+  - task: ArchiveFiles@2
+    condition: failed()
+    inputs:
+      rootFolderOrFile: '$(ARTIFACTS_DIR)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(aname)-$(pyname).zip'
+      replaceExistingArchive: true
+  - task: PublishBuildArtifacts@1
+    condition: failed()
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: build_artifacts
   - task: PublishTestResults@2
     condition: succeededOrFailed()
     inputs:
       testResultsFiles: '$(RESULTS_DIR)/testresults/**/test-*.xml'
       testRunTitle: 'Publish test results for Python $(python.version)'
   - task: PublishCodeCoverageResults@1
+    condition: succeededOrFailed()
     inputs:
       codeCoverageTool: Cobertura
       summaryFileLocation: '$(RESULTS_DIR)/codecoverage/**/coverage.xml'

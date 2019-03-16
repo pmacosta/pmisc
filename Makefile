@@ -87,6 +87,8 @@ sterile: clean
 	@rm -rf $(PKG_DIR)/.tox
 
 test: FORCE
+	@cd $(SBIN_DIR) && ./gen_req_files.py
+	@cd $(SBIN_DIR) && ./gen_pkg_manifest.py
 	@$(SBIN_DIR)/rtest.sh $(ARGS)
 
 upload: lint distro
