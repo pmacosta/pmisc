@@ -34,7 +34,7 @@
 	"decorator":{
 		"name":"Decorator",
 		"optional":false,
-		"url":"https://decorator.readthedocs.io",
+		"url":"https://raw.githubusercontent.com/micheles/decorator/master/docs/documentation.md",
 		"cat":["main", "rtd"],
 		"ver":">=4.2.1",
 		"pos":4

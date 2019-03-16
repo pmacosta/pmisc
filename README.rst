@@ -54,7 +54,8 @@ Description
 .. _Astroid: https://bitbucket.org/logilab/astroid
 .. _Cog: https://nedbatchelder.com/code/cog
 .. _Coverage: https://coverage.readthedocs.io
-.. _Decorator: https://decorator.readthedocs.io
+.. _Decorator: https://raw.githubusercontent.com/micheles/decorator/mast
+   er/docs/documentation.md
 .. _Docutils: http://docutils.sourceforge.net/docs
 .. _Funcsigs: https://pypi.org/project/funcsigs
 .. _Mock: https://docs.python.org/3/library/unittest.mock.html
@@ -68,8 +69,8 @@ Description
 .. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
-.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
-   /sphinxcontrib-shellcheck
+.. _Shellcheck Linter Sphinx Extension:
+   https://pypi.org/project/sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 .. [[[end]]]
