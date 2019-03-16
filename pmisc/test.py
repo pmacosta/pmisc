@@ -12,6 +12,7 @@ import re
 import sys
 import traceback
 import uuid
+import warnings
 
 if sys.hexversion < 0x03000000:  # pragma: no cover
     from itertools import izip_longest
@@ -294,7 +295,9 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
     The mismatch may be it due to a different exception type or a different
     exception message or both.
     """
-    regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
     actmsg = get_exmsg(excinfo)
     acttype = (
         exception_type_str(excinfo.type)
