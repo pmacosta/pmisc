@@ -133,25 +133,30 @@ def incfile(fname, fpointer, lrange=None, sdir=None):
     fpointer(os.linesep)
 
 
-def ste(command, nindent, mdir, fpointer):
+def ste(command, nindent, mdir, fpointer, env=None):
     """
     Print STDOUT of a shell command formatted in reStructuredText.
 
     This is a simplified version of :py:func:`pmisc.term_echo`.
 
-    :param command: Shell command, relative to **mdir**
+    :param command: Shell command (relative to **mdir** if **env** is not given)
     :type  command: string
 
     :param nindent: Indentation level
     :type  nindent: integer
 
-    :param mdir: Module directory
+    :param mdir: Module directory, used if **env** is not given
     :type  mdir: string
 
     :param fpointer: Output function pointer. Normally is :code:`cog.out` but
                      :code:`print` or other functions can be used for
                      debugging
     :type  fpointer: function object
+
+    :param env: Environment dictionary. If not provided, the environment
+                dictionary is the key "PKG_BIN_DIR" with the value of the
+                **mdir**
+    :type  env: dictionary
 
     For example::
 
@@ -176,15 +181,14 @@ def ste(command, nindent, mdir, fpointer):
         .. ]]]
 
     """
-    term_echo(
-        LDELIM
-        + "PKG_BIN_DIR"
-        + RDELIM
-        + "{sep}{cmd}".format(sep=os.path.sep, cmd=command),
-        nindent,
-        {"PKG_BIN_DIR": mdir},
-        fpointer,
+    sdir = LDELIM + "PKG_BIN_DIR" + RDELIM
+    command = (
+        sdir + ("{sep}{cmd}".format(sep=os.path.sep, cmd=command))
+        if env is None
+        else command
     )
+    env = {"PKG_BIN_DIR": mdir} if env is None else env
+    term_echo(command, nindent, env, fpointer)
 
 
 def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
@@ -226,6 +230,7 @@ def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
     command_int = command
     if env:
         for var, repl in env.items():
+            command_int = command_int.replace('"' + LDELIM + var + RDELIM + '"', repl)
             command_int = command_int.replace(LDELIM + var + RDELIM, repl)
     tokens = command_int.split(" ")
     # Add Python interpreter executable for Python scripts on Windows since

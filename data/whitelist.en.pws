@@ -1,4 +1,5 @@
-personal_ws-1.1 en 1762 utf-8
+personal_ws-1.1 en 1765 utf-8
+sc
 0x03000000
 9b0
 a4paper
@@ -132,6 +133,7 @@ bnode
 bobj
 bool
 boolean
+branchName
 btype
 buf
 BuGn
@@ -679,6 +681,7 @@ init
 Init
 inline
 inlinesyntaxhighlight
+installdeps
 instantiation
 interp
 InterpolatedUnivariateSpline
@@ -1268,6 +1271,7 @@ readlink
 readme
 README
 readouterr
+readthedocs
 ReadTheDocs
 READTHEDOCS
 RealNum

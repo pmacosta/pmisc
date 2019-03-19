@@ -3,6 +3,9 @@
 # See LICENSE for details
 # pylint: disable=C0111
 
+# Standard library imports
+import os
+
 
 ###
 # Global variables
@@ -12,6 +15,15 @@ SUPPORTED_INTERPS = ["2.7", "3.5", "3.6", "3.7"]
 COPYRIGHT_START = 2013
 PKG_DESC = (
     "Miscellaneous utility functions that can be applied in a variety of circumstances"
+)
+PKG_LONG_DESC = (
+    "This module contains miscellaneous utility functions that can be applied in a "
+    + "variety of circumstances; there are context managers, membership functions "
+    + "(test if an argument is of a given type), numerical functions, string "
+    + "functions and functions to aid in the unit testing of modules "
+    + ""
+    + os.linesep
+    + "`Pytest`_ is the supported test runner"
 )
 
 
