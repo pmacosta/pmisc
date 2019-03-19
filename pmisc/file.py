@@ -24,7 +24,7 @@ def make_dir(fname):
 
         $ fname="${HOME}/mydir/myfile.txt"
         $ dir=$(dirname "${fname}")
-        $ mkdir -p ${dir}
+        $ mkdir -p "${dir}"
 
     :param fname: Fully qualified file name
     :type  fname: string

@@ -69,8 +69,8 @@ Description
 .. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
-.. _Shellcheck Linter Sphinx Extension:
-   https://pypi.org/project/sphinxcontrib-shellcheck
+.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
+   /sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 .. [[[end]]]
@@ -116,7 +116,7 @@ Contributing
               https://github.com/"${github_user}"/pmisc.git
         Cloning into 'pmisc'...
         ...
-        $ cd pmisc
+        $ cd pmisc || exit 1
         $ export PMISC_DIR=${PWD}
 
 3. Install the project's Git hooks and build the documentation. The pre-commit
