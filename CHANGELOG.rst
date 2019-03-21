@@ -5,6 +5,8 @@
 Changelog
 =========
 
+* 1.5.7 [2019-03-21]: Small enhancement to ste API to make it more flexible.
+
 * 1.5.6 [2019-03-16]: Suppress warnings while extracting exception message
 
 * 1.5.5 [2019-03-02]: Fixed bug affecting pytest-pmisc plugin
