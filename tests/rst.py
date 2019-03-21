@@ -205,7 +205,7 @@ def test_ste():
     # pylint: disable=W0702
     def make_ref(rlist, indent=0):
         return LSEP.join(
-            ["", (indent * " ") + ".. code-block:: bash", ""] + rlist + ["", ""]
+            ["", (indent * " ") + ".. code-block:: console", ""] + rlist + ["", ""]
         )
 
     obj = pmisc.ste
@@ -233,7 +233,7 @@ def test_term_echo():  # noqa: D202
 
     def make_ref(rlist, indent=0):
         return LSEP.join(
-            ["", (indent * " ") + ".. code-block:: bash", ""] + rlist + ["", ""]
+            ["", (indent * " ") + ".. code-block:: console", ""] + rlist + ["", ""]
         )
 
     obj = pmisc.term_echo
@@ -258,7 +258,7 @@ def test_term_echo():  # noqa: D202
         cmd = LDELIM + "PYTHON_CMD" + RDELIM + " " + fname
         header = [
             "",
-            ".. code-block:: bash",
+            ".. code-block:: console",
             "",
             "    $ " + cmd + " -h",
             "    usage: " + os.path.basename(fname) + " [-h] [-d DIRECTORY]",

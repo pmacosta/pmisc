@@ -172,11 +172,12 @@ def ste(command, nindent, mdir, fpointer, env=None):
         .. )
         .. [[[cog ste('build_docs.py -h', 0, mdir, cog.out) ]]]
 
-        .. code-block:: bash
+        .. code-block:: console
 
         $ ${PKG_BIN_DIR}/build_docs.py -h
         usage: build_docs.py [-h] [-d DIRECTORY] [-n NUM_CPUS]
         ...
+        $
 
         .. ]]]
 
@@ -246,7 +247,7 @@ def term_echo(command, nindent=0, env=None, fpointer=None, cols=60):
     stdout = stdout.split("\n")
     indent = nindent * " "
     fpointer(os.linesep)
-    fpointer("{0}.. code-block:: bash{1}".format(indent, os.linesep))
+    fpointer("{0}.. code-block:: console{1}".format(indent, os.linesep))
     fpointer(os.linesep)
     fpointer("{0}    $ {1}{2}".format(indent, command, os.linesep))
     for line in stdout:

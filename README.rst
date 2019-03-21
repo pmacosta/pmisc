@@ -570,7 +570,7 @@ Contributing
    documentation (re-generates images, cogs source files, etc.):
 
 
-   .. code-block:: bash
+   .. code-block:: console
 
        $ "${PMISC_DIR}"/pypkg/build_docs.py -h
        usage: build_docs.py [-h] [-d DIRECTORY] [-r]
