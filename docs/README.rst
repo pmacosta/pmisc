@@ -21,6 +21,7 @@
 .. PKG_VER = pypkg.functions.get_pkg_version()
 .. PKG_INTERPS = pypkg.functions.get_supported_interps()
 .. PKG_LONG_DESC = pypkg.functions.get_pkg_long_desc()
+.. PKG_PIPELINE_ID = str(pypkg.functions.get_pkg_pipeline_id())
 .. LINE_LENGTH = 78
 .. PKG_INTERPS_STR = str(PKG_INTERPS[0]) if len(PKG_INTERPS) == 1 else ", ".join(PKG_INTERPS[:-1])+ " and " + PKG_INTERPS[-1]
 .. def wrap(text, hanging_indent=0):
@@ -50,12 +51,12 @@
 .. cog.outl("")
 .. cog.outl(".. image::")
 .. cog.outl("    https://dev.azure.com/pmasdev/"+PKG_NAME+"/_apis/build/status/pmacosta."+PKG_NAME+"?branchName=master")
-.. cog.outl("    :target: https://dev.azure.com/pmasdev/"+PKG_NAME+"/_build?definitionId=3&_a=summary")
+.. cog.outl("    :target: https://dev.azure.com/pmasdev/"+PKG_NAME+"/_build?definitionId="+PKG_PIPELINE_ID+"&_a=summary")
 .. cog.outl("    :alt: Continuous integration test status")
 .. cog.outl("")
 .. cog.outl(".. image::")
-.. cog.outl("    https://img.shields.io/azure-devops/coverage/pmasdev/"+PKG_NAME+"/3.svg")
-.. cog.outl("    :target: https://dev.azure.com/pmasdev/"+PKG_NAME+"/_build?definitionId=3&_a=summary")
+.. cog.outl("    https://img.shields.io/azure-devops/coverage/pmasdev/"+PKG_NAME+"/"+PKG_PIPELINE_ID+".svg")
+.. cog.outl("    :target: https://dev.azure.com/pmasdev/"+PKG_NAME+"/_build?definitionId="+PKG_PIPELINE_ID+"&_a=summary")
 .. cog.outl("    :alt: Continuous integration test coverage")
 .. cog.outl("")
 .. cog.outl(".. image::")

@@ -25,6 +25,7 @@ PKG_LONG_DESC = (
     + os.linesep
     + "`Pytest`_ is the supported test runner"
 )
+PKG_PIPELINE_ID = 3
 
 
 ###
