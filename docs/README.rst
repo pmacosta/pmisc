@@ -1,7 +1,7 @@
 .. README.rst
 .. Copyright (c) 2013-2019 Pablo Acosta-Serafini
 .. See LICENSE for details
-
+.. [REMOVE START]
 .. [[[cog
 .. # Standard library imports
 .. import os
@@ -30,6 +30,7 @@
 .. def tox_targets(prefix):
 ..     interps = ["``py"+str(interp).replace(".", "")+"-"+prefix+"``" for interp in PKG_INTERPS]
 ..     return interps[0] if len(interps) == 1 else ", ".join(interps[:-1])+ " and " + interps[-1]
+.. cog.outl(".. [REMOVE STOP]")
 .. cog.outl("")
 .. cog.outl(".. image:: https://badge.fury.io/py/"+PKG_NAME+".svg")
 .. cog.outl("    :target: https://pypi.org/project/"+PKG_NAME+"")
@@ -165,7 +166,7 @@
 .. cog.outl("       ...")
 .. for pyver in PKG_INTERPS:
 ..     cog.outl("         py{0}-pkg: commands succeeded".format(str(pyver).replace(".", "")))
-.. cog.outl("           congratulations :)")
+.. cog.outl("         congratulations :)")
 .. cog.outl("       $")
 .. cog.outl("")
 .. cog.outl("   `Setuptools <https://bitbucket.org/pypa/setuptools>`_ can also be used")
@@ -240,7 +241,7 @@
 .. cog.outl("")
 .. cog.outl("      .. code-block:: console")
 .. cog.outl("")
-.. cog.outl("          $ PKG_NAME="+PKG_NAME+" tox -e py27-test -- -x test_"+PKG_NAME+".py")
+.. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox -e py27-test -- -x test_"+PKG_NAME+".py")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
 .. cog.outl("       py27-pkg inst-nodeps: .../"+PKG_NAME+"/.tox/.tmp/package/1/"+PKG_NAME+"-"+PKG_VER+".zip")
 .. cog.outl("       ...")
@@ -288,7 +289,10 @@
 .. cog.outl("=======")
 .. cog.outl("")
 .. cog.outl(".. include:: ../LICENSE")
+.. cog.outl("")
+.. cog.outl(".. [REMOVE START]")
 .. ]]]
+.. [REMOVE STOP]
 
 .. image:: https://badge.fury.io/py/pmisc.svg
     :target: https://pypi.org/project/pmisc
@@ -480,7 +484,7 @@ Contributing
          py35-pkg: commands succeeded
          py36-pkg: commands succeeded
          py37-pkg: commands succeeded
-           congratulations :)
+         congratulations :)
        $
 
    `Setuptools <https://bitbucket.org/pypa/setuptools>`_ can also be used
@@ -547,7 +551,7 @@ Contributing
 
       .. code-block:: console
 
-          $ PKG_NAME=pmisc tox -e py27-test -- -x test_pmisc.py
+       $ PKG_NAME=pmisc tox -e py27-test -- -x test_pmisc.py
        GLOB sdist-make: .../pmisc/setup.py
        py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.7.zip
        ...
@@ -615,4 +619,7 @@ License
 =======
 
 .. include:: ../LICENSE
+
+.. [REMOVE START]
 .. [[[end]]]
+.. [REMOVE STOP]
