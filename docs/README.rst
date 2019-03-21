@@ -89,7 +89,7 @@
 .. cog.outl("Installing")
 .. cog.outl("==========")
 .. cog.outl("")
-.. cog.outl(".. code-block:: bash")
+.. cog.outl(".. code-block:: console")
 .. cog.outl("")
 .. cog.outl("	$ pip install "+PKG_NAME)
 .. cog.outl("")
@@ -110,7 +110,7 @@
 .. )
 .. wrap(blurb, 3)
 .. cog.outl("")
-.. cog.outl("    .. code-block:: bash")
+.. cog.outl("    .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("        $ github_user=myname")
 .. cog.outl("        $ git clone --recurse-submodules \\")
@@ -128,7 +128,7 @@
 .. cog.outl("   <https://pre-commit.com/>`_ is used to perform various pre-commit code")
 .. cog.outl("   quality and consistency checks. To enable the pre-commit hooks:")
 .. cog.outl("")
-.. cog.outl("    .. code-block:: bash")
+.. cog.outl("    .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("        $ cd \"${"+PKG_NAME.upper()+"_DIR}\" || exit 1")
 .. cog.outl("        $ pre-commit install")
@@ -140,7 +140,7 @@
 .. cog.outl("   `sys.paths() <https://docs.python.org/3/library/sys.html#sys.path>`_,")
 .. cog.outl("   etc.)")
 .. cog.outl("")
-.. cog.outl("   .. code-block:: bash")
+.. cog.outl("   .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("       $ export PYTHONPATH=${PYTHONPATH}:${"+PKG_NAME.upper()+"_DIR}")
 .. cog.outl("       $")
@@ -155,7 +155,7 @@
 .. cog.outl("   coverage of the contribution. Thorough package validation")
 .. cog.outl("   can be done via Tox and Pytest:")
 .. cog.outl("")
-.. cog.outl("   .. code-block:: bash")
+.. cog.outl("   .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
@@ -170,7 +170,7 @@
 .. cog.outl("   `Setuptools <https://bitbucket.org/pypa/setuptools>`_ can also be used")
 .. cog.outl("   (Tox is configured as its virtual environment manager):")
 .. cog.outl("")
-.. cog.outl("   .. code-block:: bash")
+.. cog.outl("   .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("       $ PKG_NAME="+PKG_NAME+" python setup.py tests")
 .. cog.outl("       running tests")
@@ -195,7 +195,7 @@
 .. )
 .. wrap((" "*3)+blurb, hanging_indent=3)
 .. cog.outl("")
-.. cog.outl("   .. code-block:: bash")
+.. cog.outl("   .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox -e py27-pkg -- -n 4")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
@@ -208,7 +208,7 @@
 .. cog.outl("   Or use the :code:`-a` Setuptools optional argument followed by a quoted")
 .. cog.outl("   string with the arguments for Pytest. For example:")
 .. cog.outl("")
-.. cog.outl("   .. code-block:: bash")
+.. cog.outl("   .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("       $ PKG_NAME="+PKG_NAME+" python setup.py tests -a \"-e py27-pkg -- -n 4\"")
 .. cog.outl("       running tests")
@@ -237,7 +237,7 @@
 .. )
 .. wrap((" "*4)+blurb, hanging_indent=6)
 .. cog.outl("")
-.. cog.outl("      .. code-block:: bash")
+.. cog.outl("      .. code-block:: console")
 .. cog.outl("")
 .. cog.outl("          $ PKG_NAME="+PKG_NAME+" tox -e py27-test -- -x test_"+PKG_NAME+".py")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
@@ -368,7 +368,7 @@ under Linux (Debian, Ubuntu), Apple macOS and Microsoft Windows
 Installing
 ==========
 
-.. code-block:: bash
+.. code-block:: console
 
 	$ pip install pmisc
 
@@ -386,7 +386,7 @@ Contributing
 2. Fork the `repository <https://github.com/pmacosta/pmisc>`_ from GitHub and
    then clone personal copy [#f1]_:
 
-    .. code-block:: bash
+    .. code-block:: console
 
         $ github_user=myname
         $ git clone --recurse-submodules \
@@ -404,7 +404,7 @@ Contributing
    <https://pre-commit.com/>`_ is used to perform various pre-commit code
    quality and consistency checks. To enable the pre-commit hooks:
 
-    .. code-block:: bash
+    .. code-block:: console
 
         $ cd "${PMISC_DIR}" || exit 1
         $ pre-commit install
@@ -416,7 +416,7 @@ Contributing
    `sys.paths() <https://docs.python.org/3/library/sys.html#sys.path>`_,
    etc.)
 
-   .. code-block:: bash
+   .. code-block:: console
 
        $ export PYTHONPATH=${PYTHONPATH}:${PMISC_DIR}
        $
@@ -468,7 +468,7 @@ Contributing
    coverage of the contribution. Thorough package validation
    can be done via Tox and Pytest:
 
-   .. code-block:: bash
+   .. code-block:: console
 
        $ PKG_NAME=pmisc tox
        GLOB sdist-make: .../pmisc/setup.py
@@ -485,7 +485,7 @@ Contributing
    `Setuptools <https://bitbucket.org/pypa/setuptools>`_ can also be used
    (Tox is configured as its virtual environment manager):
 
-   .. code-block:: bash
+   .. code-block:: console
 
        $ PKG_NAME=pmisc python setup.py tests
        running tests
@@ -509,7 +509,7 @@ Contributing
    exceptions documentation. To pass arguments to Pytest (the test runner) use
    a double dash (``--``) after all the Tox arguments, for example:
 
-   .. code-block:: bash
+   .. code-block:: console
 
        $ PKG_NAME=pmisc tox -e py27-pkg -- -n 4
        GLOB sdist-make: .../pmisc/setup.py
@@ -522,7 +522,7 @@ Contributing
    Or use the :code:`-a` Setuptools optional argument followed by a quoted
    string with the arguments for Pytest. For example:
 
-   .. code-block:: bash
+   .. code-block:: console
 
        $ PKG_NAME=pmisc python setup.py tests -a "-e py27-pkg -- -n 4"
        running tests
@@ -544,7 +544,7 @@ Contributing
       appropriate virtual environment. Arguments to pytest can be passed in
       the command line after a double dash (``--``) , for example:
 
-      .. code-block:: bash
+      .. code-block:: console
 
           $ PKG_NAME=pmisc tox -e py27-test -- -x test_pmisc.py
        GLOB sdist-make: .../pmisc/setup.py
