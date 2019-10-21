@@ -1,5 +1,4 @@
-personal_ws-1.1 en 1765 utf-8
-sc
+personal_ws-1.1 en 1772 utf-8
 0x03000000
 9b0
 a4paper
@@ -150,8 +149,8 @@ C0111
 C0113
 C0411
 cadetblue
-callables
 callable's
+callables
 Callables
 CALLABLES
 capsys
@@ -696,6 +695,7 @@ iobj
 IOError
 iom
 iomm
+Ionel
 Ionel's
 ipsum
 IRawChecker
@@ -754,6 +754,7 @@ LambdaType
 lang
 lasti
 lastword
+LaTeX
 lavenderblush
 lawngreen
 lcount
@@ -842,6 +843,7 @@ lvector
 macOS
 makedir
 makedirs
+makefile
 Makefile
 makereport
 mant
@@ -985,6 +987,7 @@ nom
 NoNe
 None's
 NONINFRINGEMENT
+nonlocal
 NonNegativeInteger
 NonNullString
 noopt
@@ -1281,6 +1284,7 @@ realpath
 rebase
 Rebase
 rect
+recurse
 recursed
 refactoring
 refstr
@@ -1342,8 +1346,8 @@ rmul
 rnode
 rnum
 ro
-robj
 r'obj
+robj
 rootdir
 ror
 rosybrown
@@ -1383,6 +1387,7 @@ sandybrown
 sarg
 sbin
 SBIN
+sc
 schar
 scipy
 Scipy
@@ -1421,6 +1426,7 @@ sfn
 sfname
 sfunc
 sharex
+shat
 shcmd
 shellcheck
 ShellCheck
@@ -1694,8 +1700,8 @@ W1113
 W9900
 W9904
 warnfunc
-waveforms
 waveform's
+waveforms
 Waveforms
 WaveInterpolationOption
 WaveInterpOption

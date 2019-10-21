@@ -25,7 +25,7 @@ repos:
   - id: black
     language_version: python3.7
 - repo: https://github.com/pmacosta/pre-commit-hooks
-  rev: v1.4.8
+  rev: v1.4.9
   hooks:
   - id: header
   - id: identity
@@ -39,7 +39,7 @@ repos:
   hooks:
   - id: pylint
     name: Check file complies with PEP8
-    entry: python -m pylint.__main__
+    entry: python3 -m pylint.__main__
     language: system
     types: [python]
     args: [--reports=n, --score=n, --rcfile=./.pylintrc]

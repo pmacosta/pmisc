@@ -77,8 +77,11 @@
 .. cog.outl("")
 .. cog.outl("")
 .. for paragraph in PKG_LONG_DESC.split(os.linesep):
-..     wrap(paragraph)
-..     cog.outl("")
+..     if paragraph.strip():
+..         wrap(paragraph)
+..     else:
+..         cog.outl("")
+.. cog.outl("")
 .. cog.outl("Interpreter")
 .. cog.outl("===========")
 .. cog.outl("")
@@ -361,7 +364,6 @@ This module contains miscellaneous utility functions that can be applied in a
 variety of circumstances; there are context managers, membership functions
 (test if an argument is of a given type), numerical functions, string
 functions and functions to aid in the unit testing of modules
-
 `Pytest`_ is the supported test runner
 
 Interpreter
