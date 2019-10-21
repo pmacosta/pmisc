@@ -6,6 +6,7 @@
 
 # Standard library imports
 from __future__ import print_function
+import builtins
 import copy
 import os
 import re
@@ -295,9 +296,11 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
     The mismatch may be it due to a different exception type or a different
     exception message or both.
     """
+    tracing = _stop_tracing()
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
         regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
+    _start_tracing(tracing)
     actmsg = get_exmsg(excinfo)
     acttype = (
         exception_type_str(excinfo.type)
@@ -320,6 +323,30 @@ def _raise_if_not_raised(eobj, exmsg=None):
     """Raise an exception if there was no exception raised (and it should have been)."""
     if get_exmsg(eobj).upper().startswith("DID NOT RAISE"):
         raise AssertionError(exmsg or "Did not raise")
+
+
+def _start_tracing(tracing):
+    """
+    Conditionally (re)start exception tracing.
+
+    Done this way to avoid circular dependency with pexdoc.exh module.
+    """
+    exhobj = getattr(builtins, "_EXH", None)
+    if tracing:
+        exhobj.start_tracing()
+
+
+def _stop_tracing():
+    """
+    Stop exception tracing.
+
+    Done this way to avoid circular dependency with pexdoc.exh module.
+    """
+    exhobj = getattr(builtins, "_EXH", None)
+    tracing = exhobj.tracing if exhobj is not None else False
+    if tracing:
+        exhobj.stop_tracing()
+    return tracing
 
 
 ###
@@ -420,6 +447,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
      * RuntimeError (Illegal number of arguments)
     """
     # Collect function arguments
+    tracing = _stop_tracing()
     arg_dict = {}
     if args:
         fargs = _get_fargs(fpointer, no_self=True)
@@ -427,6 +455,7 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
             raise RuntimeError("Illegal number of arguments")
         arg_dict = dict(zip(fargs, args))
     arg_dict.update(kwargs)
+    _start_tracing(tracing)
     # Execute function and catch exception
     inner_ex = False
     eobj = None
