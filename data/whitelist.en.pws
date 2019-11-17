@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1772 utf-8
+personal_ws-1.1 en 1791 utf-8
 0x03000000
 9b0
 a4paper
@@ -126,6 +126,7 @@ Blackifying
 blanchedalmond
 BLANKLINE
 blog
+blogentry
 blueviolet
 bmp
 bnode
@@ -602,6 +603,7 @@ github
 GitHub
 gitignore
 globals
+gmail
 gmap
 GnBu
 greenyellow
@@ -625,6 +627,8 @@ htaccess
 html
 htmlcov
 htmlhelp
+http
+https
 hunspell
 Huy
 hvec
@@ -735,6 +739,7 @@ ivar
 ivector
 IXUSR
 izip
+jeffknupp
 json
 JSON
 kcg
@@ -820,6 +825,7 @@ lobj
 loc
 locs
 lOg
+logilab
 loglog
 longrepr
 loren
@@ -1042,6 +1048,7 @@ obranch
 ocols
 oct
 odata
+oddbird
 odg
 odict
 odv
@@ -1091,6 +1098,7 @@ papersize
 param
 Param
 parameterized
+parametrize
 params
 parg
 pargs
@@ -1147,6 +1155,8 @@ pluggy
 plugin
 plugins
 PLUGINS
+pmacosta
+pmasdev
 pmisc
 PMISC
 PmiscExceptionInfo
@@ -1174,6 +1184,7 @@ pre
 prec
 PREC
 prepended
+preso
 prf
 printf
 priv
@@ -1229,11 +1240,15 @@ Pytest
 PytestWarning
 pytho
 python3
+pythonconquerstheuniverse
+pythonconquerstheuniversed
 PYTHONHASHSEED
+pythonic
 pythonpath
 PYTHONPATH
 pyver
 pyvers
+pyvideo
 quickstart
 R0205
 R0903
@@ -1482,6 +1497,7 @@ srclines
 sshippable
 ssid
 ssign
+stackoverflow
 sTaiRcAsE
 STAIRcase
 starargs
@@ -1720,12 +1736,14 @@ winnorm
 wint
 wintegral
 wobj
+wordpress
 writelines
 writerows
 wround
 wsindent
 wsregexp
 wvalue
+www
 xaxis
 xbb
 xbf
@@ -1768,6 +1786,7 @@ zA
 zcvf
 zepto
 zetta
+zoomquiet
 zorder
 zvec
 zzz

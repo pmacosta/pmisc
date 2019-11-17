@@ -50,14 +50,15 @@ Description
 .. _Docutils: http://docutils.sourceforge.net/docs
 .. _Funcsigs: https://pypi.org/project/funcsigs
 .. _Mock: https://docs.python.org/3/library/unittest.mock.html
-.. _Numpy: http://www.numpy.org
+.. _Numpy: https://numpy.org
 .. _Pydocstyle: http://www.pydocstyle.org
 .. _Pylint: https://www.pylint.org
 .. _Pytest: http://pytest.org
 .. _Pytest-coverage: https://pypi.org/project/pytest-cov
 .. _Pytest-xdist: https://pypi.org/project/pytest-xdist
 .. _Sphinx: http://sphinx-doc.org
-.. _ReadTheDocs Sphinx theme: https://github.com/rtfd/sphinx_rtd_theme
+.. _ReadTheDocs Sphinx theme:
+   https://github.com/readthedocs/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
 .. _Shellcheck Linter Sphinx Extension:
@@ -69,13 +70,12 @@ This module contains miscellaneous utility functions that can be applied in a
 variety of circumstances; there are context managers, membership functions
 (test if an argument is of a given type), numerical functions, string
 functions and functions to aid in the unit testing of modules
-
 `Pytest`_ is the supported test runner
 
 Interpreter
 ===========
 
-The package has been developed and tested with Python 2.7, 3.5, 3.6 and 3.7
+The package has been developed and tested with Python 3.5, 3.6, 3.7 and 3.8
 under Linux (Debian, Ubuntu), Apple macOS and Microsoft Windows
 
 Installing
@@ -136,7 +136,6 @@ Contributing
 
 5. Install the dependencies (if needed, done automatically by pip):
 
-
     * `Cog`_ (2.5.1 or newer)
 
     * `Coverage`_ (4.5.3 or newer)
@@ -155,7 +154,7 @@ Contributing
 
     * `Pydocstyle`_ (3.0.0 or newer)
 
-    * `Pylint`_ (Python 2.x: 1.9.4 or newer, Python 3.x: 2.3.1 or newer)
+    * `Pylint`_ (2.3.1 or newer)
 
     * `Pytest`_ (4.3.1 or newer)
 
@@ -188,10 +187,10 @@ Contributing
        py27-pkg create: .../pmisc/.tox/py27
        py27-pkg installdeps: -r.../pmisc/requirements/tests_py27.pip, -r.../pmisc/requirements/docs_py27.pip
        ...
-         py27-pkg: commands succeeded
          py35-pkg: commands succeeded
          py36-pkg: commands succeeded
          py37-pkg: commands succeeded
+         py38-pkg: commands succeeded
          congratulations :)
        $
 
@@ -207,16 +206,16 @@ Contributing
        writing dependency_links to pmisc.egg-info/dependency_links.txt
        writing requirements to pmisc.egg-info/requires.txt
        ...
-         py27-pkg: commands succeeded
          py35-pkg: commands succeeded
          py36-pkg: commands succeeded
          py37-pkg: commands succeeded
+         py38-pkg: commands succeeded
          congratulations :)
        $
 
    Tox (or Setuptools via Tox) runs with the following default environments:
-   ``py27-pkg``, ``py35-pkg``, ``py36-pkg`` and ``py37-pkg`` [#f3]_. These use
-   the 2.7, 3.5, 3.6 and 3.7 interpreters, respectively, to test all code in
+   ``py35-pkg``, ``py36-pkg``, ``py37-pkg`` and ``py38-pkg`` [#f3]_. These use
+   the 3.5, 3.6, 3.7 and 3.8 interpreters, respectively, to test all code in
    the documentation (both in Sphinx ``*.rst`` source files and in
    docstrings), run all unit tests, measure test coverage and re-build the
    exceptions documentation. To pass arguments to Pytest (the test runner) use
@@ -226,7 +225,7 @@ Contributing
 
        $ PKG_NAME=pmisc tox -e py27-pkg -- -n 4
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.8.zip
+       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
        ...
          py27-pkg: commands succeeded
          congratulations :)
@@ -246,14 +245,14 @@ Contributing
 
    There are other convenience environments defined for Tox [#f3]_:
 
-    * ``py27-repl``, ``py35-repl``, ``py36-repl`` and ``py37-repl`` run the
-      Python 2.7, 3.5, 3.6 and 3.7 REPL, respectively, in the appropriate
+    * ``py35-repl``, ``py36-repl``, ``py37-repl`` and ``py38-repl`` run the
+      Python 3.5, 3.6, 3.7 and 3.8 REPL, respectively, in the appropriate
       virtual environment. The ``pmisc`` package is pip-installed by Tox when
       the environments are created.  Arguments to the interpreter can be
       passed in the command line after a double dash (``--``).
 
-    * ``py27-test``, ``py35-test``, ``py36-test`` and ``py37-test`` run Pytest
-      using the Python 2.7, 3.5, 3.6 and 3.7 interpreter, respectively, in the
+    * ``py35-test``, ``py36-test``, ``py37-test`` and ``py38-test`` run Pytest
+      using the Python 3.5, 3.6, 3.7 and 3.8 interpreter, respectively, in the
       appropriate virtual environment. Arguments to pytest can be passed in
       the command line after a double dash (``--``) , for example:
 
@@ -261,18 +260,18 @@ Contributing
 
        $ PKG_NAME=pmisc tox -e py27-test -- -x test_pmisc.py
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.8.zip
+       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
        ...
          py27-pkg: commands succeeded
          congratulations :)
        $
-    * ``py27-test``, ``py35-test``, ``py36-test`` and ``py37-test`` test code
-      and branch coverage using the 2.7, 3.5, 3.6 and 3.7 interpreter,
+    * ``py35-test``, ``py36-test``, ``py37-test`` and ``py38-test`` test code
+      and branch coverage using the 3.5, 3.6, 3.7 and 3.8 interpreter,
       respectively, in the appropriate virtual environment. Arguments to
       pytest can be passed in the command line after a double dash (``--``).
       The report can be found in :bash:`${PMISC_DIR}/.tox/py[PV]/usr/share/pmi
-      sc/tests/htmlcov/index.html` where ``[PV]`` stands for ``2.7``, ``3.5``,
-      ``3.6`` or ``3.7`` depending on the interpreter used.
+      sc/tests/htmlcov/index.html` where ``[PV]`` stands for ``3.5``, ``3.6``,
+      ``3.7`` or ``3.8`` depending on the interpreter used.
 
 8. Verify that continuous integration tests pass. The package has continuous
    integration configured for Linux, Apple macOS and Microsoft Windows (all via
@@ -281,7 +280,6 @@ Contributing
 9. Document the new feature or bug fix (if needed). The script
    :bash:`${PMISC_DIR}/pypkg/build_docs.py` re-builds the whole package
    documentation (re-generates images, cogs source files, etc.):
-
 
    .. code-block:: console
 
@@ -320,7 +318,6 @@ Contributing
 .. [#f3] Tox configuration largely inspired by
    `Ionel's codelog <https://blog.ionelmc.ro/2015/04/14/
    tox-tricks-and-patterns/>`_
-
 
 License
 =======

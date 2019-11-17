@@ -1,0 +1,4 @@
+sphinx>=1.8.5
+sphinxcontrib-inlinesyntaxhighlight>=0.2
+sphinx_rtd_theme>=0.4.3
+sphinxcontrib-shellcheck>=1.0.8
