@@ -84,7 +84,7 @@ rtd:
 
 sdist: meta
 	@echo "Creating source distribution"
-	@cd $(PKG_DIR) && python setup.py sdist --formats=zip
+	@cd $(PKG_DIR) && python3 setup.py sdist --formats=zip
 	@$(SBIN_DIR)/list-authors.sh
 
 sterile: clean
