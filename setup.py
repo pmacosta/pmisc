@@ -154,6 +154,7 @@ class Tox(TestCommand):  # noqa
         self.test_suite = True
 
     def run_tests(self):  # noqa
+        # pylint: disable=C0415
         import shlex
         import tox
 

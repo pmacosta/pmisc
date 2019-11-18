@@ -33,7 +33,7 @@ def def_links(mobj):
     ret = []
     for line in olines:
         wobj = textwrap.wrap(line, width=LINE_WIDTH, subsequent_indent="   ")
-        ret.append("\n".join([item for item in wobj]))
+        ret.append("\n".join(item for item in wobj))
     mobj.out("\n".join(ret))
 
 
@@ -202,6 +202,6 @@ def proc_requirements(mobj):
     ret = []
     for line in olines:
         wobj = textwrap.wrap(line, width=LINE_WIDTH, subsequent_indent="      ")
-        ret.append("\n".join([item for item in wobj]))
+        ret.append("\n".join(item for item in wobj))
 
     mobj.out("\n\n".join(ret) + "\n\n")
