@@ -18,11 +18,6 @@ if sys.hexversion < 0x03000000:
 import pmisc
 from pmisc import AE, AI
 
-if sys.hexversion < 0x03000000:
-    from pmisc.compat2 import _unicode_to_ascii
-else:
-    from pmisc.compat3 import _unicode_to_ascii
-
 
 ###
 # Test functions
@@ -39,7 +34,7 @@ def test_make_dir(capsys):  # noqa: D202
         pmisc.make_dir(fname)
         stdout, _ = capsys.readouterr()
         actual = repr(os.path.dirname(fname).rstrip())[1:-1]
-        ref = repr(_unicode_to_ascii(stdout.rstrip()))[1:-1]
+        ref = repr(stdout.rstrip())[1:-1]
         assert actual == ref
         pmisc.make_dir(os.path.join(os.path.abspath(os.sep), "some_file.ext"))
         stdout, _ = capsys.readouterr()

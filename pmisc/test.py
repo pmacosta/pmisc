@@ -29,16 +29,27 @@ from _pytest.main import Failed
 from _pytest._code import Traceback
 from _pytest._code.code import ExceptionInfo
 
-# Intra-package imports
-if sys.hexversion < 0x03000000:  # pragma: no cover
-    from .compat2 import _ex_type_str, _get_ex_msg
-else:  # pragma: no cover
-    from .compat3 import _ex_type_str, _get_ex_msg
-
 
 ###
 # Constants
 ###
+def _ex_type_str(exobj):
+    """Return a string corresponding to the exception type."""
+    regexp = re.compile(r"<(?:\bclass\b|\btype\b)\s+'?([\w|\.]+)'?>")
+    exc_type = str(exobj)
+    if regexp.match(exc_type):
+        exc_type = regexp.match(exc_type).groups()[0]
+        exc_type = exc_type[11:] if exc_type.startswith("exceptions.") else exc_type
+    if "." in exc_type:
+        exc_type = str(exobj).split("'")[1].split(".")[-1]
+    return exc_type
+
+
+def _get_ex_msg(obj):
+    """Get exception message."""
+    return obj.value.args[0] if hasattr(obj, "value") else obj.args[0]
+
+
 def _get_trap(func, exc):  # pragma: no cover
     """Find a line in a function with a simple source file parser."""
     debug = False
@@ -91,7 +102,6 @@ _EXC_TRAPS_INFO = [
     ),
 ]
 _EXC_TRAPS = [_get_trap(*exc_def) for exc_def in _EXC_TRAPS_INFO]
-
 
 ###
 # Helper functions

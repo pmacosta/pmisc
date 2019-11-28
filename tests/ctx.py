@@ -7,7 +7,6 @@
 import os
 import platform
 import re
-import sys
 import time
 import uuid
 
@@ -17,11 +16,6 @@ import pytest
 # Intra-package imports
 import pmisc
 from pmisc import GET_EXMSG
-
-if sys.hexversion < 0x03000000:
-    from pmisc.compat2 import _write
-else:
-    from pmisc.compat3 import _write
 
 
 ###
@@ -110,10 +104,10 @@ def test_tmp_file():  # noqa: D202
     """Test TmpFile context manager behavior."""
 
     def write_data(file_handle):
-        _write(file_handle, "Hello world!")
+        file_handle.write("Hello world!")
 
     def write_data_with_args(file_handle, *args, **kwargs):
-        _write(file_handle, str(args) + str(kwargs))
+        file_handle.write(str(args) + str(kwargs))
 
     # Test argument validation
     with pytest.raises(RuntimeError) as excinfo:
