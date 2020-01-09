@@ -2,7 +2,7 @@
 # Copyright (c) 2013-2020 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0103,C0111,C0304,C0305,C0413,E0611,F0401
-# pylint: disable=R0205,R0903,R0914,W0106,W0122,W0201,W0212,W0613,W0703
+# pylint: disable=R0205,R0903,R0914,W0106,W0122,W0201,W0212,W0613,W0702,W0703
 
 # Standard library imports
 from __future__ import print_function
@@ -89,8 +89,12 @@ _EXC_TRAPS_INFO = [
     ("assert_prop", "_raise_if_not_raised(eobj)"),
     ("assert_prop", "_raise_exception_mismatch(eobj, extype, exmsg)"),
     ("assert_prop", "_raise_exception_mismatch(excinfo, extype, exmsg)"),
-    ("assert_ro_prop", '_raise_if_not_raised(eobj, "Property can be deleted")'),
+    ("assert_ro_prop", 'raise TypeError("Property name must be a string")'),
+    ("assert_ro_prop", 'raise ValueError("Empty property name")'),
+    ("assert_ro_prop", 'raise AttributeError("Object does not have property")'),
+    ("assert_ro_prop", "_raise_exception_mismatch(eobj, extype, exmsg)"),
     ("assert_ro_prop", "_raise_exception_mismatch(excinfo, extype, exmsg)"),
+    ("assert_ro_prop", 'raise AssertionError("Property can be deleted")'),
     (
         "compare_strings",
         'raise AssertionError("Strings do not match" + os.linesep + ret)',
@@ -103,7 +107,7 @@ _EXC_TRAPS = [_get_trap(*exc_def) for exc_def in _EXC_TRAPS_INFO]
 ###
 def _del_pmisc_test_frames(excinfo):
     """Remove the pmisc.test module frames from pytest excinfo structure."""
-    # pylint: disable=W0231,W0702
+    # pylint: disable=W0231
     class PmiscExceptionInfo(ExceptionInfo):
         def __init__(self, excinfo, offset):
             new_tb = _process_tb(excinfo.tb, offset)
@@ -528,17 +532,24 @@ def assert_ro_prop(cobj, prop_name):
     :param prop_name: Property name
     :type  prop_name: string
     """
+    if not isinstance(prop_name, str):
+        raise TypeError("Property name must be a string")
+    if not prop_name.strip():
+        raise ValueError("Empty property name")
+    if not hasattr(cobj, prop_name):
+        raise AttributeError("Object does not have property")
     try:
         exec("del cobj." + prop_name, None, locals())
     except AttributeError as excinfo:
-        print(excinfo)
-    except (BaseException, Exception, Failed) as eobj:
-        _raise_if_not_raised(eobj, "Property can be deleted")
+        extype = "AttributeError"
+        exmsg = "can't delete attribute"
+        _raise_exception_mismatch(excinfo, extype, exmsg)
+    except Exception as eobj:
+        extype = "AttributeError"
+        exmsg = "can't delete attribute"
+        _raise_exception_mismatch(eobj, extype, exmsg)
     else:
-        AssertionError("Did not raise")
-    extype = "AttributeError"
-    exmsg = "can't delete attribute"
-    _raise_exception_mismatch(excinfo, extype, exmsg)
+        raise AssertionError("Property can be deleted")
 
 
 def compare_strings(actual, ref, diff_mode=False):
