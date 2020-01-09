@@ -30,21 +30,6 @@ jobs:
 - job: 'Test'
   strategy:
     matrix:
-      macos_python35:
-        imageName: 'macos-10.13'
-        python.version: '3.5'
-        aname: 'macos'
-        pyname: 'py35'
-      macos_python36:
-        imageName: 'macos-10.13'
-        python.version: '3.6'
-        aname: 'macos'
-        pyname: 'py36'
-      macos_python37:
-        imageName: 'macos-10.13'
-        python.version: '3.7'
-        aname: 'macos'
-        pyname: 'py37'
       linux_python35:
         imageName: 'ubuntu-16.04'
         python.version: '3.5'
@@ -60,6 +45,31 @@ jobs:
         python.version: '3.7'
         aname: 'linux'
         pyname: 'py37'
+      linux_python38:
+        imageName: 'ubuntu-16.04'
+        python.version: '3.8'
+        aname: 'linux'
+        pyname: 'py38'
+      macos_python35:
+        imageName: 'macos-10.13'
+        python.version: '3.5'
+        aname: 'macos'
+        pyname: 'py35'
+      macos_python36:
+        imageName: 'macos-10.13'
+        python.version: '3.6'
+        aname: 'macos'
+        pyname: 'py36'
+      macos_python37:
+        imageName: 'macos-10.13'
+        python.version: '3.7'
+        aname: 'macos'
+        pyname: 'py37'
+      macos_python38:
+        imageName: 'macos-10.13'
+        python.version: '3.8'
+        aname: 'macos'
+        pyname: 'py38'
       windows_python35:
         imageName: 'vs2017-win2016'
         python.version: '3.5'
@@ -75,6 +85,11 @@ jobs:
         python.version: '3.7'
         aname: 'windows'
         pyname: 'py37'
+      windows_python38:
+        imageName: 'vs2017-win2016'
+        python.version: '3.8'
+        aname: 'windows'
+        pyname: 'py38'
   # [[[end]]]
 
   pool:
