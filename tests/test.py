@@ -139,7 +139,6 @@ def test_assert_ro_prop():  # noqa: D202
             del self._value
 
         value = property(getter, None, deleter)
-        value = property(getter, None, deleter)
 
     # Test case where attribute cannot be deleted
     obj1 = MyClass1()
@@ -152,33 +151,12 @@ def test_assert_ro_prop():  # noqa: D202
         actmsg = pmisc.get_exmsg(eobj)
         assert actmsg == "Property can be deleted"
     # Test case where unexpected exception is raised during evaluation
-    try:
-        pmisc.assert_ro_prop("a", "")
-    except AssertionError as eobj:
-        actmsg = pmisc.get_exmsg(eobj)
-        base = (
-            "Raised exception mismatch"
-            + os.linesep
-            + "Expected: AttributeError (can't delete attribute)"
-            + os.linesep
-        )
-        ref1 = base + "Got: SyntaxError ()"
-        ref2 = base + "Got: SyntaxError (invalid syntax)"
-        if actmsg not in (ref1, ref2):
-            print(
-                "Expected:"
-                + os.linesep
-                + ref1
-                + os.linesep
-                + "Or"
-                + os.linesep
-                + ref2
-                + os.linesep
-                + "Got:"
-                + os.linesep
-                + actmsg
-            )
-        assert actmsg in (ref1, ref2)
+    exmsg = "Property name must be a string"
+    pmisc.assert_exception(pmisc.assert_ro_prop, TypeError, exmsg, "a", 5)
+    exmsg = "Object does not have property"
+    pmisc.assert_exception(pmisc.assert_ro_prop, AttributeError, exmsg, "a", "my_prop")
+    exmsg = "Empty property name"
+    pmisc.assert_exception(pmisc.assert_ro_prop, ValueError, exmsg, "a", "")
 
 
 def test_comp_list_of_dicts():
@@ -372,7 +350,7 @@ def test_excepthook():
         "Expected: RuntimeError (Argument `arg` is not valid)",
         "Got: RuntimeError (Custom exception)",
     ]
-    comp_output(obj.msg, ref, 366)
+    comp_output(obj.msg, ref, 344)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.assert_exception(func1, ValueError, exmsg, 0)
@@ -382,7 +360,7 @@ def test_excepthook():
         "    pmisc.assert_exception(func1, ValueError, exmsg, 0)",
         "AssertionError: Did not raise",
     ]
-    comp_output(obj.msg, ref, 378)
+    comp_output(obj.msg, ref, 356)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.assert_exception(func1, ValueError, exmsg, 1)
@@ -394,7 +372,7 @@ def test_excepthook():
         "Expected: ValueError (My exception)",
         "Got: RuntimeError (Custom exception)",
     ]
-    comp_output(obj.msg, ref, 388)
+    comp_output(obj.msg, ref, 366)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.assert_exception(func1, RuntimeError, exmsg, 1)
@@ -406,7 +384,7 @@ def test_excepthook():
         "Expected: RuntimeError (My exception)",
         "Got: RuntimeError (Custom exception)",
     ]
-    comp_output(obj.msg, ref, 400)
+    comp_output(obj.msg, ref, 378)
     ###
     obj2 = TmpMock()
     with pytest.raises(AssertionError) as excinfo:
@@ -417,7 +395,7 @@ def test_excepthook():
         '    pmisc.assert_ro_prop(obj2, "msg")',
         "AssertionError: Property can be deleted",
     ]
-    comp_output(obj.msg, ref, 413)
+    comp_output(obj.msg, ref, 391)
     ###
     obj2 = Class1()
     with pytest.raises(AssertionError) as excinfo:
@@ -430,7 +408,7 @@ def test_excepthook():
         "Expected: AttributeError (can't delete attribute)",
         "Got: ValueError (An exception)",
     ]
-    comp_output(obj.msg, ref, 424)
+    comp_output(obj.msg, ref, 402)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.compare_strings("hello", "hello!")
@@ -452,7 +430,7 @@ def test_excepthook():
         pmisc.pcolor(">>>", "cyan"),
         "",
     ]
-    comp_output(obj.msg, ref, 436)
+    comp_output(obj.msg, ref, 414)
     ### Test handling of an exception not in the pmisc.test module
     with pytest.raises(RuntimeError) as excinfo:
         func1(1)
@@ -471,7 +449,7 @@ def test_excepthook():
         '    pmisc.assert_prop(test_obj, "value", 1, RuntimeError, exmsg)',
         "AssertionError: Did not raise",
     ]
-    comp_output(obj.msg, ref, 467)
+    comp_output(obj.msg, ref, 445)
     ###
     test_obj = Class1()
     with pytest.raises(AssertionError) as excinfo:
@@ -484,15 +462,15 @@ def test_excepthook():
         "Expected: RuntimeError (My exception)",
         "Got: RuntimeError (Value is too big)",
     ]
-    comp_output(obj.msg, ref, 478)
+    comp_output(obj.msg, ref, 456)
 
 
 def test_del_pmisc_test_frames():
     """Test _remove_test_module_frame function behavior."""
     obj = pmisc.test._del_pmisc_test_frames
-    line1 = 498
+    line1 = 476
     line2 = _EXC_TRAPS[0][2]
-    line3 = 514
+    line3 = 492
 
     def func1():
         raise RuntimeError("Sample exception")  # <-- line1
