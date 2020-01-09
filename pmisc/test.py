@@ -313,10 +313,7 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
     actmsg = get_exmsg(excinfo)
     exrepr = repr(excinfo)
     if isinstance(excinfo, ExceptionInfo):
-        try:
-            acttype = str(excinfo.exconly())[: str(excinfo.exconly()).find(":")].strip()
-        except:
-            acttype = "ExceptionInfo"
+        acttype = str(excinfo.exconly())[: str(excinfo.exconly()).find(":")].strip()
     else:
         acttype = exrepr[: exrepr.find("(")]
     if not (
@@ -344,7 +341,7 @@ def _start_tracing(tracing):
     Done this way to avoid circular dependency with pexdoc.exh module.
     """
     exhobj = getattr(builtins, "_EXH", None)
-    if tracing:
+    if (exhobj is not None) and tracing:  # pragma: no cover
         exhobj.start_tracing()
 
 
@@ -356,7 +353,7 @@ def _stop_tracing():
     """
     exhobj = getattr(builtins, "_EXH", None)
     tracing = exhobj.tracing if exhobj is not None else False
-    if tracing:
+    if tracing:  # pragma: no cover
         exhobj.stop_tracing()
     return tracing
 
