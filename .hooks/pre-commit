@@ -249,17 +249,27 @@ fi
 # Check for congruence between author file and Git contact information {{{
 if [ "${email}" == 1 ]; then
     fname=${pkg_dir}/AUTHORS.rst
+    use_author_file=1
     if [ ! -f "${fname}" ]; then
-        >&2 echo -e "Email check could not be done, ${fname} not found"
-        exit 1
+        use_author_file=0
+        >&2 echo -e "${fname} not found, using first commit information"
+        names="$(\
+            git \
+            --no-pager \
+            show \
+            -s \
+            --pretty=format:'%an <%ae>' \
+            "$(git rev-list --max-parents=0 HEAD)" \
+        )"
+    else
+        names=$(\
+            grep -E '^\s*.*\s+<.*>\s*$' "${fname}" | \
+            sed -r -e 's/(\s*\*\s+)(.*)/\2/g' | \
+            sed -r -e 's/\s+/ /g' \
+        )
     fi
-    git_author="$(git config user.name) <$(git config user.email)>"
-    names=$(\
-        grep -E '^\s*.*\s+<.*>\s*$' "${fname}" | \
-        sed -r -e 's/(\s*\*\s+)(.*)/\2/g' | \
-        sed -r -e 's/\s+/ /g' \
-    )
     names=${names//[$'\t\r\n']}
+    git_author="$(git config user.name) <$(git config user.email)>"
     sep=">"
     found=0
     while [ "${names}" != "${names#*${sep}}" ]; do
@@ -273,7 +283,11 @@ if [ "${email}" == 1 ]; then
         names="${names#*${sep}}"
     done
     if [ "${found}" == 0 ]; then
-        >&2 echo -e "Error: git author ${git_author} not found in ${fname}"
+        if [ "${use_author_file}" == 1 ]; then
+            >&2 echo -e "Error: git author ${git_author} not found in ${fname}"
+        else
+            >&2 echo -e "Error: git author ${git_author} does not match first commit author"
+        fi
         exit 1
     fi
 fi
