@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1793 utf-8
+personal_ws-1.1 en 1797 utf-8
 0x03000000
 9b0
 a4paper
@@ -417,6 +417,7 @@ eprint
 eps
 EPS
 epub
+Epub
 eq
 eqs
 er
@@ -533,6 +534,7 @@ fn
 fname
 FNAME
 fnames
+FNAMES
 fnmatch
 fnode
 fnum
@@ -1078,6 +1080,7 @@ orangered
 ord
 OrderedDict
 orfilter
+org
 orow
 OrRd
 os
@@ -1590,6 +1593,7 @@ TestTreeNode
 TestWaveform
 tex
 texinfo
+Texinfo
 textwrap
 TextWrapper
 tfuncs
