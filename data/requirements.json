@@ -2,7 +2,7 @@
 	"docutils":{
 		"name":"Docutils",
 		"optional":false,
-		"url":"http://docutils.sourceforge.net/docs",
+		"url":"https://docutils.sourceforge.io/docs",
 		"cat":["tests"],
 		"ver":">=0.14",
 		"pos":0

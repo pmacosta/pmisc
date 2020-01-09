@@ -47,7 +47,7 @@ Description
 .. _Coverage: https://coverage.readthedocs.io
 .. _Decorator: https://raw.githubusercontent.com/micheles/decorator/mast
    er/docs/documentation.md
-.. _Docutils: http://docutils.sourceforge.net/docs
+.. _Docutils: https://docutils.sourceforge.io/docs
 .. _Funcsigs: https://pypi.org/project/funcsigs
 .. _Mock: https://docs.python.org/3/library/unittest.mock.html
 .. _Numpy: https://numpy.org
