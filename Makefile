@@ -1,5 +1,5 @@
 # Makefile
-# Copyright (c) 2013-2019 Pablo Acosta-Serafini
+# Copyright (c) 2013-2020 Pablo Acosta-Serafini
 # See LICENSE for details
 
 PKG_NAME := $(shell basename $(dir $(abspath $(lastword $(MAKEFILE_LIST)))) | sed -r -e "s/-/_/g")

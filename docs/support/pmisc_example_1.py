@@ -1,5 +1,5 @@
 # pmisc_example_1.py
-# Copyright (c) 2013-2019 Pablo Acosta-Serafini
+# Copyright (c) 2013-2020 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,C0410,E1129,W0702
 

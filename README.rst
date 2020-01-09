@@ -1,5 +1,5 @@
 .. README.rst
-.. Copyright (c) 2013-2019 Pablo Acosta-Serafini
+.. Copyright (c) 2013-2020 Pablo Acosta-Serafini
 .. See LICENSE for details
 
 .. image:: https://badge.fury.io/py/pmisc.svg
@@ -324,7 +324,7 @@ License
 
 The MIT License (MIT)
 
-Copyright (c) 2013-2019 Pablo Acosta-Serafini
+Copyright (c) 2013-2020 Pablo Acosta-Serafini
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
