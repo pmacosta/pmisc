@@ -1,4 +1,4 @@
-personal_ws-1.1 en 1791 utf-8
+personal_ws-1.1 en 1793 utf-8
 0x03000000
 9b0
 a4paper
@@ -438,6 +438,7 @@ exceptionC
 exceptionD
 ExceptionInfo
 excinfo
+exconly
 exdata
 exdb
 exdef
@@ -483,6 +484,7 @@ exopt
 exoutput
 expanduser
 expr
+exrepr
 extb
 extype
 exvalue

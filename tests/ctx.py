@@ -1,5 +1,5 @@
 # ctx.py
-# Copyright (c) 2013-2019 Pablo Acosta-Serafini
+# Copyright (c) 2013-2020 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0111,E1129
 
@@ -15,7 +15,7 @@ import pytest
 
 # Intra-package imports
 import pmisc
-from pmisc import GET_EXMSG
+from pmisc import GET_EXMSG, compare_strings
 
 
 ###
@@ -51,7 +51,7 @@ def test_timer(capsys):
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.Timer(5):
             pass
-    assert GET_EXMSG(excinfo) == "Argument `verbose` is not valid"
+    compare_strings(GET_EXMSG(excinfo), "Argument `verbose` is not valid")
     # Test that exceptions within the with statement are re-raised
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.Timer():

@@ -1,7 +1,7 @@
 # test.py
-# Copyright (c) 2013-2019 Pablo Acosta-Serafini
+# Copyright (c) 2013-2020 Pablo Acosta-Serafini
 # See LICENSE for details
-# pylint: disable=C0111,C0413,C0414,E0401,E0611,R0201,R0205,R0903,R0915,W0212
+# pylint: disable=C0111,C0413,C0414,E0401,E0611,R0201,R0205,R0903,R0915,W0212,W0613
 
 # Standard library imports
 from __future__ import print_function
@@ -313,12 +313,17 @@ def test_excepthook():
     test_fname = os.path.join(test_path, "test.py")
 
     def comp_output(act, ref, lineno=0):
-        ref = [
+        ref1 = [
             "Traceback (most recent call last):",
             '  File "{0}", line {1}, in test_excepthook'.format(test_fname, lineno),
-        ] + ref
+        ] + [ref[0]]
         tokens = act.split(os.linesep)
-        pmisc.compare_strings(os.linesep.join(tokens), os.linesep.join(ref))
+        pmisc.compare_strings(
+            os.linesep.join(tokens[: len(ref1)]), os.linesep.join(ref1)
+        )
+        pmisc.compare_strings(
+            os.linesep.join(tokens[-len(ref) + 1 :]), os.linesep.join(ref[1:])
+        )
 
     class TmpMock(object):
         def __init__(self):
@@ -328,8 +333,10 @@ def test_excepthook():
             self.msg = msg
 
         def _excepthook(self, exc_type, exc_value, exc_traceback):
-            # pylint: disable=W0613
             self.msg = str(exc_type) + "|" + str(exc_value)
+
+    def _eprint(msg):
+        pass
 
     class Class1(object):
         def __init__(self):
@@ -365,7 +372,7 @@ def test_excepthook():
         "Expected: RuntimeError (Argument `arg` is not valid)",
         "Got: RuntimeError (Custom exception)",
     ]
-    comp_output(obj.msg, ref, 359)
+    comp_output(obj.msg, ref, 366)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.assert_exception(func1, ValueError, exmsg, 0)
@@ -375,7 +382,7 @@ def test_excepthook():
         "    pmisc.assert_exception(func1, ValueError, exmsg, 0)",
         "AssertionError: Did not raise",
     ]
-    comp_output(obj.msg, ref, 371)
+    comp_output(obj.msg, ref, 378)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.assert_exception(func1, ValueError, exmsg, 1)
@@ -387,7 +394,7 @@ def test_excepthook():
         "Expected: ValueError (My exception)",
         "Got: RuntimeError (Custom exception)",
     ]
-    comp_output(obj.msg, ref, 381)
+    comp_output(obj.msg, ref, 388)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.assert_exception(func1, RuntimeError, exmsg, 1)
@@ -399,7 +406,7 @@ def test_excepthook():
         "Expected: RuntimeError (My exception)",
         "Got: RuntimeError (Custom exception)",
     ]
-    comp_output(obj.msg, ref, 393)
+    comp_output(obj.msg, ref, 400)
     ###
     obj2 = TmpMock()
     with pytest.raises(AssertionError) as excinfo:
@@ -410,7 +417,7 @@ def test_excepthook():
         '    pmisc.assert_ro_prop(obj2, "msg")',
         "AssertionError: Property can be deleted",
     ]
-    comp_output(obj.msg, ref, 406)
+    comp_output(obj.msg, ref, 413)
     ###
     obj2 = Class1()
     with pytest.raises(AssertionError) as excinfo:
@@ -423,7 +430,7 @@ def test_excepthook():
         "Expected: AttributeError (can't delete attribute)",
         "Got: ValueError (An exception)",
     ]
-    comp_output(obj.msg, ref, 417)
+    comp_output(obj.msg, ref, 424)
     ###
     with pytest.raises(AssertionError) as excinfo:
         pmisc.compare_strings("hello", "hello!")
@@ -445,15 +452,15 @@ def test_excepthook():
         pmisc.pcolor(">>>", "cyan"),
         "",
     ]
-    comp_output(obj.msg, ref, 429)
+    comp_output(obj.msg, ref, 436)
     ### Test handling of an exception not in the pmisc.test module
     with pytest.raises(RuntimeError) as excinfo:
         func1(1)
-    with mock.patch("pmisc.test._ORIG_EXCEPTHOOK", side_effect=obj._excepthook):
-        pmisc._excepthook(excinfo.type, excinfo.value, excinfo.tb)
-    ref1 = "<type 'exceptions.RuntimeError'>|Custom exception"
-    ref2 = "<class 'RuntimeError'>|Custom exception"
-    assert (obj.msg == ref1) or (obj.msg == ref2)
+    with mock.patch("pmisc.test._eprint", side_effect=_eprint):
+        with mock.patch("pmisc.test._ORIG_EXCEPTHOOK", side_effect=obj._excepthook):
+            pmisc._excepthook(excinfo.type, excinfo.value, excinfo.tb)
+    ref = "<class 'RuntimeError'>|Custom exception"
+    pmisc.compare_strings(obj.msg, ref)
     ###
     test_obj = Class1()
     with pytest.raises(AssertionError) as excinfo:
@@ -464,7 +471,7 @@ def test_excepthook():
         '    pmisc.assert_prop(test_obj, "value", 1, RuntimeError, exmsg)',
         "AssertionError: Did not raise",
     ]
-    comp_output(obj.msg, ref, 460)
+    comp_output(obj.msg, ref, 467)
     ###
     test_obj = Class1()
     with pytest.raises(AssertionError) as excinfo:
@@ -477,15 +484,15 @@ def test_excepthook():
         "Expected: RuntimeError (My exception)",
         "Got: RuntimeError (Value is too big)",
     ]
-    comp_output(obj.msg, ref, 471)
+    comp_output(obj.msg, ref, 478)
 
 
 def test_del_pmisc_test_frames():
     """Test _remove_test_module_frame function behavior."""
     obj = pmisc.test._del_pmisc_test_frames
-    line1 = 491
+    line1 = 498
     line2 = _EXC_TRAPS[0][2]
-    line3 = 507
+    line3 = 514
 
     def func1():
         raise RuntimeError("Sample exception")  # <-- line1

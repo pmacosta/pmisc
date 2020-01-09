@@ -1,5 +1,5 @@
 # test.py
-# Copyright (c) 2013-2019 Pablo Acosta-Serafini
+# Copyright (c) 2013-2020 Pablo Acosta-Serafini
 # See LICENSE for details
 # pylint: disable=C0103,C0111,C0304,C0305,C0413,E0611,F0401
 # pylint: disable=R0205,R0903,R0914,W0106,W0122,W0201,W0212,W0613,W0703
@@ -43,11 +43,6 @@ def _ex_type_str(exobj):
     if "." in exc_type:
         exc_type = str(exobj).split("'")[1].split(".")[-1]
     return exc_type
-
-
-def _get_ex_msg(obj):
-    """Get exception message."""
-    return obj.value.args[0] if hasattr(obj, "value") else obj.args[0]
 
 
 def _get_trap(func, exc):  # pragma: no cover
@@ -312,11 +307,14 @@ def _raise_exception_mismatch(excinfo, extype, exmsg):
         regexp = re.compile(exmsg) if isinstance(exmsg, str) else None
     _start_tracing(tracing)
     actmsg = get_exmsg(excinfo)
-    acttype = (
-        exception_type_str(excinfo.type)
-        if hasattr(excinfo, "type")
-        else repr(excinfo)[: repr(excinfo).find("(")]
-    )
+    exrepr = repr(excinfo)
+    if isinstance(excinfo, ExceptionInfo):
+        try:
+            acttype = str(excinfo.exconly())[: str(excinfo.exconly()).find(":")].strip()
+        except:
+            acttype = "ExceptionInfo"
+    else:
+        acttype = exrepr[: exrepr.find("(")]
     if not (
         (acttype == exception_type_str(extype))
         and ((actmsg == exmsg) or (regexp and regexp.match(actmsg)))
@@ -531,10 +529,13 @@ def assert_ro_prop(cobj, prop_name):
     :type  prop_name: string
     """
     try:
-        with pytest.raises(AttributeError) as excinfo:
-            exec("del cobj." + prop_name, None, locals())
+        exec("del cobj." + prop_name, None, locals())
+    except AttributeError as excinfo:
+        print(excinfo)
     except (BaseException, Exception, Failed) as eobj:
         _raise_if_not_raised(eobj, "Property can be deleted")
+    else:
+        AssertionError("Did not raise")
     extype = "AttributeError"
     exmsg = "can't delete attribute"
     _raise_exception_mismatch(excinfo, extype, exmsg)
@@ -690,7 +691,11 @@ def get_exmsg(exobj):  # pragma: no cover
 
     :rtype: string
     """
-    return _get_ex_msg(exobj)
+    msg = str(exobj)
+    if (msg[0] == "<") and (msg[-1] == ">") and (exobj._excinfo):
+        exobj = exobj._excinfo[1]
+        return exobj.args[0]
+    return msg
 
 
 ###
