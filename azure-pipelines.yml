@@ -244,7 +244,8 @@ jobs:
       fi
     displayName: List relevant directories
   - bash: |
-      python "${SBIN_DIR}"/coveragerc_manager.py 'ci' 1 ${INTERP} ${PYTHON_SITE_PACKAGES}
+      export PSP_TMP="$("${SBIN_DIR}"/winnorm_path.py "${PYTHON_SITE_PACKAGES}")"
+      python "${SBIN_DIR}"/coveragerc_manager.py 'ci' 1 ${INTERP} ${PSP_TMP}
       cat "${COV_FILE}"
     displayName: Create coverage config file
   - bash: |
