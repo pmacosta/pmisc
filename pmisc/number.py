@@ -51,7 +51,7 @@ def _no_exp(number):
 
     :rtype: string
 
-    :raises: RuntimeError (Argument \`number\` is not valid)
+    :raises RuntimeError: Argument \`number\` is not valid
     """
     if isinstance(number, bool) or (not isinstance(number, (int, float))):
         raise RuntimeError("Argument `number` is not valid")
@@ -83,7 +83,7 @@ def _to_scientific_tuple(number):
             item is the exponent (*integer*) of the number when expressed in
             scientific notation
 
-    :raises: RuntimeError (Argument \`number\` is not valid)
+    :raises RuntimeError: Argument \`number\` is not valid
     """
     # pylint: disable=W0632
     if isinstance(number, bool) or (not isinstance(number, (int, float, str))):
@@ -157,17 +157,12 @@ def normalize(value, series, offset=0):
 
     :rtype: number
 
-    :raises:
-     * RuntimeError (Argument \`offset\` is not valid)
-
-     * RuntimeError (Argument \`series\` is not valid)
-
-     * RuntimeError (Argument \`value\` is not valid)
-
-     * ValueError (Argument \`offset\` has to be in the [0.0, 1.0] range)
-
-     * ValueError (Argument \`value\` has to be within the bounds of the
-       argument \`series\`)
+    :raises RuntimeError: Argument \`offset\` is not valid
+    :raises RuntimeError: Argument \`series\` is not valid
+    :raises RuntimeError: Argument \`value\` is not valid
+    :raises ValueError: Argument \`offset\` has to be in the [0.0, 1.0] range
+    :raises ValueError: Argument \`value\` has to be within the bounds of the
+      argument \`series\`
 
     For example::
 
@@ -221,14 +216,10 @@ def per(arga, argb, prec=10):
     :rtype: Float, list of floats or Numpy vector, depending on the arguments
      type
 
-    :raises:
-     * RuntimeError (Argument \`arga\` is not valid)
-
-     * RuntimeError (Argument \`argb\` is not valid)
-
-     * RuntimeError (Argument \`prec\` is not valid)
-
-     * TypeError (Arguments are not of the same type)
+    :raises RuntimeError: Argument \`arga\` is not valid
+    :raises RuntimeError: Argument \`argb\` is not valid
+    :raises RuntimeError: Argument \`prec\` is not valid
+    :raises TypeError: Arguments are not of the same type
     """
     # pylint: disable=C0103,C0200,E1101,R0204
     if not isinstance(prec, int):

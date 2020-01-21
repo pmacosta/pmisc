@@ -397,10 +397,8 @@ def assert_arg_invalid(fpointer, pname, *args, **kwargs):
     :param kwargs: Keyword arguments to pass to object
     :type  kwargs: dictionary
 
-    :raises:
-     * AssertionError (Did not raise)
-
-     * RuntimeError (Illegal number of arguments)
+    :raises AssertionError: Did not raise
+    :raises RuntimeError: Illegal number of arguments
     """
     assert_exception(
         fpointer,
@@ -450,10 +448,8 @@ def assert_exception(fpointer, extype, exmsg, *args, **kwargs):
             ...
         RuntimeError: Exception not raised
 
-    :raises:
-     * AssertionError (Did not raise)
-
-     * RuntimeError (Illegal number of arguments)
+    :raises AssertionError: Did not raise
+    :raises RuntimeError: Illegal number of arguments
     """
     # Collect function arguments
     tracing = _stop_tracing()
@@ -569,14 +565,10 @@ def compare_strings(actual, ref, diff_mode=False):
                       strings are printed separately (False)
     :type diff_mode: boolean
 
-    :raises:
-     * AssertionError(Strings do not match)
-
-     * RuntimeError(Argument \`actual\` is not valid)
-
-     * RuntimeError(Argument \`diff_mode\` is not valid)
-
-     * RuntimeError(Argument \`ref\` is not valid)
+    :raises AssertionError: Strings do not match
+    :raises RuntimeError: Argument \`actual\` is not valid
+    :raises RuntimeError: Argument \`diff_mode\` is not valid
+    :raises RuntimeError: Argument \`ref\` is not valid
     """
     # pylint: disable=R0912
     pyellow = lambda x, y: x if x == y else _pcolor(x, "yellow")

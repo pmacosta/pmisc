@@ -100,7 +100,7 @@ class Timer(object):
 
     :returns: :py:class:`pmisc.Timer`
 
-    :raises: RuntimeError (Argument \`verbose\` is not valid)
+    :raises RuntimeError: Argument \`verbose\` is not valid
 
     For example:
 
@@ -181,7 +181,7 @@ class TmpDir(object):
 
     :returns:   temporary directory absolute path
 
-    :raises:    RuntimeError (Argument \`dpath\` is not valid)
+    :raises RuntimeError: Argument \`dpath\` is not valid
 
     .. warning:: The file name returned uses the forward slash (``/``) as
        the path separator regardless of the platform. This avoids
@@ -237,7 +237,7 @@ class TmpFile(object):
 
     :returns:   temporary file name
 
-    :raises:    RuntimeError (Argument \`fpointer\` is not valid)
+    :raises RuntimeError: Argument \`fpointer\` is not valid
 
     .. warning:: The file name returned uses the forward slash (``/``) as
        the path separator regardless of the platform. This avoids
