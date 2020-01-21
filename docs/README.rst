@@ -164,8 +164,8 @@
 .. cog.outl("")
 .. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
-.. cog.outl("       py27-pkg create: .../"+PKG_NAME+"/.tox/py27")
-.. cog.outl("       py27-pkg installdeps: -r.../"+PKG_NAME+"/requirements/tests_py27.pip, -r.../"+PKG_NAME+"/requirements/docs_py27.pip")
+.. cog.outl("       py35-pkg create: .../"+PKG_NAME+"/.tox/py35")
+.. cog.outl("       py35-pkg installdeps: -r.../"+PKG_NAME+"/requirements/tests_py35.pip, -r.../"+PKG_NAME+"/requirements/docs_py35.pip")
 .. cog.outl("       ...")
 .. for pyver in PKG_INTERPS:
 ..     cog.outl("         py{0}-pkg: commands succeeded".format(str(pyver).replace(".", "")))
@@ -202,11 +202,11 @@
 .. cog.outl("")
 .. cog.outl("   .. code-block:: console")
 .. cog.outl("")
-.. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox -e py27-pkg -- -n 4")
+.. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox -e py35-pkg -- -n 4")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
-.. cog.outl("       py27-pkg inst-nodeps: .../"+PKG_NAME+"/.tox/.tmp/package/1/"+PKG_NAME+"-"+PKG_VER+".zip")
+.. cog.outl("       py35-pkg inst-nodeps: .../"+PKG_NAME+"/.tox/.tmp/package/1/"+PKG_NAME+"-"+PKG_VER+".zip")
 .. cog.outl("       ...")
-.. cog.outl("         py27-pkg: commands succeeded")
+.. cog.outl("         py35-pkg: commands succeeded")
 .. cog.outl("         congratulations :)")
 .. cog.outl("       $")
 .. cog.outl("")
@@ -215,10 +215,10 @@
 .. cog.outl("")
 .. cog.outl("   .. code-block:: console")
 .. cog.outl("")
-.. cog.outl("       $ PKG_NAME="+PKG_NAME+" python setup.py tests -a \"-e py27-pkg -- -n 4\"")
+.. cog.outl("       $ PKG_NAME="+PKG_NAME+" python setup.py tests -a \"-e py35-pkg -- -n 4\"")
 .. cog.outl("       running tests")
 .. cog.outl("       ...")
-.. cog.outl("         py27-pkg: commands succeeded")
+.. cog.outl("         py35-pkg: commands succeeded")
 .. cog.outl("         congratulations :)")
 .. cog.outl("       $")
 .. cog.outl("")
@@ -244,11 +244,11 @@
 .. cog.outl("")
 .. cog.outl("      .. code-block:: console")
 .. cog.outl("")
-.. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox -e py27-test -- -x test_"+PKG_NAME+".py")
+.. cog.outl("       $ PKG_NAME="+PKG_NAME+" tox -e py35-test -- -x test_"+PKG_NAME+".py")
 .. cog.outl("       GLOB sdist-make: .../"+PKG_NAME+"/setup.py")
-.. cog.outl("       py27-pkg inst-nodeps: .../"+PKG_NAME+"/.tox/.tmp/package/1/"+PKG_NAME+"-"+PKG_VER+".zip")
+.. cog.outl("       py35-pkg inst-nodeps: .../"+PKG_NAME+"/.tox/.tmp/package/1/"+PKG_NAME+"-"+PKG_VER+".zip")
 .. cog.outl("       ...")
-.. cog.outl("         py27-pkg: commands succeeded")
+.. cog.outl("         py35-pkg: commands succeeded")
 .. cog.outl("         congratulations :)")
 .. cog.outl("       $")
 .. PY_LIST = "``"+str(PKG_INTERPS[0])+"``" if len(PKG_INTERPS) == 1 else ", ".join(["``"+str(item)+"``" for item in PKG_INTERPS[:-1]])+" or ``"+str(PKG_INTERPS[-1])+"``"
@@ -356,8 +356,8 @@ Description
    https://github.com/readthedocs/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
-.. _Shellcheck Linter Sphinx Extension:
-   https://pypi.org/project/sphinxcontrib-shellcheck
+.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
+   /sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 
@@ -480,8 +480,8 @@ Contributing
 
        $ PKG_NAME=pmisc tox
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg create: .../pmisc/.tox/py27
-       py27-pkg installdeps: -r.../pmisc/requirements/tests_py27.pip, -r.../pmisc/requirements/docs_py27.pip
+       py35-pkg create: .../pmisc/.tox/py35
+       py35-pkg installdeps: -r.../pmisc/requirements/tests_py35.pip, -r.../pmisc/requirements/docs_py35.pip
        ...
          py35-pkg: commands succeeded
          py36-pkg: commands succeeded
@@ -519,11 +519,11 @@ Contributing
 
    .. code-block:: console
 
-       $ PKG_NAME=pmisc tox -e py27-pkg -- -n 4
+       $ PKG_NAME=pmisc tox -e py35-pkg -- -n 4
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
+       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
        ...
-         py27-pkg: commands succeeded
+         py35-pkg: commands succeeded
          congratulations :)
        $
 
@@ -532,10 +532,10 @@ Contributing
 
    .. code-block:: console
 
-       $ PKG_NAME=pmisc python setup.py tests -a "-e py27-pkg -- -n 4"
+       $ PKG_NAME=pmisc python setup.py tests -a "-e py35-pkg -- -n 4"
        running tests
        ...
-         py27-pkg: commands succeeded
+         py35-pkg: commands succeeded
          congratulations :)
        $
 
@@ -554,11 +554,11 @@ Contributing
 
       .. code-block:: console
 
-       $ PKG_NAME=pmisc tox -e py27-test -- -x test_pmisc.py
+       $ PKG_NAME=pmisc tox -e py35-test -- -x test_pmisc.py
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
+       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
        ...
-         py27-pkg: commands succeeded
+         py35-pkg: commands succeeded
          congratulations :)
        $
     * ``py35-test``, ``py36-test``, ``py37-test`` and ``py38-test`` test code

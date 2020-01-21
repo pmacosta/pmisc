@@ -184,8 +184,8 @@ Contributing
 
        $ PKG_NAME=pmisc tox
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg create: .../pmisc/.tox/py27
-       py27-pkg installdeps: -r.../pmisc/requirements/tests_py27.pip, -r.../pmisc/requirements/docs_py27.pip
+       py35-pkg create: .../pmisc/.tox/py35
+       py35-pkg installdeps: -r.../pmisc/requirements/tests_py35.pip, -r.../pmisc/requirements/docs_py35.pip
        ...
          py35-pkg: commands succeeded
          py36-pkg: commands succeeded
@@ -223,11 +223,11 @@ Contributing
 
    .. code-block:: console
 
-       $ PKG_NAME=pmisc tox -e py27-pkg -- -n 4
+       $ PKG_NAME=pmisc tox -e py35-pkg -- -n 4
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
+       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
        ...
-         py27-pkg: commands succeeded
+         py35-pkg: commands succeeded
          congratulations :)
        $
 
@@ -236,10 +236,10 @@ Contributing
 
    .. code-block:: console
 
-       $ PKG_NAME=pmisc python setup.py tests -a "-e py27-pkg -- -n 4"
+       $ PKG_NAME=pmisc python setup.py tests -a "-e py35-pkg -- -n 4"
        running tests
        ...
-         py27-pkg: commands succeeded
+         py35-pkg: commands succeeded
          congratulations :)
        $
 
@@ -258,11 +258,11 @@ Contributing
 
       .. code-block:: console
 
-       $ PKG_NAME=pmisc tox -e py27-test -- -x test_pmisc.py
+       $ PKG_NAME=pmisc tox -e py35-test -- -x test_pmisc.py
        GLOB sdist-make: .../pmisc/setup.py
-       py27-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
+       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.9.zip
        ...
-         py27-pkg: commands succeeded
+         py35-pkg: commands succeeded
          congratulations :)
        $
     * ``py35-test``, ``py36-test``, ``py37-test`` and ``py38-test`` test code
