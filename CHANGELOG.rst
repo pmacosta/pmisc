@@ -5,6 +5,13 @@
 Changelog
 =========
 
+* 1.5.10 [2020-01-21]: Documentation update
+
+* 1.5.9 [2020-01-21]: Dropped support for Python 2.7. Added testing for Python
+                      3.8. Fixed CI bugs under Microsoft Windows. Added more
+                      granular argument checks in assert_ro_prop API. Fixed bugs
+                      with assert_ro_prop API in new(er) Pytest versions
+
 * 1.5.8 [2019-03-21]: Minor documentation update
 
 * 1.5.7 [2019-03-21]: Small enhancement to ste API to make it more flexible.
