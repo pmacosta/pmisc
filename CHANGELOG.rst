@@ -5,16 +5,18 @@
 Changelog
 =========
 
+* 1.5.12 [2020-01-28]: Micro documentation update for correct PyPI rendering
+
 * 1.5.11 [2020-01-28]: Removed hard-coded aliases of certain APIs, these can be
-                       done in the project code that uses the library, using
-                       whatever aliases are deemed appropriate for the project
+  done in the project code that uses the library, using whatever aliases are
+  deemed appropriate for the project
 
 * 1.5.10 [2020-01-21]: Documentation update
 
 * 1.5.9 [2020-01-21]: Dropped support for Python 2.7. Added testing for Python
-                      3.8. Fixed CI bugs under Microsoft Windows. Added more
-                      granular argument checks in assert_ro_prop API. Fixed bugs
-                      with assert_ro_prop API in new(er) Pytest versions
+  3.8. Fixed CI bugs under Microsoft Windows. Added more granular argument
+  checks in assert_ro_prop API. Fixed bugs with assert_ro_prop API in new(er)
+  Pytest versions
 
 * 1.5.8 [2019-03-21]: Minor documentation update
 

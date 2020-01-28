@@ -10,7 +10,7 @@ import os
 ###
 # Global variables
 ###
-VERSION_INFO = (1, 5, 11, "final", 0)
+VERSION_INFO = (1, 5, 12, "final", 0)
 SUPPORTED_INTERPS = ["3.5", "3.6", "3.7", "3.8"]
 COPYRIGHT_START = 2013
 PKG_DESC = (
