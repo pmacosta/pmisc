@@ -696,16 +696,3 @@ def get_exmsg(exobj):  # pragma: no cover
         exobj = exobj._excinfo[1]
         return exobj.args[0]
     return msg
-
-
-###
-# Global variables (shortcuts)
-###
-AE = assert_exception
-AI = assert_arg_invalid
-APROP = assert_prop
-AROPROP = assert_ro_prop
-CLDICTS = comp_list_of_dicts
-CS = compare_strings
-GET_EXMSG = get_exmsg
-RE = RuntimeError

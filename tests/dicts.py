@@ -8,7 +8,7 @@ import pytest
 
 # Intra-package imports
 import pmisc
-from pmisc import GET_EXMSG
+from pmisc.test import get_exmsg as GET_EXMSG
 
 
 ###

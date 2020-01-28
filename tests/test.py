@@ -16,7 +16,7 @@ import pytest
 if sys.hexversion < 0x03000000:
     import mock
 # Intra-package imports
-from pmisc import AI
+from pmisc.test import assert_arg_invalid as AI
 from pmisc.test import _EXC_TRAPS
 import pmisc
 

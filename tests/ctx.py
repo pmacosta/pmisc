@@ -15,7 +15,7 @@ import pytest
 
 # Intra-package imports
 import pmisc
-from pmisc import GET_EXMSG, compare_strings
+from pmisc.test import get_exmsg, compare_strings
 
 
 ###
@@ -51,12 +51,12 @@ def test_timer(capsys):
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.Timer(5):
             pass
-    compare_strings(GET_EXMSG(excinfo), "Argument `verbose` is not valid")
+    compare_strings(get_exmsg(excinfo), "Argument `verbose` is not valid")
     # Test that exceptions within the with statement are re-raised
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.Timer():
             raise RuntimeError("Error in code")
-    assert GET_EXMSG(excinfo) == "Error in code"
+    assert get_exmsg(excinfo) == "Error in code"
     # Test normal operation
     with pmisc.Timer() as tobj:
         time.sleep(0.5)
@@ -74,12 +74,12 @@ def test_tmp_dir():
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.TmpDir(5) as dname:
             pass
-    assert GET_EXMSG(excinfo) == "Argument `dpath` is not valid"
+    assert get_exmsg(excinfo) == "Argument `dpath` is not valid"
     dname = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_dir_")
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.TmpDir(dname) as dname:
             pass
-    assert GET_EXMSG(excinfo) == "Argument `dpath` is not valid"
+    assert get_exmsg(excinfo) == "Argument `dpath` is not valid"
     # Test behavior when no function pointer is given
     with pmisc.TmpDir() as dname:
         assert os.path.isdir(dname)
@@ -88,7 +88,7 @@ def test_tmp_dir():
     with pytest.raises(OSError) as excinfo:
         with pmisc.TmpDir() as dname:
             raise OSError("No data")
-    assert GET_EXMSG(excinfo) == "No data"
+    assert get_exmsg(excinfo) == "No data"
     assert not os.path.isdir(dname)
     # Test behavior under "normal" circumstances
     with pmisc.TmpDir() as dname:
@@ -113,7 +113,7 @@ def test_tmp_file():  # noqa: D202
     with pytest.raises(RuntimeError) as excinfo:
         with pmisc.TmpFile(5) as fname:
             pass
-    assert GET_EXMSG(excinfo) == "Argument `fpointer` is not valid"
+    assert get_exmsg(excinfo) == "Argument `fpointer` is not valid"
     # Test behavior when no function pointer is given
     with pmisc.TmpFile() as fname:
         assert isinstance(fname, str) and fname
@@ -123,7 +123,7 @@ def test_tmp_file():  # noqa: D202
     with pytest.raises(OSError) as excinfo:
         with pmisc.TmpFile(write_data) as fname:
             raise OSError("No data")
-    assert GET_EXMSG(excinfo) == "No data"
+    assert get_exmsg(excinfo) == "No data"
     assert not os.path.exists(fname)
     # Test behavior under "normal" circumstances
     with pmisc.TmpFile(write_data) as fname:

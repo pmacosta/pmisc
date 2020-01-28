@@ -12,7 +12,8 @@ import sys
 
 # Intra-package imports
 import pmisc
-from pmisc import AE, AI
+from pmisc.test import assert_exception as AE
+from pmisc.test import assert_arg_invalid as AI
 
 
 ###

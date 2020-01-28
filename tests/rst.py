@@ -18,7 +18,7 @@ import pytest
 
 # Intra-package imports
 import pmisc
-from pmisc import AI
+from pmisc.test import assert_arg_invalid as AI
 
 
 ###
