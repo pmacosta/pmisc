@@ -18,7 +18,7 @@ jobs:
 # cog.outl("- job: 'Test'")
 # cog.outl("  strategy:")
 # cog.outl("    matrix:")
-# PLATFORMS = {"linux":"ubuntu-16.04", "macos":"macos-10.13", "windows":"vs2017-win2016"}
+# PLATFORMS = {"linux":"ubuntu-18.04", "macos":"macos-10.14", "windows":"vs2017-win2016"}
 # for PLATFORM, IMAGE in PLATFORMS.items():
 #     for SUPPORTED_INTERP in SUPPORTED_INTERPS:
 #         cog.outl("      {0}_python{1}:".format(PLATFORM, str(SUPPORTED_INTERP).replace(".", "")))
@@ -31,42 +31,42 @@ jobs:
   strategy:
     matrix:
       linux_python35:
-        imageName: 'ubuntu-16.04'
+        imageName: 'ubuntu-18.04'
         python.version: '3.5'
         aname: 'linux'
         pyname: 'py35'
       linux_python36:
-        imageName: 'ubuntu-16.04'
+        imageName: 'ubuntu-18.04'
         python.version: '3.6'
         aname: 'linux'
         pyname: 'py36'
       linux_python37:
-        imageName: 'ubuntu-16.04'
+        imageName: 'ubuntu-18.04'
         python.version: '3.7'
         aname: 'linux'
         pyname: 'py37'
       linux_python38:
-        imageName: 'ubuntu-16.04'
+        imageName: 'ubuntu-18.04'
         python.version: '3.8'
         aname: 'linux'
         pyname: 'py38'
       macos_python35:
-        imageName: 'macos-10.13'
+        imageName: 'macos-10.14'
         python.version: '3.5'
         aname: 'macos'
         pyname: 'py35'
       macos_python36:
-        imageName: 'macos-10.13'
+        imageName: 'macos-10.14'
         python.version: '3.6'
         aname: 'macos'
         pyname: 'py36'
       macos_python37:
-        imageName: 'macos-10.13'
+        imageName: 'macos-10.14'
         python.version: '3.7'
         aname: 'macos'
         pyname: 'py37'
       macos_python38:
-        imageName: 'macos-10.13'
+        imageName: 'macos-10.14'
         python.version: '3.8'
         aname: 'macos'
         pyname: 'py38'
