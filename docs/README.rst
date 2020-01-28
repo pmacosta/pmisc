@@ -521,7 +521,7 @@ Contributing
 
        $ PKG_NAME=pmisc tox -e py35-pkg -- -n 4
        GLOB sdist-make: .../pmisc/setup.py
-       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.10.zip
+       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.11.zip
        ...
          py35-pkg: commands succeeded
          congratulations :)
@@ -556,7 +556,7 @@ Contributing
 
        $ PKG_NAME=pmisc tox -e py35-test -- -x test_pmisc.py
        GLOB sdist-make: .../pmisc/setup.py
-       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.10.zip
+       py35-pkg inst-nodeps: .../pmisc/.tox/.tmp/package/1/pmisc-1.5.11.zip
        ...
          py35-pkg: commands succeeded
          congratulations :)

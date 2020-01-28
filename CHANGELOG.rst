@@ -5,6 +5,10 @@
 Changelog
 =========
 
+* 1.5.11 [2020-01-28]: Removed hard-coded aliases of certain APIs, these can be
+                       done in the project code that uses the library, using
+                       whatever aliases are deemed appropriate for the project
+
 * 1.5.10 [2020-01-21]: Documentation update
 
 * 1.5.9 [2020-01-21]: Dropped support for Python 2.7. Added testing for Python
