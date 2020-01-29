@@ -9,11 +9,11 @@
 .. import textwrap
 .. # PyPI imports
 .. import pmisc
-.. import docs.support.requirements_to_rst
 .. SDIR = os.path.dirname(os.path.dirname(os.path.abspath(cog.inFile)))
 .. sys.path.append(SDIR)
 .. import pypkg.functions
-.. FILE_NAME = sys.modules['docs.support.requirements_to_rst'].__file__
+.. import pypkg.requirements_to_rst
+.. FILE_NAME = sys.modules['pypkg.requirements_to_rst'].__file__
 .. MDIR = os.path.join(os.path.realpath(
 ..    os.path.dirname(os.path.dirname(os.path.dirname(FILE_NAME))))
 .. )
@@ -73,7 +73,7 @@
 .. cog.outl(".. role:: bash(code)")
 .. cog.outl("	:language: bash")
 .. cog.outl("")
-.. docs.support.requirements_to_rst.def_links(cog)
+.. pypkg.requirements_to_rst.def_links(cog)
 .. cog.outl("")
 .. cog.outl("")
 .. for paragraph in PKG_LONG_DESC.split(os.linesep):
@@ -151,7 +151,7 @@
 .. cog.outl("       $")
 .. cog.outl("")
 .. cog.outl("5. Install the dependencies (if needed, done automatically by pip):")
-.. docs.support.requirements_to_rst.proc_requirements(cog)
+.. pypkg.requirements_to_rst.proc_requirements(cog)
 .. cog.outl("6. Implement a new feature or fix a bug")
 .. cog.outl("")
 .. cog.outl("7. Write a unit test which shows that the contributed code works as expected.")

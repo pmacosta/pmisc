@@ -61,8 +61,8 @@ Description
    https://github.com/readthedocs/sphinx_rtd_theme
 .. _Inline Syntax Highlight Sphinx Extension:
    https://bitbucket.org/klorenz/sphinxcontrib-inlinesyntaxhighlight
-.. _Shellcheck Linter Sphinx Extension: https://pypi.org/project
-   /sphinxcontrib-shellcheck
+.. _Shellcheck Linter Sphinx Extension:
+   https://pypi.org/project/sphinxcontrib-shellcheck
 .. _Tox: https://tox.readthedocs.io
 .. _Virtualenv: https://docs.python-guide.org/dev/virtualenvs
 
