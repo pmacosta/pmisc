@@ -48,6 +48,14 @@
 .. cog.outl("    :target: https://pypi.org/project/"+PKG_NAME+"")
 .. cog.outl("    :alt: Format")
 .. cog.outl("")
+.. cog.outl(".. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white")
+.. cog.outl("   :target: https://github.com/pmacosta/"+PKG_NAME+"")
+.. cog.outl("   :alt: pre-commit")
+.. cog.outl("")
+.. cog.outl(".. image:: https://www.repostatus.org/badges/latest/active.svg")
+.. cog.outl("   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.")
+.. cog.outl("   :target: https://www.repostatus.org/#active")
+.. cog.outl("")
 .. cog.outl("|")
 .. cog.outl("")
 .. cog.outl(".. image::")
@@ -312,6 +320,14 @@
 .. image:: https://img.shields.io/pypi/format/pmisc.svg
     :target: https://pypi.org/project/pmisc
     :alt: Format
+
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+   :target: https://github.com/pmacosta/pmisc
+   :alt: pre-commit
+
+.. image:: https://www.repostatus.org/badges/latest/active.svg
+   :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
+   :target: https://www.repostatus.org/#active
 
 |
 
